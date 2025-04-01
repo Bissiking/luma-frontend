@@ -1,0 +1,91 @@
+.admin-section {
+    margin-top: 40px;
+    border-top: 2px solid #e0e0e0;
+    padding-top: 30px;
+}
+
+.dashboard-subsection {
+    margin-top: 30px;
+}
+
+.subsection-title {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.admin-stats {
+    margin-top: 20px;
+}
+
+.admin-icon {
+    background-color: #4e73df;
+    color: white;
+}
+
+.admin-tools {
+    margin-top: 30px;
+}
+
+.admin-tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-tool-card {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.admin-tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-tool-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: #4e73df;
+    color: white;
+    border-radius: 10px;
+    margin-right: 15px;
+    font-size: 1.2em;
+}
+
+.admin-tool-content {
+    flex: 1;
+}
+
+.admin-tool-title {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.admin-tool-description {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.admin-activity-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}

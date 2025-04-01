@@ -1,0 +1,2323 @@
+/**
+ * Nino Platform - Composants d'interface
+ */
+
+/* === Modale de lecteur vidéo === */
+.nino-player-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.nino-player-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nino-player-container {
+    width: 90%;
+    max-width: 1200px;
+    position: relative;
+    aspect-ratio: 16 / 9;
+}
+
+.nino-player-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.nino-video-player {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* === Barre de recherche avancée === */
+.nino-search {
+    position: relative;
+    margin-right: 20px;
+}
+
+.nino-search-form {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.nino-search-form.nino-search-active {
+    width: 300px;
+}
+
+.nino-search-input {
+    width: 100%;
+    padding: 8px 16px;
+    padding-right: 40px;
+    border-radius: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 14px;
+}
+
+.nino-search-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nino-search-submit {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+.nino-search-toggle {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.nino-search-toggle:hover {
+    color: var(--accent);
+}
+
+.nino-user-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* === Menu utilisateur déroulant === */
+.nino-user-dropdown {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 280px;
+    background-color: var(--bg-dark);
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.nino-user-dropdown.nino-dropdown-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nino-dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nino-dropdown-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.nino-dropdown-user-info {
+    flex: 1;
+}
+
+.nino-dropdown-username {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.nino-dropdown-email {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-dropdown-stats {
+    display: flex;
+    margin-top: 8px;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.nino-dropdown-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nino-dropdown-stat-value {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.nino-dropdown-stat-label {
+    opacity: 0.7;
+}
+
+.nino-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.nino-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nino-dropdown-item-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(0.98);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nino-dropdown-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.nino-dropdown-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+}
+
+/* === Badge d'abonnement === */
+.nino-subscription-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 8px;
+    background-color: #9C27B0;
+    color: white;
+}
+
+.nino-subscription-badge.premium {
+    background: linear-gradient(135deg, #ff8a00, #ff5252);
+}
+
+.nino-subscription-badge i {
+    margin-right: 3px;
+    font-size: 8px;
+}
+
+/* === Informations d'abonnement dans le menu === */
+.nino-dropdown-subscription-info {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.03);
+    margin: 5px 0;
+}
+
+.nino-subscription-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff8a00, #ff5252);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: white;
+    font-size: 14px;
+}
+
+.nino-subscription-details {
+    flex: 1;
+}
+
+.nino-subscription-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.nino-subscription-expiry {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* === Bascule de thème === */
+.nino-theme-toggle-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 15px;
+}
+
+.nino-theme-toggle {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin: 0 10px;
+}
+
+.nino-theme-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.nino-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.nino-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .nino-toggle-slider {
+    background-color: var(--accent);
+}
+
+input:checked + .nino-toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.nino-toggle-icon {
+    color: var(--text-dark);
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* === Modale standard === */
+.nino-modal-container {
+    position: relative;
+    z-index: 1000;
+}
+
+.nino-modal-content {
+    background-color: var(--bg-dark);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.nino-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nino-modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.nino-modal-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.nino-modal-close:hover {
+    color: white;
+}
+
+.nino-modal-body {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.nino-modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.nino-modal-small {
+    max-width: 400px;
+}
+
+.nino-modal-medium {
+    max-width: 600px;
+}
+
+.nino-modal-large {
+    max-width: 800px;
+}
+
+/* === Notification système === */
+.nino-notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+}
+
+.nino-notification {
+    padding: 15px;
+    border-radius: 4px;
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.nino-notification.success {
+    border-left: 3px solid #4CAF50;
+}
+
+.nino-notification.info {
+    border-left: 3px solid #2196F3;
+}
+
+.nino-notification.warning {
+    border-left: 3px solid #FF9800;
+}
+
+.nino-notification.error {
+    border-left: 3px solid #f44336;
+}
+
+.nino-notification-icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    padding-top: 2px;
+}
+
+.nino-notification-content {
+    flex-grow: 1;
+}
+
+.nino-notification-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.nino-notification-message {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.nino-notification-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* === Page de lecture vidéo === */
+.nino-video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+}
+
+.nino-video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: 20px;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.nino-video-container:hover .nino-video-controls {
+    opacity: 1;
+}
+
+.nino-progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 15px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.nino-progress-fill {
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: 2px;
+    position: relative;
+}
+
+.nino-progress-handle {
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.nino-control-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nino-control-left, .nino-control-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nino-control-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.nino-volume-container {
+    display: flex;
+    align-items: center;
+    width: 100px;
+    position: relative;
+}
+
+.nino-volume-slider {
+    width: 80px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.nino-volume-fill {
+    height: 100%;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.nino-time-display {
+    font-size: 14px;
+    color: white;
+}
+
+.nino-video-title-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.nino-video-container:hover .nino-video-title-bar {
+    opacity: 1;
+}
+
+.nino-video-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+/* === Badge de nouveauté === */
+.nino-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.nino-badge-new {
+    background-color: var(--accent);
+    color: white;
+}
+
+.nino-badge-popular {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.nino-badge-4k {
+    background-color: #FF9800;
+    color: white;
+}
+
+.nino-badge-hdr {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* === Page de profil === */
+.nino-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+}
+
+.nino-profile-header {
+    margin-bottom: 30px;
+}
+
+.nino-profile-cover {
+    height: 240px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    margin-bottom: -60px;
+}
+
+.nino-profile-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8));
+    border-radius: 8px;
+}
+
+.nino-profile-user {
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.nino-profile-avatar-container {
+    margin-right: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.nino-profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    border: 4px solid var(--bg-dark);
+    object-fit: cover;
+}
+
+.nino-profile-info {
+    flex: 1;
+}
+
+.nino-profile-name {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.nino-profile-email {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.nino-profile-date {
+    font-size: 13px;
+    opacity: 0.6;
+    margin-bottom: 15px;
+}
+
+.nino-profile-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.nino-profile-stat {
+    text-align: center;
+}
+
+.nino-profile-stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.nino-profile-stat-label {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-profile-actions {
+    margin-left: 20px;
+}
+
+.nino-profile-content {
+    background-color: rgba(30, 30, 30, 0.6);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.nino-profile-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+.nino-profile-tab {
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    opacity: 0.7;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.nino-profile-tab:hover {
+    opacity: 1;
+}
+
+.nino-profile-tab.active {
+    opacity: 1;
+    color: var(--accent);
+}
+
+.nino-profile-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--accent);
+}
+
+.nino-profile-tab-content {
+    display: none;
+    padding: 0 30px 30px;
+}
+
+.nino-profile-tab-content.active {
+    display: block;
+}
+
+.nino-profile-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Timeline d'activité */
+.nino-activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nino-activity-item {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.nino-activity-icon {
+    width: 50px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.nino-activity-watch {
+    background-color: #1976D2;
+}
+
+.nino-activity-favorite {
+    background-color: #E91E63;
+}
+
+.nino-activity-review {
+    background-color: #FFC107;
+}
+
+.nino-activity-content {
+    flex: 1;
+    display: flex;
+    padding: 15px;
+}
+
+.nino-activity-details {
+    flex: 1;
+}
+
+.nino-activity-time {
+    font-size: 12px;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.nino-activity-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.nino-activity-link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.nino-activity-link:hover {
+    text-decoration: underline;
+}
+
+.nino-activity-progress {
+    margin-top: 10px;
+}
+
+.nino-activity-rating {
+    color: #FFC107;
+    margin-bottom: 10px;
+}
+
+.nino-rating-value {
+    color: var(--text-dark);
+    margin-left: 10px;
+}
+
+.nino-activity-comment {
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.nino-activity-thumbnail {
+    width: 100px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-left: 15px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nino-activity-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* État vide */
+.nino-profile-empty-state {
+    text-align: center;
+    padding: 50px 0;
+    opacity: 0.7;
+}
+
+.nino-profile-empty-state i {
+    font-size: 40px;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.5;
+}
+
+.nino-profile-empty-state p {
+    margin-bottom: 20px;
+}
+
+/* Formulaire des paramètres */
+.nino-settings-form {
+    max-width: 600px;
+}
+
+.nino-form-group {
+    margin-bottom: 20px;
+}
+
+.nino-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.nino-form-control {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--text-dark);
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.nino-form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nino-avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nino-avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    object-fit: cover;
+}
+
+.nino-avatar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nino-form-actions {
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .nino-profile-user {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .nino-profile-avatar-container {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .nino-profile-stats {
+        justify-content: center;
+    }
+    
+    .nino-profile-actions {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    
+    .nino-activity-content {
+        flex-direction: column;
+    }
+    
+    .nino-activity-thumbnail {
+        margin-left: 0;
+        margin-top: 15px;
+        width: 100%;
+        height: 120px;
+    }
+}
+
+/* === Page de favoris === */
+.nino-favorites-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+}
+
+.nino-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.nino-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.nino-page-controls {
+    display: flex;
+    gap: 15px;
+}
+
+/* Filtres et tri */
+.nino-filter-dropdown,
+.nino-sort-dropdown {
+    position: relative;
+}
+
+.nino-filter-toggle,
+.nino-sort-toggle {
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: var(--text-dark);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nino-filter-toggle:hover,
+.nino-sort-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nino-filter-menu,
+.nino-sort-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    background-color: var(--bg-dark);
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    padding: 15px;
+    margin-top: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.nino-filter-menu.active,
+.nino-sort-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nino-filter-group {
+    margin-bottom: 15px;
+}
+
+.nino-filter-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.nino-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nino-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.nino-filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.nino-btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.nino-btn-link {
+    background: none;
+    border: none;
+    color: var(--accent);
+    text-decoration: underline;
+    padding: 0;
+}
+
+.nino-sort-menu {
+    width: 180px;
+}
+
+.nino-sort-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+}
+
+.nino-sort-option:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nino-sort-option.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+}
+
+/* Grille des favoris */
+.nino-favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.nino-favorite-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.nino-favorite-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nino-favorite-thumbnail {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.nino-favorite-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.nino-favorite-card:hover .nino-favorite-thumbnail img {
+    transform: scale(1.05);
+}
+
+.nino-favorite-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nino-favorite-card:hover .nino-favorite-overlay {
+    opacity: 1;
+}
+
+.nino-favorite-play {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-favorite-play:hover {
+    transform: scale(1.1);
+    background-color: var(--accent);
+}
+
+.nino-favorite-type {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.nino-favorite-content {
+    padding: 15px;
+    flex: 1;
+}
+
+.nino-favorite-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.nino-favorite-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.nino-favorite-rating {
+    color: #FFC107;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.nino-favorite-rating .nino-rating-value {
+    color: var(--text-dark);
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.nino-favorite-date {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.nino-favorite-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 10px;
+}
+
+.nino-favorite-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-favorite-action:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--accent);
+}
+
+/* Animation de suppression */
+.nino-favorite-card.removing {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+/* État vide */
+.nino-empty-state {
+    text-align: center;
+    padding: 80px 0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.nino-empty-state i {
+    font-size: 50px;
+    color: var(--accent);
+    opacity: 0.5;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.nino-empty-state h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.nino-empty-state p {
+    margin-bottom: 30px;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .nino-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .nino-favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .nino-favorite-actions {
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 480px) {
+    .nino-page-controls {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .nino-filter-dropdown,
+    .nino-sort-dropdown {
+        flex: 1;
+    }
+    
+    .nino-favorites-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === Page d'historique === */
+.nino-history-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+}
+
+.nino-history-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.nino-history-filters {
+    display: flex;
+    gap: 10px;
+}
+
+.nino-filter-btn {
+    padding: 6px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-filter-btn.active {
+    background-color: var(--accent);
+}
+
+.nino-filter-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nino-clear-history {
+    padding: 6px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-clear-history:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nino-history-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nino-history-item {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 200px;
+}
+
+.nino-history-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nino-history-poster {
+    width: 300px;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.nino-history-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.nino-history-item:hover .nino-history-poster img {
+    transform: scale(1.05);
+}
+
+.nino-history-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nino-history-item:hover .nino-history-overlay {
+    opacity: 1;
+}
+
+.nino-history-play,
+.nino-history-info,
+.nino-history-remove {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-history-play {
+    background-color: var(--accent);
+}
+
+.nino-history-play:hover {
+    transform: scale(1.1);
+    background-color: var(--accent);
+}
+
+.nino-history-info:hover,
+.nino-history-remove:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.nino-history-type {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.nino-history-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nino-history-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.nino-history-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.nino-history-genre {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 15px;
+}
+
+.nino-history-synopsis {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.nino-history-date {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: auto;
+}
+
+.nino-history-progress {
+    margin-bottom: 15px;
+}
+
+.nino-progress-bar {
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.nino-progress-fill {
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.nino-progress-text {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-history-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.nino-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nino-empty-state i {
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.nino-empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.nino-empty-state p {
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+/* Animation de l'élément supprimé */
+.nino-history-item.removing {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+@media (max-width: 768px) {
+    .nino-history-item {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .nino-history-poster {
+        width: 100%;
+        height: 180px;
+    }
+    
+    .nino-history-details {
+        padding: 15px;
+    }
+    
+    .nino-history-title {
+        font-size: 18px;
+    }
+    
+    .nino-history-synopsis {
+        -webkit-line-clamp: 2;
+    }
+    
+    .nino-history-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+/* === Page de paramètres du compte === */
+.nino-account-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+}
+
+.nino-account-content {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.nino-account-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.nino-account-main {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.nino-account-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.nino-account-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nino-account-username {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.nino-account-email {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-account-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nino-account-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    color: var(--text-dark);
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-account-tab:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nino-account-tab.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+}
+
+.nino-account-tab i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.nino-account-tab-content {
+    display: none;
+}
+
+.nino-account-tab-content.active {
+    display: block;
+}
+
+.nino-account-section-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.nino-account-section-description {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
+
+.nino-account-subsection-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 30px 0 15px;
+}
+
+.nino-account-form {
+    max-width: 100%;
+}
+
+.nino-form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.nino-form-group {
+    flex: 1;
+}
+
+.nino-form-group-full {
+    width: 100%;
+}
+
+.nino-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nino-form-help {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+.nino-form-help ul {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+.nino-form-help li {
+    margin-bottom: 3px;
+}
+
+.nino-form-actions {
+    margin-top: 30px;
+}
+
+/* Commutateurs et toggles */
+.nino-toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.nino-toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+}
+
+.nino-toggle-info {
+    flex: 1;
+}
+
+.nino-toggle-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.nino-toggle-description {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.nino-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.nino-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.nino-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .nino-switch-slider {
+    background-color: var(--accent);
+}
+
+input:checked + .nino-switch-slider:before {
+    transform: translateX(24px);
+}
+
+/* Sessions */
+.nino-security-sessions {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+}
+
+.nino-session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.nino-session-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+.nino-session-item.current {
+    border-left: 3px solid var(--accent);
+}
+
+.nino-session-info {
+    flex: 1;
+}
+
+.nino-session-device {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nino-session-device i {
+    opacity: 0.7;
+}
+
+.nino-session-current {
+    font-size: 11px;
+    background-color: var(--accent);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+
+.nino-session-details {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.nino-session-details i {
+    margin-right: 5px;
+}
+
+.nino-btn-small {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.nino-btn-danger {
+    background-color: #F44336;
+    color: white;
+}
+
+.nino-btn-block {
+    display: block;
+    width: 100%;
+}
+
+.nino-btn-danger:hover {
+    background-color: #D32F2F;
+}
+
+/* Sections en placeholder */
+.nino-account-placeholder {
+    text-align: center;
+    padding: 50px 0;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+}
+
+.nino-account-placeholder i {
+    font-size: 40px;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+.nino-account-placeholder p {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+@media (max-width: 992px) {
+    .nino-account-content {
+        flex-direction: column;
+    }
+    
+    .nino-account-sidebar {
+        width: 100%;
+    }
+    
+    .nino-account-tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .nino-account-tab {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nino-form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nino-session-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .nino-toggle-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .nino-toggle-item .nino-switch {
+        align-self: flex-start;
+    }
+}
+
+/* === Page "Ma liste" === */
+.nino-watchlist-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+}
+
+.nino-page-subtitle {
+    margin-top: 5px;
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.nino-watchlist-content {
+    margin-top: 30px;
+}
+
+.nino-watchlist-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nino-watchlist-item {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 200px;
+}
+
+.nino-watchlist-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nino-watchlist-poster {
+    width: 300px;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.nino-watchlist-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.nino-watchlist-item:hover .nino-watchlist-poster img {
+    transform: scale(1.05);
+}
+
+.nino-watchlist-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nino-watchlist-item:hover .nino-watchlist-overlay {
+    opacity: 1;
+}
+
+.nino-watchlist-play,
+.nino-watchlist-info,
+.nino-watchlist-remove {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-watchlist-play {
+    background-color: var(--accent);
+}
+
+.nino-watchlist-play:hover {
+    transform: scale(1.1);
+    background-color: var(--accent);
+}
+
+.nino-watchlist-info:hover,
+.nino-watchlist-remove:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.nino-watchlist-type {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.nino-watchlist-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nino-watchlist-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.nino-watchlist-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.nino-watchlist-genre {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 15px;
+}
+
+.nino-watchlist-synopsis {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.nino-watchlist-date {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: auto;
+}
+
+.nino-watchlist-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* États de la modale */
+.nino-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.nino-modal-content {
+    width: 90%;
+    max-width: 500px;
+    background-color: var(--bg-dark);
+    border-radius: 8px;
+    z-index: 9991;
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.nino-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nino-modal-content.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.nino-modal-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nino-modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.nino-modal-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.nino-modal-body {
+    padding: 20px;
+}
+
+.nino-modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animation de l'élément supprimé */
+.nino-watchlist-item.removing {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+@media (max-width: 768px) {
+    .nino-watchlist-item {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .nino-watchlist-poster {
+        width: 100%;
+        height: 180px;
+    }
+    
+    .nino-watchlist-details {
+        padding: 15px;
+    }
+    
+    .nino-watchlist-title {
+        font-size: 18px;
+    }
+    
+    .nino-watchlist-synopsis {
+        -webkit-line-clamp: 2;
+    }
+} 

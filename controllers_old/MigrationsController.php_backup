@@ -1,0 +1,418 @@
+<?php
+
+namespace App\Controllers\admin;
+
+use App\Controllers\Controller;
+use App\Models\TableManager;
+use App\Services\TableVersionService;
+use Exception;
+use PDO;
+
+echo 'test';
+
+class MigrationsController extends Controller
+{
+    private $tableManager;
+    private $tableVersionService;
+    private $backupDir;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tableManager = new TableManager();
+        $this->tableVersionService = new TableVersionService();
+        $this->backupDir = __DIR__ . '/../backend/database/backups';
+
+        // Créer le répertoire de sauvegarde s'il n'existe pas
+        if (!is_dir($this->backupDir)) {
+            mkdir($this->backupDir, 0755, true);
+        }
+    }
+
+    /**
+     * Affiche la page de gestion des migrations
+     */
+    public function index()
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            // Récupérer les informations sur les tables
+            $tableStatus = $this->getTablesStatus();
+            
+            // Calculer les statistiques
+            $stats = [
+                'total' => count($tableStatus),
+                'installed' => 0,
+                'needsUpdate' => 0,
+                'notInstalled' => 0
+            ];
+
+            foreach ($tableStatus as $table) {
+                if (!$table['exists']) {
+                    $stats['notInstalled']++;
+                } elseif ($table['needs_update'] ?? false) {
+                    $stats['needsUpdate']++;
+                } else {
+                    $stats['installed']++;
+                }
+            }
+
+            // Charger la vue
+            echo view('admin/migrations', [
+                'tableStatus' => $tableStatus,
+                'stats' => $stats
+            ]);
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de la récupération des informations sur les tables : " . $e->getMessage();
+            redirect('admin');
+        }
+    }
+
+    /**
+     * Récupère le statut de toutes les tables gérées
+     */
+    private function getTablesStatus()
+    {
+        $result = [];
+        $tables = $this->tableManager->getManagedTables();
+        $db = $this->getDbConnection();
+
+        // Récupérer toutes les tables dans la base de données
+        $stmt = $db->query("SHOW TABLES");
+        $existingTables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($tables as $table) {
+            $tableName = $table['name'];
+            $tableExists = in_array($tableName, $existingTables);
+            
+            // Récupérer la version actuelle si la table existe
+            $currentVersion = null;
+            if ($tableExists) {
+                $currentVersion = $this->tableVersionService->getTableVersion($tableName);
+            }
+            
+            $result[$tableName] = [
+                'exists' => $tableExists,
+                'current_version' => $currentVersion,
+                'latest_version' => $table['version'],
+                'needs_update' => $tableExists && $currentVersion !== $table['version'],
+                'module' => $table['module'] ?? 'Core',
+                'description' => $table['description'] ?? 'Table du système'
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sauvegarde une table spécifique
+     */
+    public function backup($tableName)
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            // Vérifier que la table existe
+            $db = $this->getDbConnection();
+            $stmt = $db->prepare("SHOW TABLES LIKE :table");
+            $stmt->execute([':table' => $tableName]);
+            
+            if ($stmt->rowCount() === 0) {
+                $_SESSION['error'] = "La table {$tableName} n'existe pas.";
+                redirect('admin/migrations');
+            }
+
+            // Générer le fichier de sauvegarde
+            $timestamp = date('Y-m-d_H-i-s');
+            $filename = "{$tableName}_{$timestamp}.sql";
+            $filePath = $this->backupDir . '/' . $filename;
+
+            // Récupérer la structure de la table
+            $stmt = $db->prepare("SHOW CREATE TABLE `{$tableName}`");
+            $stmt->execute();
+            $createTableSql = $stmt->fetch(PDO::FETCH_ASSOC)['Create Table'];
+
+            // Récupérer les données de la table
+            $stmt = $db->prepare("SELECT * FROM `{$tableName}`");
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Créer le fichier SQL
+            $sql = "-- Sauvegarde de la table {$tableName}\n";
+            $sql .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
+            $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
+            $sql .= "DROP TABLE IF EXISTS `{$tableName}`;\n\n";
+            $sql .= $createTableSql . ";\n\n";
+
+            if (!empty($rows)) {
+                $sql .= "-- Données de la table\n";
+                $sql .= "INSERT INTO `{$tableName}` VALUES\n";
+
+                $rowsCount = count($rows);
+                foreach ($rows as $i => $row) {
+                    $values = array_map(function($value) use ($db) {
+                        if ($value === null) {
+                            return 'NULL';
+                        } else {
+                            return $db->quote($value);
+                        }
+                    }, array_values($row));
+
+                    $sql .= "(" . implode(", ", $values) . ")";
+                    $sql .= ($i < $rowsCount - 1) ? ",\n" : ";\n";
+                }
+            }
+
+            $sql .= "\nSET FOREIGN_KEY_CHECKS = 1;\n";
+
+            // Enregistrer le fichier
+            file_put_contents($filePath, $sql);
+
+            $_SESSION['success'] = "La table {$tableName} a été sauvegardée avec succès.";
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de la sauvegarde de la table {$tableName} : " . $e->getMessage();
+        }
+
+        redirect('admin/migrations');
+    }
+
+    /**
+     * Met à jour une table spécifique
+     */
+    public function update($tableName)
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            // Vérifier que la table est gérée par TableManager
+            $managedTables = $this->tableManager->getManagedTables();
+            $tableFound = false;
+            
+            foreach ($managedTables as $table) {
+                if ($table['name'] === $tableName) {
+                    $tableFound = true;
+                    break;
+                }
+            }
+            
+            if (!$tableFound) {
+                $_SESSION['error'] = "La table {$tableName} n'est pas gérée par le système.";
+                redirect('admin/migrations');
+            }
+
+            // Effectuer la sauvegarde avant la mise à jour
+            $this->backup($tableName);
+
+            // Mettre à jour la table
+            $result = $this->tableManager->updateTable($tableName);
+            
+            if ($result) {
+                $_SESSION['success'] = "La table {$tableName} a été mise à jour avec succès.";
+            } else {
+                $_SESSION['warning'] = "La table {$tableName} est déjà à jour.";
+            }
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de la mise à jour de la table {$tableName} : " . $e->getMessage();
+        }
+
+        redirect('admin/migrations');
+    }
+
+    /**
+     * Met à jour toutes les tables qui ont besoin d'être mises à jour
+     */
+    public function updateAll()
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            $tableStatus = $this->getTablesStatus();
+            $updatedTables = [];
+            $errorTables = [];
+            $installedTables = [];
+
+            foreach ($tableStatus as $tableName => $table) {
+                try {
+                    if (!$table['exists']) {
+                        // Installer la table si elle n'existe pas
+                        $this->tableManager->createTable($tableName);
+                        $installedTables[] = $tableName;
+                    } else if ($table['needs_update']) {
+                        // Faire une sauvegarde avant la mise à jour
+                        $this->backup($tableName);
+                        
+                        // Mettre à jour la table
+                        $result = $this->tableManager->updateTable($tableName);
+                        if ($result) {
+                            $updatedTables[] = $tableName;
+                        }
+                    }
+                } catch (Exception $e) {
+                    $errorTables[$tableName] = $e->getMessage();
+                }
+            }
+
+            // Afficher les messages de résultat
+            if (!empty($installedTables)) {
+                $_SESSION['success'] = count($installedTables) . " table(s) installée(s) avec succès : " . implode(", ", $installedTables);
+            }
+            
+            if (!empty($updatedTables)) {
+                if (isset($_SESSION['success'])) {
+                    $_SESSION['success'] .= "<br>" . count($updatedTables) . " table(s) mise(s) à jour avec succès : " . implode(", ", $updatedTables);
+                } else {
+                    $_SESSION['success'] = count($updatedTables) . " table(s) mise(s) à jour avec succès : " . implode(", ", $updatedTables);
+                }
+            }
+            
+            if (!empty($errorTables)) {
+                $_SESSION['errors'] = [];
+                foreach ($errorTables as $table => $error) {
+                    $_SESSION['errors'][] = "Erreur pour la table {$table} : {$error}";
+                }
+            }
+            
+            if (empty($installedTables) && empty($updatedTables) && empty($errorTables)) {
+                $_SESSION['warning'] = "Toutes les tables sont déjà à jour.";
+            }
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de la mise à jour des tables : " . $e->getMessage();
+        }
+
+        redirect('admin/migrations');
+    }
+
+    /**
+     * Installe une nouvelle table
+     */
+    public function install($tableName)
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            // Vérifier que la table est gérée par TableManager
+            $managedTables = $this->tableManager->getManagedTables();
+            $tableFound = false;
+            
+            foreach ($managedTables as $table) {
+                if ($table['name'] === $tableName) {
+                    $tableFound = true;
+                    break;
+                }
+            }
+            
+            if (!$tableFound) {
+                $_SESSION['error'] = "La table {$tableName} n'est pas gérée par le système.";
+                redirect('admin/migrations');
+            }
+
+            // Installer la table
+            $result = $this->tableManager->createTable($tableName);
+            
+            if ($result) {
+                $_SESSION['success'] = "La table {$tableName} a été installée avec succès.";
+            } else {
+                $_SESSION['warning'] = "La table {$tableName} existe déjà.";
+            }
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de l'installation de la table {$tableName} : " . $e->getMessage();
+        }
+
+        redirect('admin/migrations');
+    }
+
+    /**
+     * Affiche l'historique des versions
+     */
+    public function history()
+    {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            redirect('admin/login');
+        }
+
+        try {
+            $db = $this->getDbConnection();
+            
+            // Récupérer les filtres
+            $selectedTable = $_GET['table'] ?? null;
+            $dateFrom = $_GET['date_from'] ?? null;
+            $dateTo = $_GET['date_to'] ?? null;
+            
+            // Construire la requête SQL
+            $sql = "SELECT * FROM luma_versions WHERE 1=1";
+            $params = [];
+            
+            if ($selectedTable) {
+                $sql .= " AND table_name = :table";
+                $params[':table'] = $selectedTable;
+            }
+            
+            if ($dateFrom) {
+                $sql .= " AND created_at >= :date_from";
+                $params[':date_from'] = $dateFrom . ' 00:00:00';
+            }
+            
+            if ($dateTo) {
+                $sql .= " AND created_at <= :date_to";
+                $params[':date_to'] = $dateTo . ' 23:59:59';
+            }
+            
+            $sql .= " ORDER BY created_at DESC";
+            
+            // Exécuter la requête
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Récupérer toutes les tables pour le filtre
+            $tablesStmt = $db->query("SELECT DISTINCT table_name FROM luma_versions ORDER BY table_name");
+            $availableTables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Charger la vue
+            $this->render('admin/migration_history', [
+                'history' => $history,
+                'availableTables' => $availableTables,
+                'selectedTable' => $selectedTable,
+                'dateFrom' => $dateFrom,
+                'dateTo' => $dateTo
+            ]);
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Erreur lors de la récupération de l'historique des versions : " . $e->getMessage();
+            redirect('admin/migrations');
+        }
+    }
+
+    /**
+     * Récupère une connexion à la base de données
+     */
+    private function getDbConnection()
+    {
+        // Récupérer la configuration
+        $config = require __DIR__ . '/../../../config/database.php';
+        
+        // Créer la connexion PDO
+        $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']};charset=utf8mb4";
+        return new PDO($dsn, $config['username'], $config['password'], [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]);
+    }
+} 

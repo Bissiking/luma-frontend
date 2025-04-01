@@ -1,0 +1,1758 @@
+/* Garantir que tous les éléments visibles s'adaptent au thème sombre */
+.dark * {
+    border-color: var(--border-color);
+}
+
+.dark {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Conteneur admin */
+.admin-container {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Sidebar */
+.admin-sidebar {
+    background-color: var(--bg-card);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--border-color);
+}
+
+.dark .admin-sidebar {
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-link {
+    color: var(--text-primary);
+}
+
+.sidebar-link:hover {
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+}
+
+.sidebar-link.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Content */
+.admin-content {
+    background-color: var(--bg-primary);
+}
+
+/* Navbar */
+.admin-navbar {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+}
+
+.dropdown-toggle:hover {
+    background-color: var(--bg-hover);
+}
+
+.dropdown-menu {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Page header */
+.page-header {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+}
+
+.page-header::before {
+    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+}
+
+.page-title {
+    color: var(--text-primary);
+}
+
+.welcome-message {
+    color: var(--text-secondary);
+}
+
+.breadcrumb-item a {
+    color: var(--primary);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+/* Cartes de statistiques */
+.stat-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.stat-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.stat-card-value {
+    color: var(--text-primary);
+}
+
+.stat-card-label {
+    color: var(--text-secondary);
+}
+
+/* Cartes graphiques */
+.chart-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.chart-card-title {
+    color: var(--text-primary);
+}
+
+/* Cartes du tableau de bord */
+.dashboard-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.dashboard-card-title {
+    color: var(--text-primary);
+}
+
+/* Boutons */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Activités */
+.activity-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.activity-card-title {
+    color: var(--text-primary);
+}
+
+.activity-icon {
+    background-color: var(--bg-secondary);
+}
+
+.activity-login {
+    color: var(--primary);
+}
+
+.activity-video {
+    color: var(--success);
+}
+
+.activity-ticket {
+    color: var(--warning);
+}
+
+.activity-agent {
+    color: var(--info);
+}
+
+.activity-description {
+    color: var(--text-primary);
+}
+
+.activity-time {
+    color: var(--text-secondary);
+}
+
+/* Tables */
+.dashboard-table th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.dashboard-table tr {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.dashboard-table tbody tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.admin-table th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.admin-table tr {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.admin-table tbody tr:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Badges */
+.status-badge {
+    border: 1px solid var(--border-color);
+}
+
+/* Accès rapide */
+.quick-access-item {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.quick-access-item:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.quick-access-icon {
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+}
+
+.quick-access-content h3 {
+    color: var(--text-primary);
+}
+
+.quick-access-content p {
+    color: var(--text-secondary);
+}
+
+/* Liste vidéos */
+.video-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+.video-title {
+    color: var(--text-primary);
+}
+
+.video-meta {
+    color: var(--text-secondary);
+}
+
+/* Services */
+.service-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .service-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 1rem;
+}
+
+.dark .service-icon {
+    background-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.service-title {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.service-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Agents */
+.agent-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.agent-name {
+    color: var(--text-primary);
+}
+
+.agent-meta {
+    color: var(--text-secondary);
+}
+
+.progress-bar {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+/* État vide */
+.empty-state {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+}
+
+/* Modification des barres de progression */
+.metric-value {
+    color: var(--text-primary);
+}
+
+.metric-label {
+    color: var(--text-secondary);
+}
+
+/* Correction des métriques pour le thème sombre */
+.dark .progress {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .metric[data-value="high"] .progress {
+    background-color: rgba(231, 76, 60, 0.3);
+}
+
+.dark .metric[data-value="medium"] .progress {
+    background-color: rgba(243, 156, 18, 0.3);
+}
+
+.dark .metric[data-value="low"] .progress {
+    background-color: rgba(46, 204, 113, 0.3);
+}
+
+/* Styles pour les éléments spécifiques du tableau de bord visible sur la capture d'écran */
+/* Widget icons */
+.widget-icon {
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.widget-icon.videos {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.widget-icon.tickets {
+    background-color: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+}
+
+.widget-icon.agents {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.widget-icon.notifications {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+/* Dashboard widgets */
+.dashboard-widget {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.dark .dashboard-widget {
+    background-color: var(--bg-card);
+}
+
+.dashboard-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.widget-content {
+    flex: 1;
+}
+
+.widget-title {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+
+.widget-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Sections du tableau de bord */
+.dashboard-section {
+    margin-bottom: 30px;
+}
+
+.dashboard-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.action-item {
+    flex: 1;
+    min-width: 250px;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .action-item {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.action-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 18px;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.action-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Listes vidéo récentes */
+.video-list-section {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.dark .video-list-section {
+    background-color: var(--bg-card);
+}
+
+.video-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.video-list-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.video-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.video-item:last-child {
+    border-bottom: none;
+}
+
+.video-thumbnail {
+    width: 80px;
+    height: 45px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 15px;
+    position: relative;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-duration {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+.video-info {
+    flex: 1;
+}
+
+.video-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.video-time {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Bouton "Voir tout" */
+.view-all-btn {
+    display: inline-block;
+    padding: 6px 15px;
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.view-all-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Adaptation pour le mode sombre */
+.dark .widget-icon.videos {
+    background-color: rgba(46, 204, 113, 0.3);
+}
+
+.dark .widget-icon.tickets {
+    background-color: rgba(243, 156, 18, 0.3);
+}
+
+.dark .widget-icon.agents {
+    background-color: rgba(52, 152, 219, 0.3);
+}
+
+.dark .widget-icon.notifications {
+    background-color: rgba(231, 76, 60, 0.3);
+}
+
+/* Correction du menu de l'en-tête */
+.user-menu {
+    position: relative;
+}
+
+.user-dropdown.hidden {
+    display: none;
+}
+
+/* Correction des actions rapides */
+.action-item {
+    text-decoration: none !important;
+    color: var(--text-primary);
+}
+
+/* Adaptation globale pour le thème sombre */
+.dark body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.dark .header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dark .nav-link {
+    color: var(--text-primary);
+}
+
+.dark .nav-link:hover, 
+.dark .nav-link.active {
+    color: var(--primary);
+}
+
+.dark .user-button {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.dark .user-button:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Correction des autres blocs pour le thème sombre */
+.dark .stats-container, 
+.dark .actions-row, 
+.dark .video-list-section {
+    background-color: transparent;
+}
+
+.dark .dashboard-section-title {
+    color: var(--text-primary);
+}
+
+.dark .video-list-section {
+    background-color: var(--bg-card);
+}
+
+.dark .video-item {
+    border-bottom-color: var(--border-color);
+}
+
+.dark .video-title {
+    color: var(--text-primary);
+}
+
+.dark .video-time {
+    color: var(--text-secondary);
+}
+
+/* Adaptation des tableaux pour le thème sombre */
+.dark table {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark table th {
+    background-color: var(--bg-secondary);
+}
+
+.dark table td {
+    border-color: var(--border-color);
+}
+
+/* Styles supplémentaires pour l'en-tête du site */
+.header {
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-content {
+    background-color: var(--bg-primary);
+    min-height: calc(100vh - 70px);
+    transition: background-color 0.3s ease;
+}
+
+.main-content-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Adaptation pour la sidebar */
+.admin-body .header {
+    display: none;
+}
+
+/* Correction pour tous les boutons */
+.btn {
+    text-decoration: none !important;
+}
+
+/* Correction des états de focus */
+a:focus, button:focus, input:focus {
+    outline-color: var(--primary);
+}
+
+/* Styles spécifiques pour le menu utilisateur */
+.theme-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-links {
+    padding: 5px 0;
+}
+
+.user-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.user-link:hover {
+    background-color: var(--bg-hover);
+    color: var(--primary);
+}
+
+.user-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-fullname {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.user-email {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 5px 0;
+}
+
+/* Correction des marges pour les sections du tableau de bord */
+.dashboard-section {
+    margin-bottom: 40px;
+}
+
+/* Correction pour la visualisation des vidéos */
+.video-thumbnail {
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+}
+
+/* Styles pour les petites cartes à droite */
+.small-cards {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.dark .small-cards {
+    background-color: var(--bg-card);
+}
+
+/* Règle globale pour les liens */
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* Overrides pour les items d'action */
+.action-item,
+.action-item:hover,
+.action-item:active,
+.action-item:focus,
+.action-item:visited {
+    text-decoration: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Renforcement des styles pour les cartes et sections */
+.dashboard-widget,
+.action-item,
+.video-list-section,
+.page-header,
+.dashboard-card,
+.stat-card,
+.chart-card,
+.quick-access-item,
+.empty-state,
+#user-menu-dropdown,
+.video-item {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .dashboard-widget,
+.dark .action-item,
+.dark .video-list-section,
+.dark .page-header,
+.dark .dashboard-card,
+.dark .stat-card,
+.dark .chart-card,
+.dark .quick-access-item,
+.dark .empty-state,
+.dark #user-menu-dropdown {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+/* Renforcement des styles spécifiques à la navigation */
+.dark .nav-link {
+    color: var(--text-primary);
+}
+
+.dark .nav-link:hover, 
+.dark .nav-link.active {
+    color: var(--primary);
+}
+
+/* Style pour les boutons d'action sur fond sombre */
+.dark .btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.dark .btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.dark .btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.dark .btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Style pour les titres des widgets */
+.dark .dashboard-section-title,
+.dark .page-title,
+.dark .widget-title,
+.dark .action-title,
+.dark .video-list-title {
+    color: var(--text-primary);
+}
+
+.dark .welcome-message,
+.dark .widget-value,
+.dark .action-description,
+.dark .video-time {
+    color: var(--text-secondary);
+}
+
+/* Correction pour les éléments du tableau */
+.dark table,
+.dark th,
+.dark td {
+    border-color: var(--border-color);
+}
+
+.dark th {
+    background-color: var(--bg-secondary);
+}
+
+/* Style pour garantir la lisibilité des graphiques */
+.dark .chart-container canvas {
+    filter: brightness(0.9);
+}
+
+/* Style pour garantir la visibilité des icônes */
+.dark .fas,
+.dark .fab,
+.dark .far {
+    color: inherit;
+}
+
+/* Correction pour le menu utilisateur et ses options */
+.dark .theme-switch {
+    border-color: var(--text-secondary);
+}
+
+.dark .theme-switch .slider {
+    background-color: var(--bg-secondary);
+}
+
+/* Styles pour la section Agents de monitoring */
+.agent-monitoring-container {
+    background-color: var(--bg-primary);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.dark .agent-monitoring-container {
+    background-color: var(--bg-card);
+}
+
+.agent-monitoring-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agent-monitoring-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.agent-monitoring-description {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.monitoring-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.monitoring-feature-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.monitoring-feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+}
+
+.dark .feature-icon {
+    background-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.agent-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.agent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.agent-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-indicator.online {
+    background-color: #10B981;
+}
+
+.status-indicator.warning {
+    background-color: #F59E0B;
+}
+
+.status-indicator.offline {
+    background-color: #EF4444;
+}
+
+.status-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-text.online {
+    color: #10B981;
+}
+
+.status-text.warning {
+    color: #F59E0B;
+}
+
+.status-text.offline {
+    color: #EF4444;
+}
+
+.agent-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agent-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 20px;
+}
+
+.agent-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.agent-os {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.agent-metrics {
+    margin-top: 20px;
+}
+
+.metric {
+    margin-bottom: 15px;
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.metric-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    color: var(--text-secondary);
+}
+
+.metric-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.progress-container {
+    height: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-value {
+    position: absolute;
+    right: 0;
+    top: -18px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.progress-bar.low {
+    background-color: #10B981;
+}
+
+.progress-bar.medium {
+    background-color: #F59E0B;
+}
+
+.progress-bar.high {
+    background-color: #EF4444;
+}
+
+.details-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.details-button:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Styles pour le thème sombre */
+.dark .agent-monitoring-container,
+.dark .agent-monitoring-description,
+.dark .monitoring-feature-card,
+.dark .agent-card {
+    background-color: var(--bg-card);
+}
+
+.dark .agent-monitoring-title {
+    color: var(--text-primary);
+}
+
+.dark .agent-monitoring-description,
+.dark .feature-description,
+.dark .metric-name,
+.dark .progress-value {
+    color: var(--text-secondary);
+}
+
+.dark .progress-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .feature-icon,
+.dark .agent-icon {
+    background-color: var(--accent-primary);
+}
+
+.dark .monitoring-feature-card,
+.dark .agent-card {
+    border-color: var(--border-color);
+}
+
+.dark .details-button {
+    background-color: var(--accent-primary);
+}
+
+.dark .details-button:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Styles pour gérer le bouton */
+.manage-agents-btn {
+    background-color: transparent;
+    color: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.manage-agents-btn:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.dark .manage-agents-btn {
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.dark .manage-agents-btn:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+/* Amélioration du contraste des textes en mode sombre */
+.dark .text-secondary,
+.dark .widget-title,
+.dark .action-description,
+.dark .feature-description,
+.dark .metric-name,
+.dark .agent-os,
+.dark .user-email {
+    color: var(--text-secondary);
+    opacity: 0.9; /* Augmenter l'opacité pour un meilleur contraste */
+}
+
+/* Ajustement des couleurs de fond pour le thème sombre */
+.dark .bg-secondary-light {
+    background-color: var(--bg-secondary);
+}
+
+/* Adapter les cartes et sections au thème */
+.dark .card,
+.dark .dashboard-widget,
+.dark .action-item,
+.dark .monitoring-feature-card,
+.dark .agent-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+/* Ajustement supplémentaire des boutons */
+.dark .btn-outline-primary {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.dark .btn-outline-primary:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+
+.dark #user-menu-dropdown {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+/* Corrections spécifiques pour les éléments de la page d'accueil */
+
+/* Sections Nos services et Fonctionnalités */
+.section-title {
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Cartes de services */
+.service-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .service-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 1rem;
+}
+
+.dark .service-icon {
+    background-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.service-title {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.service-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Correctifs spécifiques pour le menu utilisateur */
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.dark .user-dropdown {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+/* Ajustement des sections principales */
+.hero-section {
+    background-color: var(--primary);
+    color: white;
+    padding: 4rem 2rem;
+    background-image: linear-gradient(135deg, var(--primary), var(--secondary));
+    position: relative;
+    overflow: hidden;
+}
+
+.dark .hero-section {
+    background-image: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.hero-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+}
+
+.dark .hero-section:before {
+    background-image: radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+}
+
+/* Correctifs pour les fonctionnalités */
+.feature-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .feature-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Correctifs pour footer */
+footer {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.dark footer {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+/* Style pour le titre Luma sur la page d'accueil */
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation sur la page d'accueil */
+.orbit-animation {
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 300px;
+}
+
+.dark .orbit-animation {
+    opacity: 0.9; /* Légèrement plus visible en mode sombre */
+}
+
+.orbit-circle {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+.orbit-circle-1 {
+    width: 300px;
+    height: 300px;
+    top: 0;
+    left: 0;
+}
+
+.orbit-circle-2 {
+    width: 200px;
+    height: 200px;
+    top: 50px;
+    left: 50px;
+}
+
+.orbit-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.orbit-dot-1 {
+    top: 50px;
+    left: 150px;
+}
+
+.orbit-dot-2 {
+    top: 150px;
+    right: 50px;
+}
+
+.orbit-dot-3 {
+    bottom: 70px;
+    left: 120px;
+}
+
+/* Amélioration du contraste et de la visibilité en mode clair */
+.light .orbit-circle {
+    border-color: rgba(0, 0, 0, 0.2); /* Plus foncé en mode clair */
+}
+
+.light .orbit-dot {
+    background-color: var(--primary); /* Points bleus en mode clair */
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5); /* Effet brillant */
+}
+
+/* Ajustement des icônes pour les fonctionnalités */
+.feature-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Fonctionnalités - section spécifique */
+.functionalities-section {
+    background-color: var(--bg-secondary);
+    padding: 3rem 0;
+}
+
+.light .functionalities-section {
+    background-color: #f0f2f5; /* Gris clair pour meilleur contraste */
+}
+
+.dark .functionalities-section {
+    background-color: var(--bg-secondary);
+}
+
+/* Correction des icônes de fonctionnalités pour qu'elles soient visibles */
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    font-size: 26px;
+    /* Couleurs par défaut réutilisables */
+    background-color: #e6effd;
+    color: #2563eb;
+    border: 2px solid rgba(37, 99, 235, 0.1);
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+}
+
+/* Icons spécifiques avec couleurs distinctes */
+.feature-icon.security-icon {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.1);
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.1);
+}
+
+.feature-icon.sync-icon {
+    background-color: #d1fae5;
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+}
+
+.feature-icon.stats-icon {
+    background-color: #dbeafe;
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+}
+
+.feature-icon.notifications-icon {
+    background-color: #fef3c7;
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.1);
+    box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1);
+}
+
+/* Styles pour le mode sombre */
+.dark .feature-icon {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark .feature-icon.security-icon {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.2);
+}
+
+.dark .feature-icon.sync-icon {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border-color: rgba(52, 211, 153, 0.2);
+}
+
+.dark .feature-icon.stats-icon {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: rgba(96, 165, 250, 0.2);
+}
+
+.dark .feature-icon.notifications-icon {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+/* Styles pour les cartes de fonctionnalités */
+.feature-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.light .feature-card {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dark .feature-card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+} 

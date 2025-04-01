@@ -1,0 +1,20 @@
+.news-icon > .fa-bell {
+    animation: shake 5s ease-in-out infinite;
+}
+
+
+/* Class pour l'animation de secousse */
+.shake {
+    animation: shake 5s ease-in-out;
+}
+
+
+/* Animation de secousse */
+@keyframes shake {
+    0%, 90% { transform: translateX(0); } /* Période d'attente */
+    92% { transform: translateX(-1px) rotate(-5deg); }
+    94% { transform: translateX(1px) rotate(5deg); }
+    96% { transform: translateX(-1px) rotate(-5deg); }
+    98% { transform: translateX(1px) rotate(5deg); }
+    100% { transform: translateX(0); }
+}

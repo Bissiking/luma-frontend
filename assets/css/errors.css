@@ -1,0 +1,83 @@
+/* Styles pour les pages d'erreur */
+
+.error-container {
+    text-align: center;
+    padding: 3rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 700;
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    line-height: 1;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.error-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.error-message {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.error-actions {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.error-details {
+    margin-top: 2rem;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.error-debug {
+    margin: 2rem auto;
+    max-width: 100%;
+    text-align: left;
+}
+
+.error-debug h3 {
+    color: #e74c3c;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.error-details-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: #333;
+    font-family: monospace;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+@media (max-width: 576px) {
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-message {
+        font-size: 1rem;
+    }
+} 

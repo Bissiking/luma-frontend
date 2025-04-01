@@ -1,0 +1,432 @@
+:root {
+    --primary: #00476b;
+    --secondary: #003049;
+    --accent: #ff6b6b;
+
+    --bg-light: #f4f4f4;
+    --text-light: #333;
+
+    --bg-dark: #1a1a1a;
+    --text-dark: #f4f4f4;
+    
+    /* Variables spécifiques à Nino */
+    --nino-hero-gradient: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), transparent);
+    --nino-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    --nino-overlay: rgba(0, 0, 0, 0.75);
+    --nino-hover-scale: 1.05;
+    --nino-transition: all 0.3s ease;
+}
+
+/* ===== Réinitialisation de base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Masquer l'en-tête standard du site */
+body.nino-body header.header,
+body.nino-body .main-nav,
+body.nino-body .user-menu,
+body.nino-body .sidebar {
+    display: none !important;
+}
+
+/* Forcer le plein écran pour l'interface Nino */
+body.nino-body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    line-height: 1.5;
+    overflow-x: hidden;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Contenu principal sans marge/padding supplémentaire */
+body.nino-body .main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+}
+
+/* Masquer le pied de page standard */
+body.nino-body footer:not(.nino-footer) {
+    display: none !important;
+}
+
+/* ===== Conteneur principal ===== */
+.nino-container {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===== Navigation ===== */
+.nino-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 16px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    transition: background-color 0.3s ease;
+}
+
+.nino-header.scrolled {
+    background-color: var(--bg-dark);
+}
+
+.nino-header-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nino-logo {
+    height: 40px;
+    display: block;
+}
+
+.nino-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.nino-nav-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding: 8px 0;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.nino-nav-link:hover {
+    color: var(--accent);
+}
+
+.nino-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--accent);
+}
+
+.nino-user-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nino-search-toggle {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.nino-user-menu {
+    position: relative;
+}
+
+.nino-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.nino-user-avatar:hover {
+    transform: scale(1.1);
+}
+
+/* ===== Section Héro ===== */
+.nino-hero {
+    height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 50px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 30px;
+}
+
+.nino-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--nino-hero-gradient);
+    z-index: 1;
+}
+
+.nino-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.nino-hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.nino-hero-description {
+    font-size: 18px;
+    margin-bottom: 24px;
+    opacity: 0.9;
+}
+
+.nino-hero-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.nino-btn {
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--nino-transition);
+    border: none;
+    font-size: 16px;
+}
+
+.nino-btn-primary {
+    background-color: var(--accent);
+    color: white;
+}
+
+.nino-btn-secondary {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.nino-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.95;
+}
+
+/* ===== Section de contenu ===== */
+.nino-section {
+    margin-bottom: 40px;
+    padding: 0 50px;
+}
+
+.nino-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nino-section-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.nino-see-all {
+    color: var(--text-dark);
+    opacity: 0.7;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.nino-see-all:hover {
+    opacity: 1;
+    color: var(--accent);
+}
+
+/* ===== Cartes vidéo ===== */
+.nino-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+}
+
+.nino-row::-webkit-scrollbar {
+    display: none;
+}
+
+.nino-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 300px;
+    height: 170px;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: var(--nino-transition);
+    cursor: pointer;
+    box-shadow: var(--nino-card-shadow);
+}
+
+.nino-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--nino-transition);
+}
+
+.nino-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    transform: translateY(100%);
+    transition: var(--nino-transition);
+}
+
+.nino-card:hover {
+    transform: scale(var(--nino-hover-scale));
+    z-index: 10;
+}
+
+.nino-card:hover .nino-card-overlay {
+    transform: translateY(0);
+}
+
+.nino-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nino-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* ===== Pied de page ===== */
+.nino-footer {
+    background-color: var(--bg-dark);
+    padding: 50px;
+    color: var(--text-dark);
+    opacity: 0.7;
+}
+
+.nino-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.nino-footer-column h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.nino-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nino-footer-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.nino-footer-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.nino-copyright {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+}
+
+/* ===== Mode Responsive ===== */
+@media (max-width: 1024px) {
+    .nino-hero {
+        height: 60vh;
+    }
+    
+    .nino-hero-title {
+        font-size: 36px;
+    }
+    
+    .nino-card {
+        width: 250px;
+        height: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nino-header {
+        padding: 16px 20px;
+    }
+    
+    .nino-hero, 
+    .nino-section {
+        padding: 0 20px;
+    }
+    
+    .nino-hero-title {
+        font-size: 28px;
+    }
+    
+    .nino-hero-description {
+        font-size: 16px;
+    }
+    
+    .nino-card {
+        width: 200px;
+        height: 120px;
+    }
+    
+    .nino-footer {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nino-hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .nino-footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .nino-card {
+        width: 160px;
+        height: 100px;
+    }
+} 

@@ -1,0 +1,30 @@
+ /* Actions container */
+.actions-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 100px;
+}
+
+/* Action Block */
+.action-block {
+    width: 125px;
+}
+
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: var(--accent-primary-transparent);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}

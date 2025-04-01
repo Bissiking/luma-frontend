@@ -1,0 +1,252 @@
+/* Styles pour les popups */
+#popup-container {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    max-width: 350px;
+    width: 100%;
+}
+
+.popup-flash {
+    position: relative;
+    overflow: hidden;
+    padding: 16px 20px;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out forwards;
+    border-left: 4px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dark .popup-flash {
+    background-color: var(--bg-secondary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-flash.success {
+    border-left-color: var(--success);
+}
+
+.popup-flash.error {
+    border-left-color: var(--error);
+}
+
+.popup-flash.info {
+    border-left-color: var(--info);
+}
+
+.popup-flash.warning {
+    border-left-color: var(--warning);
+}
+
+.dark .popup-flash.success {
+    border-left-color: var(--success);
+}
+
+.dark .popup-flash.error {
+    border-left-color: var(--error);
+}
+
+.dark .popup-flash.info {
+    border-left-color: var(--info);
+}
+
+.dark .popup-flash.warning {
+    border-left-color: var(--warning);
+}
+
+.popup-flash h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-light);
+}
+
+.dark .popup-flash h3 {
+    color: var(--color-text-dark);
+}
+
+.popup-flash p {
+    font-size: 14px;
+    margin: 0;
+    color: var(--color-text-light);
+    opacity: 0.8;
+}
+
+.dark .popup-flash p {
+    color: var(--color-text-dark);
+}
+
+.popup-flash .alert-background {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-color: transparent;
+}
+
+.popup-flash.success .alert-background {
+    background-color: var(--color-success-light);
+}
+
+.popup-flash.error .alert-background {
+    background-color: var(--color-error-light);
+}
+
+.popup-flash.info .alert-background {
+    background-color: var(--color-info-light);
+}
+
+.popup-flash.warning .alert-background {
+    background-color: var(--color-warning-light);
+}
+
+.dark .popup-flash.success .alert-background {
+    background-color: var(--color-success-dark);
+}
+
+.dark .popup-flash.error .alert-background {
+    background-color: var(--color-error-dark);
+}
+
+.dark .popup-flash.info .alert-background {
+    background-color: var(--color-info-dark);
+}
+
+.dark .popup-flash.warning .alert-background {
+    background-color: var(--color-warning-dark);
+}
+
+.popup-flash .popup-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.popup-flash.success .popup-icon {
+    color: var(--color-success-light);
+}
+
+.popup-flash.error .popup-icon {
+    color: var(--color-error-light);
+}
+
+.popup-flash.info .popup-icon {
+    color: var(--color-info-light);
+}
+
+.popup-flash.warning .popup-icon {
+    color: var(--color-warning-light);
+}
+
+.dark .popup-flash.success .popup-icon {
+    color: var(--color-success-dark);
+}
+
+.dark .popup-flash.error .popup-icon {
+    color: var(--color-error-dark);
+}
+
+.dark .popup-flash.info .popup-icon {
+    color: var(--color-info-dark);
+}
+
+.dark .popup-flash.warning .popup-icon {
+    color: var(--color-warning-dark);
+}
+
+.popup-flash .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-light);
+    opacity: 0.5;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.dark .popup-flash .close-btn {
+    color: var(--color-text-dark);
+}
+
+.popup-flash .close-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark .popup-flash .close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #popup-container {
+        max-width: calc(100% - 40px);
+        top: 10px;
+        right: 10px;
+    }
+} 
