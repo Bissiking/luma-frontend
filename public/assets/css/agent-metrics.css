@@ -1,0 +1,562 @@
+/* 
+ * MÉTRIQUES DES AGENTS
+ * Styles pour la page de métriques des agents
+ */
+
+/* BARRE D'INFORMATION DE L'AGENT */
+.agent-info-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-card);
+    border-radius: var(--rounded-md);
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.agent-info-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+}
+
+.agent-info-name i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.agent-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.agent-info-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--gray-400);
+}
+
+.status-indicator.online {
+    background-color: var(--success);
+}
+
+.status-indicator.offline {
+    background-color: var(--error);
+}
+
+.status-indicator.warning {
+    background-color: var(--warning);
+}
+
+.status-indicator.error {
+    background-color: var(--error);
+}
+
+.status-text {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.status-text.online {
+    color: var(--success);
+}
+
+.status-text.offline {
+    color: var(--error);
+}
+
+.status-text.warning {
+    color: var(--warning);
+}
+
+.status-text.error {
+    color: var(--error);
+}
+
+.agent-info-version,
+.agent-info-uptime {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.agent-info-version .label,
+.agent-info-uptime .label {
+    color: var(--text-muted);
+}
+
+.agent-info-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+/* GRILLE DE MÉTRIQUES */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background-color: var(--bg-card);
+    border-radius: var(--rounded-md);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.metric-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.metric-current {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.metric-body {
+    flex: 1;
+    padding: 15px 10px;
+    position: relative;
+    min-height: 200px;
+}
+
+.metric-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.metric-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    flex: 1;
+}
+
+.info-item .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.info-item span:not(.label) {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* SERVICES ET ALERTES */
+.extra-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+}
+
+.metrics-section {
+    background-color: var(--bg-card);
+    border-radius: var(--rounded-md);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.metrics-section h3 {
+    margin: 0;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Services */
+.services-table {
+    padding: 0;
+}
+
+.services-loading,
+.alerts-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    gap: 12px;
+}
+
+.services-loading i,
+.alerts-loading i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.services-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-tertiary);
+}
+
+.service-name {
+    flex: 2;
+}
+
+.service-status,
+.service-uptime,
+.service-memory,
+.service-actions {
+    flex: 1;
+}
+
+.service-actions {
+    text-align: right;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.service-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.service-item .service-name {
+    flex: 2;
+    font-weight: 500;
+}
+
+.service-item .service-status,
+.service-item .service-uptime,
+.service-item .service-memory {
+    flex: 1;
+}
+
+.service-item .service-memory {
+    color: var(--text-secondary);
+}
+
+.service-item .service-actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.service-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: var(--rounded-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.service-status-badge.running {
+    background-color: rgba(var(--success_rgb), 0.15);
+    color: var(--success);
+}
+
+.service-status-badge.stopped {
+    background-color: rgba(var(--error_rgb), 0.15);
+    color: var(--error);
+}
+
+.service-status-badge.restarting {
+    background-color: rgba(var(--warning_rgb), 0.15);
+    color: var(--warning);
+}
+
+/* Alertes */
+.alerts-timeline {
+    padding: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.alerts-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.alert-item {
+    display: flex;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.alert-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.alert-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.alert-icon.warning {
+    background-color: rgba(var(--warning_rgb), 0.15);
+    color: var(--warning);
+}
+
+.alert-icon.error {
+    background-color: rgba(var(--error_rgb), 0.15);
+    color: var(--error);
+}
+
+.alert-icon.info {
+    background-color: rgba(var(--info_rgb), 0.15);
+    color: var(--info);
+}
+
+.alert-icon.success {
+    background-color: rgba(var(--success_rgb), 0.15);
+    color: var(--success);
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.alert-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.alert-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.alert-message {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.alert-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.alert-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.services-empty,
+.alerts-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    gap: 12px;
+}
+
+.services-empty i,
+.alerts-empty i {
+    font-size: 2.5rem;
+    opacity: 0.5;
+}
+
+/* TIMEFRAME DROPDOWN */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    background-color: var(--bg-card);
+    border-radius: var(--rounded);
+    padding: 8px 0;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-hover);
+}
+
+/* ANIMATIONS */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.status-indicator.warning,
+.status-indicator.error {
+    animation: pulse 2s infinite;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 992px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .extra-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .agent-info-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .agent-info-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .metric-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .info-item {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .services-header {
+        display: none;
+    }
+    
+    .service-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .service-item > div {
+        width: 100%;
+    }
+    
+    .service-item .service-name {
+        font-size: 1rem;
+    }
+    
+    .service-item .service-status,
+    .service-item .service-uptime,
+    .service-item .service-memory {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .service-item .service-status::before {
+        content: "Statut:";
+        color: var(--text-muted);
+    }
+    
+    .service-item .service-uptime::before {
+        content: "Temps d'activité:";
+        color: var(--text-muted);
+    }
+    
+    .service-item .service-memory::before {
+        content: "Mémoire:";
+        color: var(--text-muted);
+    }
+    
+    .service-item .service-actions {
+        justify-content: flex-start;
+    }
+} 

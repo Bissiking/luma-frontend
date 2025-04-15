@@ -1,5 +1,8 @@
 extends ../../layouts/main
 
+block append head
+  include partials/resources
+  
 block content
   .dashboard-page
     .container-fluid
@@ -7,101 +10,149 @@ block content
         .header-content
           h1.dashboard-title.d-flex.align-items-center.gap-2
             i.fas.fa-server.gradient-icon
-            | Agents de supervision
+            | Gestion des Agents
           nav(aria-label="breadcrumb")
             ol.breadcrumb.mb-0
               li.breadcrumb-item
                 a(href="/dashboard") Tableau de bord
-              li.breadcrumb-item.active(aria-current="page") Agents de supervision
+              li.breadcrumb-item.active(aria-current="page") Gestion des Agents
             
-      .card.mb-4
-        .card-header.d-flex.justify-content-between.align-items-center
-          h5.mb-0 Liste des agents
-          .btn-group
-            button.btn.btn-primary.btn-sm#create-agent-btn(type="button" data-bs-toggle="modal" data-bs-target="#create-agent-modal")
-              i.fas.fa-plus.me-2
-              | Nouvel agent
-            button.btn.btn-outline-secondary.btn-sm#refresh-agents
-              i.fas.fa-sync-alt
+      .view-controls.mb-4
+        .view-actions
+          button.btn-primary.create-agent-btn#create-agent-btn
+            i.fas.fa-plus
+            span Nouvel Agent
+          
+          button.btn-secondary.refresh-btn#refresh-agents
+            i.fas.fa-sync-alt
+            span Rafraîchir
             
-        .card-body
-          .table-responsive
-            table.table.table-striped.table-hover#agents-table
-              thead
-                tr
-                  th ID
-                  th Nom
-                  th Statut
-                  th Type
-                  th Dernière connexion
-                  th Utilisateurs
-                  th Services
-                  th Actions
-              tbody
-                // Les données seront chargées dynamiquement
-                tr.placeholder-glow
-                  td(colspan="8").text-center
-                    span.placeholder.col-12 Chargement des agents...
-              
+        .view-options
+          .search-container
+            input(type="text" placeholder="Rechercher un agent..." id="agent-search")
+            i.fas.fa-search
+          
+          .view-switch
+            button.btn-icon.list-view-btn.active#list-view-btn(title="Vue liste")
+              i.fas.fa-list
+            button.btn-icon.grid-view-btn#grid-view-btn(title="Vue grille") 
+              i.fas.fa-th-large
+          
+          .filter-dropdown
+            button.btn-secondary.dropdown-toggle#filter-toggle
+              i.fas.fa-filter
+              span Filtrer
+            .dropdown-menu#filter-menu
+              .dropdown-item
+                input(type="checkbox" id="filter-status-online" checked)
+                label(for="filter-status-online") En ligne
+              .dropdown-item
+                input(type="checkbox" id="filter-status-offline" checked)
+                label(for="filter-status-offline") Hors ligne
+              .dropdown-item
+                input(type="checkbox" id="filter-status-warning" checked)
+                label(for="filter-status-warning") Avertissement
+              .dropdown-item
+                input(type="checkbox" id="filter-status-error" checked)
+                label(for="filter-status-error") Erreur
+              .dropdown-item.divider
+              .dropdown-item
+                input(type="checkbox" id="filter-type-linux" checked)
+                label(for="filter-type-linux") Linux
+              .dropdown-item
+                input(type="checkbox" id="filter-type-windows" checked)
+                label(for="filter-type-windows") Windows
+              .dropdown-item.divider
+              button.btn-primary#apply-filters Appliquer
+      
+      .agents-container
+        .agents-view.list-view#agents-view
+          .agents-header
+            .agent-header-name
+              span Nom
+              button.sort-btn(data-sort="name")
+                i.fas.fa-sort
+            .agent-header-version
+              span Version
+              button.sort-btn(data-sort="version")
+                i.fas.fa-sort
+            .agent-header-status 
+              span Statut
+              button.sort-btn(data-sort="status")
+                i.fas.fa-sort
+            .agent-header-metrics Métriques
+            .agent-header-last-seen
+              span Dernière activité
+              button.sort-btn(data-sort="lastSeen")
+                i.fas.fa-sort
+          
+          .agents-loading#agents-loading
+            i.fas.fa-spinner.fa-spin
+            span Chargement des agents...
+          
+          .agents-list#agents-list
+            // Les agents seront ajoutés ici dynamiquement
+            
+          .agents-empty#agents-empty.hidden
+            i.fas.fa-server
+            p Aucun agent trouvé
+      
+      .pagination-container#pagination-container
+        button.pagination-prev#pagination-prev
+          i.fas.fa-chevron-left
+        .pagination-pages#pagination-pages
+          // Les pages seront ajoutées ici dynamiquement
+        button.pagination-next#pagination-next
+          i.fas.fa-chevron-right
+      
   // Modal de création d'agent
-  .modal.fade#create-agent-modal(tabindex="-1" aria-labelledby="create-agent-modal-label" aria-hidden="true")
-    .modal-dialog
-      .modal-content
-        .modal-header
-          h5.modal-title#create-agent-modal-label Nouvel agent
-          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
-        .modal-body
-          form#create-agent-form
-            .mb-3
-              label.form-label(for="agent-name") Nom de l'agent
-              input.form-control#agent-name(type="text" required)
-            
-            .mb-3
-              label.form-label(for="agent-description") Description
-              textarea.form-control#agent-description
-            
-            .mb-3
-              label.form-label(for="agent-type") Type
-              select.form-select#agent-type
-                option(value="server" selected) Serveur
-                option(value="workstation") Poste de travail
-                option(value="container") Conteneur
-                option(value="vm") Machine virtuelle
-                option(value="network") Équipement réseau
-            
-            .mb-3
-              .form-check
-                input.form-check-input#agent-public(type="checkbox")
-                label.form-check-label(for="agent-public") Agent public (visible par tous)
-                
-        .modal-footer
-          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
-          button.btn.btn-primary#create-agent-submit(type="button") Créer
+  .modal#create-agent-modal
+    .modal-content
+      .modal-header
+        h3 Nouvel Agent
+        button.close-btn#close-create-modal
+          i.fas.fa-times
+      .modal-body
+        form#create-agent-form
+          .form-group
+            label(for="agent-name") Nom de l'agent
+            input(type="text" id="agent-name" required)
+          
+          .form-group
+            label(for="agent-type") Type
+            select#agent-type
+              option(value="linux") Linux
+              option(value="windows") Windows
+          
+          .form-group
+            label(for="agent-description") Description
+            textarea#agent-description
+          
+          .form-group
+            .checkbox-container
+              input(type="checkbox" id="agent-public")
+              label(for="agent-public") Agent public
+      
+      .modal-footer
+        button.btn-secondary#cancel-create-agent Annuler
+        button.btn-primary#create-agent-submit Créer
   
   // Modal de suppression d'agent
-  .modal.fade#delete-agent-modal(tabindex="-1" aria-hidden="true")
-    .modal-dialog.modal-sm
-      .modal-content
-        .modal-header
-          h5.modal-title Confirmer la suppression
-          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
-        .modal-body
-          p Êtes-vous sûr de vouloir supprimer l'agent <strong id="delete-agent-name"></strong> ?
-          p.text-danger Cette action est irréversible.
-          input(type="hidden")#delete-agent-id
-        .modal-footer
-          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
-          button.btn.btn-danger#delete-agent-confirm(type="button") Supprimer
-  
-  // Template pour les actions
-  template#action-template
-    .d-flex.gap-1
-      a.btn.btn-sm.btn-info.view-agent(href="#" title="Voir les détails")
-        i.fas.fa-eye
-      a.btn.btn-sm.btn-warning.edit-agent(href="#" title="Modifier")
-        i.fas.fa-edit
-      button.btn.btn-sm.btn-danger.delete-agent(type="button" title="Supprimer")
-        i.fas.fa-trash
+  .modal#delete-agent-modal
+    .modal-content
+      .modal-header
+        h3 Supprimer l'agent
+        button.close-btn#close-delete-modal
+          i.fas.fa-times
+      .modal-body
+        p Êtes-vous sûr de vouloir supprimer l'agent 
+          span#delete-agent-name
+          | ?
+        input(type="hidden" id="delete-agent-id")
+      
+      .modal-footer
+        button.btn-secondary#cancel-delete-agent Annuler
+        button.btn-danger#delete-agent-confirm Supprimer
 
-block scripts
-  script(src='/assets/js/monitoring/agents-list.js') 
+block page_scripts
+  script(src="/assets/js/agents-management.js") 

@@ -11,11 +11,21 @@ const authController = {
    */
   renderLogin: (req, res) => {
     const config = configService.getAppConfig();
+    
+    // Récupérer l'URL de redirection depuis les paramètres de requête
+    const redirectTo = req.query.redirect_to;
+    if (redirectTo) {
+      // Stocker l'URL de redirection dans la session pour une utilisation ultérieure
+      req.session.redirectTo = redirectTo;
+      console.log('URL de redirection capturée:', redirectTo);
+    }
+    
     res.render('auth/login', {
       title: 'Connexion',
       currentPage: 'login',
       pageStyles: ['css/auth.css'],
-      apiUrl: config.apiUrl
+      apiUrl: config.apiUrl,
+      redirectTo: redirectTo || null
     });
   },
 
@@ -105,11 +115,12 @@ const authController = {
    */
   createSession: async (req, res) => {
     try {
-      const { user, token, remember_me } = req.body;
+      const { user, token, remember_me, original_destination } = req.body;
       console.log('Création de session avec données:', { 
         user: user ? { ...user, password: '***' } : null, 
         tokenProvided: !!token, 
-        remember_me: !!remember_me  // Conversion explicite en booléen
+        remember_me: !!remember_me,
+        original_destination: original_destination || 'Non spécifiée'
       });
 
       // Vérifier que les données nécessaires sont présentes
@@ -166,15 +177,32 @@ const authController = {
           });
         }
         
+        // Déterminer l'URL de redirection
+        let redirectTo = '/';
+        
+        // Priorité 1: URL spécifiée par le client (formulaire ou API)
+        if (original_destination) {
+          redirectTo = original_destination;
+        } 
+        // Priorité 2: URL stockée dans la session par le middleware
+        else if (req.session.redirectTo) {
+          redirectTo = req.session.redirectTo;
+          delete req.session.redirectTo;
+        }
+        // Priorité 3: Ancienne variable returnTo (compatibilité)
+        else if (req.session.returnTo) {
+          redirectTo = req.session.returnTo;
+          delete req.session.returnTo;
+        }
+        
+        console.log('Redirection après connexion vers:', redirectTo);
+        
         // Répondre avec succès
         res.json({
           success: true,
           user: userData,
-          redirectTo: req.session.returnTo || '/'
+          redirectTo: redirectTo
         });
-
-        // Nettoyer l'URL de retour stockée en session
-        delete req.session.returnTo;
       });
     } catch (error) {
       console.error('Erreur lors de la création de la session:', error);

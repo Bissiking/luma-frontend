@@ -1,0 +1,163 @@
+extends ../../layouts/main
+
+block append head
+  include partials/resources
+  
+  block page_css
+    link(rel="stylesheet", href="/assets/css/agent-metrics.css")
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-chart-line.gradient-icon
+            | Métriques de l'Agent
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/monitoring/agents") Gestion des Agents
+              li.breadcrumb-item.active(aria-current="page") Métriques
+
+      .agent-info-bar#agent-info-bar
+        .agent-info-name
+          i.fas.fa-server
+          span.agent-name#agent-name Chargement...
+        .agent-info-status
+          span.status-indicator#agent-status
+          span.status-text#status-text En attente...
+        .agent-info-version
+          span.label Version:
+          span#agent-version -
+        .agent-info-uptime
+          span.label En ligne depuis:
+          span#agent-uptime -
+        .agent-info-actions
+          button.btn-primary.view-config-btn#view-config-btn
+            i.fas.fa-cog
+            span Configuration
+          .dropdown
+            button.btn-secondary.dropdown-toggle#timeframe-toggle
+              i.fas.fa-clock
+              span.selected-timeframe 1 heure
+            .dropdown-menu#timeframe-menu
+              .dropdown-item(data-value="1h") 1 heure
+              .dropdown-item(data-value="6h") 6 heures
+              .dropdown-item(data-value="12h") 12 heures
+              .dropdown-item(data-value="24h") 24 heures
+              .dropdown-item(data-value="7d") 7 jours
+              .dropdown-item(data-value="30d") 30 jours
+
+      .metrics-grid
+        .metric-card
+          .metric-header
+            h3 CPU
+            .metric-current
+              span#cpu-current 0%
+          .metric-body
+            canvas#cpu-chart
+          .metric-footer
+            .metric-info
+              .info-item
+                span.label Moyenne:
+                span#cpu-avg 0%
+              .info-item
+                span.label Max:
+                span#cpu-max 0%
+              .info-item
+                span.label Min:
+                span#cpu-min 0%
+        
+        .metric-card
+          .metric-header
+            h3 Mémoire
+            .metric-current
+              span#memory-current 0%
+          .metric-body
+            canvas#memory-chart
+          .metric-footer
+            .metric-info
+              .info-item
+                span.label Utilisée:
+                span#memory-used 0 GB
+              .info-item
+                span.label Totale:
+                span#memory-total 0 GB
+              .info-item
+                span.label Libre:
+                span#memory-free 0 GB
+        
+        .metric-card
+          .metric-header
+            h3 Disque
+            .metric-current
+              span#disk-current 0%
+          .metric-body
+            canvas#disk-chart
+          .metric-footer
+            .metric-info
+              .info-item
+                span.label Utilisé:
+                span#disk-used 0 GB
+              .info-item
+                span.label Total:
+                span#disk-total 0 GB
+              .info-item
+                span.label Libre:
+                span#disk-free 0 GB
+        
+        .metric-card
+          .metric-header
+            h3 Réseau
+            .metric-current
+              span#network-current 0 Mbps
+          .metric-body
+            canvas#network-chart
+          .metric-footer
+            .metric-info
+              .info-item
+                span.label Download:
+                span#network-download 0 Mbps
+              .info-item
+                span.label Upload:
+                span#network-upload 0 Mbps
+              .info-item
+                span.label Total:
+                span#network-total 0 GB
+      
+      .extra-metrics
+        .metrics-section
+          h3 Services
+          .services-table#services-table
+            .services-loading
+              i.fas.fa-spinner.fa-spin
+              span Chargement des services...
+            .services-list#services-list
+              .services-header
+                .service-name Nom du service
+                .service-status Statut
+                .service-uptime Temps d'activité
+                .service-memory Mémoire
+                .service-actions Actions
+            .services-empty.hidden#services-empty
+              i.fas.fa-plug
+              p Aucun service trouvé
+              
+        .metrics-section
+          h3 Historique des Alertes
+          .alerts-timeline#alerts-timeline
+            .alerts-loading
+              i.fas.fa-spinner.fa-spin
+              span Chargement des alertes...
+            .alerts-list#alerts-list
+              // Les alertes seront ajoutées ici dynamiquement
+            .alerts-empty.hidden#alerts-empty
+              i.fas.fa-bell-slash
+              p Aucune alerte trouvée dans cette période
+
+block page_scripts
+  script(src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js")
+  script(src="/assets/js/agent-metrics.js") 

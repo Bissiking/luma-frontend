@@ -1,0 +1,256 @@
+extends ../../layouts/main
+
+block append head
+  include partials/resources
+  
+  block page_css
+    link(rel="stylesheet", href="/assets/css/agent-config.css")
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-cog.gradient-icon
+            | Configuration de l'Agent
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/monitoring/agents") Gestion des Agents
+              li.breadcrumb-item.active(aria-current="page") Configuration
+
+      .agent-info-bar#agent-info-bar
+        .agent-info-name
+          i.fas.fa-server
+          span.agent-name#agent-name Chargement...
+        .agent-info-status
+          span.status-indicator#agent-status
+          span.status-text#status-text En attente...
+        .agent-info-version
+          span.label Version:
+          span#agent-version -
+        .agent-info-actions
+          button.btn-primary.view-metrics-btn#view-metrics-btn
+            i.fas.fa-chart-line
+            span Métriques
+          button.btn-secondary.reload-agent-btn#reload-agent-btn
+            i.fas.fa-sync-alt
+            span Recharger
+
+      .config-container
+        .config-tabs
+          button.config-tab.active#tab-visual(data-tab="visual") 
+            i.fas.fa-sliders-h
+            span Visuel
+          button.config-tab#tab-json(data-tab="json")
+            i.fas.fa-code
+            span JSON
+          button.config-tab#tab-templates(data-tab="templates")
+            i.fas.fa-save
+            span Modèles
+          button.config-tab#tab-history(data-tab="history")
+            i.fas.fa-history
+            span Historique
+        
+        .config-actions
+          button.btn-secondary.reset-config-btn#reset-config-btn
+            i.fas.fa-undo
+            span Réinitialiser
+          button.btn-primary.save-config-btn#save-config-btn
+            i.fas.fa-save
+            span Sauvegarder
+
+        .config-content
+          .tab-content.active#visual-content
+            .config-section
+              h3.section-title
+                i.fas.fa-network-wired
+                span API Configuration
+              .config-fields
+                .config-field
+                  label(for="api-base-url") URL de base
+                  input(type="text" id="api-base-url")
+                .config-field
+                  label(for="api-uuid") UUID de l'agent
+                  input(type="text" id="api-uuid")
+                .config-field
+                  label(for="api-token") Token API
+                  .password-field
+                    input(type="password" id="api-token")
+                    button.toggle-password
+                      i.fas.fa-eye
+                .config-field
+                  label(for="api-timeout") Timeout (secondes)
+                  input(type="number" id="api-timeout" min="1" max="300")
+            
+            .config-section
+              h3.section-title
+                i.fas.fa-bell
+                span Alertes
+              
+              .alert-type-tabs
+                button.alert-tab.active(data-alert="cpu") CPU
+                button.alert-tab(data-alert="memory") Mémoire
+                button.alert-tab(data-alert="disk") Disque
+                button.alert-tab(data-alert="services") Services
+              
+              .alert-configs
+                .alert-config.active#cpu-alert-config
+                  .alert-config-header
+                    .alert-toggle
+                      input(type="checkbox" id="cpu-enabled")
+                      label(for="cpu-enabled") Activer les alertes CPU
+                  
+                  .alert-config-body
+                    .config-field
+                      label(for="cpu-warning") Seuil d'avertissement (%)
+                      input(type="number" id="cpu-warning" min="1" max="100")
+                    .config-field
+                      label(for="cpu-critical") Seuil critique (%)
+                      input(type="number" id="cpu-critical" min="1" max="100")
+                    .config-field
+                      label(for="cpu-duration") Durée avant alerte (secondes)
+                      input(type="number" id="cpu-duration" min="1")
+                    .config-field
+                      label(for="cpu-recovery") Seuil de récupération (%)
+                      input(type="number" id="cpu-recovery" min="1" max="100")
+                    .config-field
+                      label(for="cpu-cooldown") Période de refroidissement (secondes)
+                      input(type="number" id="cpu-cooldown" min="0")
+                
+                .alert-config#memory-alert-config
+                  .alert-config-header
+                    .alert-toggle
+                      input(type="checkbox" id="memory-enabled")
+                      label(for="memory-enabled") Activer les alertes mémoire
+                  
+                  .alert-config-body
+                    .config-field
+                      label(for="memory-warning") Seuil d'avertissement (%)
+                      input(type="number" id="memory-warning" min="1" max="100")
+                    .config-field
+                      label(for="memory-critical") Seuil critique (%)
+                      input(type="number" id="memory-critical" min="1" max="100")
+                    .config-field
+                      label(for="memory-duration") Durée avant alerte (secondes)
+                      input(type="number" id="memory-duration" min="1")
+                    .config-field
+                      label(for="memory-recovery") Seuil de récupération (%)
+                      input(type="number" id="memory-recovery" min="1" max="100")
+                    .config-field
+                      label(for="memory-cooldown") Période de refroidissement (secondes)
+                      input(type="number" id="memory-cooldown" min="0")
+                
+                .alert-config#disk-alert-config
+                  .alert-config-header
+                    .alert-toggle
+                      input(type="checkbox" id="disk-enabled")
+                      label(for="disk-enabled") Activer les alertes disque
+                  
+                  .alert-config-body
+                    .config-field
+                      label(for="disk-warning") Seuil d'avertissement (%)
+                      input(type="number" id="disk-warning" min="1" max="100")
+                    .config-field
+                      label(for="disk-critical") Seuil critique (%)
+                      input(type="number" id="disk-critical" min="1" max="100")
+                    .config-field
+                      label(for="disk-duration") Durée avant alerte (secondes)
+                      input(type="number" id="disk-duration" min="1")
+                    .config-field
+                      label(for="disk-recovery") Seuil de récupération (%)
+                      input(type="number" id="disk-recovery" min="1" max="100")
+                    .config-field
+                      label(for="disk-cooldown") Période de refroidissement (secondes)
+                      input(type="number" id="disk-cooldown" min="0")
+                    .config-field
+                      label(for="disk-partitions") Partitions surveillées
+                      input(type="text" id="disk-partitions" placeholder="*")
+                      .field-hint Séparez les noms par des virgules, ou utilisez * pour toutes
+
+                .alert-config#services-alert-config
+                  .alert-config-header
+                    .alert-toggle
+                      input(type="checkbox" id="services-enabled")
+                      label(for="services-enabled") Activer les alertes de service
+                  
+                  .alert-config-body
+                    .config-field
+                      label(for="services-consecutive-failures") Échecs consécutifs avant alerte
+                      input(type="number" id="services-consecutive-failures" min="1" max="10")
+                    .config-field
+                      label(for="services-cooldown") Période de refroidissement (secondes)
+                      input(type="number" id="services-cooldown" min="0")
+                    .config-field
+                      label(for="services-monitored") Services surveillés
+                      input(type="text" id="services-monitored")
+                      .field-hint Séparez les noms par des virgules
+
+          .tab-content#json-content
+            .json-editor-container
+              .editor-toolbar
+                button.btn-icon#format-json(title="Formater JSON")
+                  i.fas.fa-indent
+                button.btn-icon#copy-json(title="Copier")
+                  i.fas.fa-copy
+              #json-editor
+              .editor-error#json-error
+
+          .tab-content#templates-content
+            .templates-container
+              .templates-list#templates-list
+                h3 Modèles de configuration
+                .templates-loading
+                  i.fas.fa-spinner.fa-spin
+                  span Chargement des modèles...
+                .templates-empty.hidden
+                  i.fas.fa-file-alt
+                  p Aucun modèle trouvé
+              
+              .template-actions
+                button.btn-primary#save-as-template
+                  i.fas.fa-save
+                  span Enregistrer comme modèle
+                button.btn-secondary#import-template
+                  i.fas.fa-file-import
+                  span Importer
+                button.btn-secondary#export-template
+                  i.fas.fa-file-export
+                  span Exporter
+
+          .tab-content#history-content
+            .history-timeline#history-timeline
+              h3 Historique des modifications
+              .history-loading
+                i.fas.fa-spinner.fa-spin
+                span Chargement de l'historique...
+              .history-empty.hidden
+                i.fas.fa-history
+                p Aucun historique trouvé
+      
+  // Modal pour sauvegarder un modèle
+  .modal#save-template-modal
+    .modal-content
+      .modal-header
+        h3 Enregistrer comme modèle
+        button.close-btn#close-template-modal
+          i.fas.fa-times
+      .modal-body
+        form#save-template-form
+          .form-group
+            label(for="template-name") Nom du modèle
+            input(type="text" id="template-name" required)
+          
+          .form-group
+            label(for="template-description") Description
+            textarea#template-description
+      
+      .modal-footer
+        button.btn-secondary#cancel-save-template Annuler
+        button.btn-primary#confirm-save-template Enregistrer
+
+block page_scripts
+  script(src="/assets/js/agent-config.js") 

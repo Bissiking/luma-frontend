@@ -10,8 +10,14 @@ const isAuthenticated = (req, res, next) => {
         return next();
     }
     
+    // Capturer l'URL demandée avant la redirection
+    const originalUrl = req.originalUrl;
+    // Stocker l'URL originale dans la session
+    req.session.redirectTo = originalUrl;
+    
     req.session.error = 'Vous devez être connecté pour accéder à cette page.';
-    return res.redirect('/login');
+    // Ajouter le paramètre redirect_to dans l'URL de redirection
+    return res.redirect(`/auth/login?redirect_to=${encodeURIComponent(originalUrl)}`);
 };
 
 /**
@@ -19,7 +25,12 @@ const isAuthenticated = (req, res, next) => {
  */
 const redirectIfAuthenticated = (req, res, next) => {
     if (req.session && req.session.user) {
-        return res.redirect('/tickets');
+        // Récupérer l'URL de redirection si elle existe
+        const redirectTo = req.session.redirectTo || '/tickets';
+        // Effacer l'URL de redirection de la session
+        delete req.session.redirectTo;
+        
+        return res.redirect(redirectTo);
     }
     return next();
 };
