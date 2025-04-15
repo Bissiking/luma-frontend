@@ -1,0 +1,637 @@
+/* Ajout de styles pour les états vides */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  color: #777;
+}
+
+.empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Styles pour les onglets de ticket */
+.ticket-tabs-container {
+  margin-top: 2rem;
+}
+
+.ticket-tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.ticket-tab {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-tab i {
+  margin-right: 0.5rem;
+}
+
+.ticket-tab:hover {
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.ticket-tab.active {
+  background-color: #fff;
+  border-bottom-color: #6366f1;
+  color: #6366f1;
+}
+
+.ticket-tab-content {
+  display: none;
+  padding: 1.5rem;
+  margin-top: -1px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+}
+
+.ticket-tab-content.active {
+  display: block;
+}
+
+/* Styles pour les commentaires */
+.ticket-comment {
+  display: flex;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-comment-internal {
+  background-color: #fff8e6;
+  border-left: 3px solid #f59e0b;
+}
+
+.ticket-comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #6366f1;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.ticket-comment-content {
+  flex: 1;
+}
+
+.ticket-comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ticket-comment-author {
+  font-weight: 600;
+  color: #333;
+}
+
+.ticket-comment-date {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.ticket-comment-body {
+  line-height: 1.5;
+  color: #444;
+  white-space: pre-line;
+}
+
+/* Styles pour l'historique */
+.ticket-history-item {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #6366f1;
+}
+
+.ticket-history-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.ticket-history-user {
+  font-weight: 500;
+  color: #333;
+}
+
+.ticket-history-user i {
+  margin-right: 0.5rem;
+  color: #6366f1;
+}
+
+.ticket-history-date {
+  color: #777;
+}
+
+.ticket-history-action {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.ticket-history-details {
+  margin: 0.5rem 0 0;
+  color: #444;
+}
+
+/* Styles pour les escalades */
+.ticket-escalation-item {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #f43f5e;
+}
+
+.ticket-escalation-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ticket-escalation-user {
+  font-weight: 500;
+  color: #333;
+}
+
+.ticket-escalation-user i {
+  margin-right: 0.5rem;
+  color: #f43f5e;
+}
+
+.ticket-escalation-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.ticket-escalation-status.pending {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.ticket-escalation-status.resolved {
+  background-color: #dcfce7;
+  color: #10b981;
+}
+
+.ticket-escalation-content {
+  padding-top: 0.5rem;
+}
+
+.ticket-escalation-reason {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.ticket-escalation-dates {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.ticket-escalation-date {
+  margin-bottom: 0.5rem;
+}
+
+.ticket-escalation-date i,
+.ticket-escalation-resolver i {
+  margin-right: 0.5rem;
+  color: #6366f1;
+}
+
+.ticket-escalation-resolver {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.ticket-escalation-resolution {
+  background-color: #f0f9ff;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+/* Styles pour les formulaires dans les tickets */
+.ticket-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.ticket-form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.ticket-form-control:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.ticket-form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.ticket-form-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 6h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+}
+
+.ticket-checkbox {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.ticket-checkbox input {
+  margin-right: 0.5rem;
+}
+
+.checkbox-label {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Styles pour les boutons de ticket */
+.btn-ticket {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ticket i {
+  margin-right: 0.5rem;
+}
+
+.btn-ticket-primary {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn-ticket-primary:hover {
+  background-color: #4f46e5;
+}
+
+.btn-ticket-secondary {
+  background-color: #e5e7eb;
+  color: #4b5563;
+}
+
+.btn-ticket-secondary:hover {
+  background-color: #d1d5db;
+}
+
+.btn-ticket-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-ticket-success:hover {
+  background-color: #059669;
+}
+
+.btn-ticket-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-ticket-danger:hover {
+  background-color: #dc2626;
+}
+
+.btn-ticket-orange {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-ticket-orange:hover {
+  background-color: #d97706;
+}
+
+/* Styles pour la section d'actions de ticket */
+.ticket-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+/* Styles pour les modales de ticket */
+.ticket-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.ticket-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ticket-modal-content {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.ticket-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ticket-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #111827;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-modal-title i {
+  margin-right: 0.75rem;
+  color: #6366f1;
+}
+
+.ticket-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ticket-modal-close:hover {
+  color: #6b7280;
+}
+
+.ticket-modal-body {
+  padding: 1.5rem;
+}
+
+.ticket-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ticket-detail {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.ticket-detail-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+
+.ticket-detail-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.ticket-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ticket-detail-meta-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.ticket-detail-meta-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.ticket-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ticket-status-open {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.ticket-status-in_progress {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.ticket-status-resolved {
+  background-color: #dcfce7;
+  color: #059669;
+}
+
+.ticket-status-closed {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.ticket-status-unknown {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+}
+
+.ticket-priority {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.ticket-priority-low {
+  background-color: #dcfce7;
+  color: #059669;
+}
+
+.ticket-priority-medium {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.ticket-priority-high {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.ticket-priority-urgent {
+  background-color: #fecaca;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.ticket-detail-description {
+  background-color: #f9fafb;
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.ticket-detail-description p {
+  margin: 0;
+  line-height: 1.6;
+  color: #4b5563;
+  white-space: pre-line;
+}
+
+/* Styles pour l'affichage d'un ticket non trouvé */
+.empty-ticket-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.empty-state-large {
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+}
+
+.empty-icon-large {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  color: #d1d5db;
+}
+
+.empty-state-large h2 {
+  font-size: 1.5rem;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.empty-state-large p {
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.empty-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Style pour rendre les onglets plus visibles */
+.ticket-tab {
+  padding: 1rem 1.5rem;
+}
+
+.ticket-tab.active {
+  background-color: #fff;
+  border-bottom-color: #6366f1;
+  color: #6366f1;
+}
+
+.ticket-tab-content {
+  background-color: #fff;
+  border-radius: 0 0 8px 8px;
+  padding: 1.5rem;
+  margin-top: -1px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+}
+
+/* Amélioration de l'état vide */
+.empty-state {
+  padding: 3rem 2rem;
+} 

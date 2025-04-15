@@ -1,0 +1,54 @@
+extends ../layouts/main
+
+block content
+  .categories-container
+    .categories-header
+      .categories-title
+        h1 Gestion des Catégories
+        p Gérez les catégories de tickets
+      if user.role === 'admin' || user.role === 'manager'
+        button#addCategoryBtn.btn-primary
+          i.fas.fa-plus
+          |  Nouvelle Catégorie
+
+    .categories-list
+      table#categoriesTable.table
+        thead
+          tr
+            th Nom
+            th Description
+            th Couleur
+            if user.role === 'admin' || user.role === 'manager'
+              th Actions
+        tbody#categoriesTableBody
+          // Le contenu sera généré dynamiquement par JavaScript
+
+    #categoryModal.modal
+      .modal-content
+        .modal-header
+          h2#modalTitle Nouvelle Catégorie
+          button.close-modal(type="button")
+            i.fas.fa-times
+        form#categoryForm
+          .modal-body
+            .form-group
+              label(for="categoryName") Nom
+              input#categoryName.form-control(type="text" required)
+            .form-group
+              label(for="categoryDescription") Description
+              textarea#categoryDescription.form-control
+            .form-group
+              label(for="categoryColor") Couleur
+              input#categoryColor.form-control(type="color" value="#4a90e2" required)
+          .modal-footer
+            button.btn-secondary.close-modal(type="button") Annuler
+            button.btn-primary#saveCategory(type="submit") Enregistrer
+
+block scripts
+  script(src="/assets/js/categories-manager.js")
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM chargé, initialisation du gestionnaire de catégories');
+      const categoriesManager = new CategoriesManager();
+      categoriesManager.init();
+    }); 

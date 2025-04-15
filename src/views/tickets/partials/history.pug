@@ -1,0 +1,34 @@
+.history-section
+  h3.h5.mb-3 Historique
+  #history-list
+    if history && history.length > 0
+      .timeline
+        each item in history
+          .timeline-item.mb-3
+            .timeline-badge.bg-primary.rounded-circle.d-flex.align-items-center.justify-content-center
+              case item.action
+                when 'create'
+                  i.fas.fa-plus.text-white
+                when 'update'
+                  i.fas.fa-edit.text-white
+                when 'comment'
+                  i.fas.fa-comment.text-white
+                when 'escalate'
+                  i.fas.fa-arrow-up-right-dots.text-white
+                when 'resolve_escalation'
+                  i.fas.fa-check.text-white
+                default
+                  i.fas.fa-circle.text-white
+            .timeline-content.bg-light.rounded.p-3.ms-4
+              .timeline-header.d-flex.justify-content-between.align-items-center.mb-2
+                .timeline-user
+                  i.fas.fa-user-clock.me-2
+                  span.fw-bold #{item.performed_by_username}
+                .timeline-date.text-muted.small #{item.created_at_formatted}
+              .timeline-body
+                span.badge.bg-info.mb-2 #{getActionLabel(item.action)}
+                p.mb-0 #{item.details}
+    else
+      .empty-state.text-center.py-4
+        i.fas.fa-history.fa-3x.text-muted.mb-3
+        p.text-muted Aucun historique disponible. 

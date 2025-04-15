@@ -20,6 +20,15 @@
     --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
     --border-radius: 0.25rem;
     --transition: all 0.3s ease;
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f1c40f;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --surface-color: #ffffff;
+    --surface-secondary: #f8f9fa;
+    --border-color: #dee2e6;
 }
 
 /* Reset et styles de base */
@@ -1553,4 +1562,38 @@
 
 .modal-footer > * {
     margin: 0.25rem;
+}
+
+body {
+    background-color: var(--surface-secondary);
+    color: var(--text-primary);
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.nav-link {
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 0.5rem;
+    }
 } 

@@ -1,0 +1,154 @@
+/* Styles pour la page de gestion des groupes d'affectation */
+
+.groups-container {
+  padding: 20px;
+}
+
+.groups-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.groups-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.groups-content {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.groups-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.groups-list th {
+  background-color: #f8f9fa;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.groups-list td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.groups-list tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Styles pour les badges de membres */
+.member-badge {
+  display: inline-block;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  padding: 4px 10px;
+  margin: 2px;
+  font-size: 12px;
+  color: #495057;
+}
+
+.member-badge .remove-member {
+  margin-left: 5px;
+  cursor: pointer;
+  color: #dc3545;
+}
+
+/* Styles pour les boutons d'action */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.action-buttons button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-group-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-group-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Styles pour le modal */
+.members-container {
+  margin-top: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.members-list {
+  margin-bottom: 10px;
+}
+
+.members-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Styles pour la recherche d'utilisateurs */
+.search-results {
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.user-result-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #dee2e6;
+  cursor: pointer;
+}
+
+.user-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.selected-users {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .groups-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .groups-header button {
+    margin-top: 10px;
+  }
+  
+  .groups-list {
+    overflow-x: auto;
+  }
+  
+  .groups-list table {
+    min-width: 600px;
+  }
+} 

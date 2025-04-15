@@ -1,0 +1,83 @@
+doctype html
+html(lang='fr')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= title || appName
+    
+    //- Favicon
+    link(rel='shortcut icon', href=asset('images/luma/luma75.png'), type='image/x-icon')
+    
+    //- CSS global
+    link(rel='stylesheet', href=asset('css/global/main.css'))
+    link(rel='stylesheet', href=asset('css/global/popup.css'))
+    link(rel='stylesheet', href=asset('css/global/theme.css'))
+    
+    //- CSS fontawesome
+    link(rel='stylesheet', href=asset('fontawesome/css/all.css'))
+    
+    //- CSS layout
+    link(rel='stylesheet', href=asset('css/layouts/header.css'))
+    link(rel='stylesheet', href=asset('css/layouts/footer.css'))
+    
+    //- Admin sidebar CSS
+    if user && user.role === 'admin'
+      link(rel='stylesheet', href=asset('css/admin-sidebar.css'))
+    
+    //- CSS spécifiques à la page
+    if pageStyles
+      each style in pageStyles
+        link(rel='stylesheet', href=asset(style))
+    
+    //- JavaScript libraries
+    script(src=asset('js/lib/axios.js'))
+    script(src=asset('js/lib/axios-config.js'))
+    script(src=asset('js/lib/jquery.js'))
+    script(src=asset('js/lib/popup.js'))
+    script(src=asset('js/auth/auth-manager.js'))
+
+    //- Script pour exposer les variables d'environnement frontend  
+    script.
+      window.API_URL = '#{apiUrl}';
+      window.USER_ROLE = '#{user ? user.role : ""}';
+      window.USER_ID = '#{user ? user.id : ""}';
+    
+    //- Configuration Axios
+    script(src='/assets/js/api/axios-config.js')
+    
+  body
+    //- Header
+    include ../partials/header
+    
+    //- Admin Sidebar (if user is admin)
+    if user && user.role === 'admin'
+      include ../partials/admin-sidebar
+    
+    //- Flash Messages
+    if error
+      .alert.alert-danger= error
+    
+    if success
+      .alert.alert-success= success
+    
+    //- Main Content
+    main.main-content
+      block content
+    
+    //- Footer
+    include ../partials/footer
+    
+    //- JavaScript global
+    script(src=asset('js/main.js'))
+    
+    //- Admin sidebar JS
+    if user && user.role === 'admin'
+      script(src=asset('js/admin-sidebar.js'))
+    
+    //- JavaScript spécifiques à la page
+    if pageScripts
+      each script in pageScripts
+        script(src=asset(script))
+    
+    //- Bloc pour les scripts additionnels
+    block scripts 

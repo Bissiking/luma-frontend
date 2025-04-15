@@ -1,0 +1,27 @@
+footer.bg-secondary-light.dark-bg-secondary-dark.pt-16.pb-8
+  .container.mx-auto.px-6
+    //- Footer Top Section
+    .grid.grid-cols-1.md-grid-cols-2.lg-grid-cols-4.gap-8.mb-12
+      //- About
+      .glass
+        .mb-6
+          img.h-10.hover-scale(src=asset('images/luma/luma75.png'), alt=appName)
+        p.text-secondary.text-sm.mb-6
+          | Des solutions personnelles pour votre divertissement et votre productivité numérique.
+        .flex.space-x-4
+          a.social-icon(href='https://www.linkedin.com/in/mathéo-hemery-5a5a59303', aria-label='LinkedIn')
+            i.fab.fa-linkedin-in
+          a.social-icon(href='https://github.com/Bissiking', aria-label='GitHub')
+            i.fab.fa-github
+          a.social-icon(href='https://discord.me/amether-community', aria-label='Discord')
+            i.fab.fa-discord
+
+    //- Footer Bottom
+    .flex.flex-col.md-flex-row.md-items-center.justify-between
+      p.text-secondary.text-sm.mb-4.md-mb-0
+        | &copy; #{new Date().getFullYear()} #{appName}. Tous droits réservés.
+      .flex.flex-wrap.gap-4
+        a.footer-link(href='#') In DEV
+        //- a.footer-link(href='/privacy') Politique de confidentialité
+        //- a.footer-link(href='/terms') Conditions d'utilisation
+        //- a.footer-link(href='/cookies') Cookies

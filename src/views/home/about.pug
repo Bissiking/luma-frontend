@@ -1,0 +1,64 @@
+extends ../layouts/main
+
+block content
+    section.about-section
+        .container
+            h1.section-title À propos de LUMA
+
+            .about-grid
+                .about-image-container
+                    img.about-image(src="/assets/images/luma/about.png" alt="À propos de LUMA")
+
+                .about-content
+                    h2.content-title Notre mission
+                    p.content-text LUMA a été créé pour offrir des solutions personnelles innovantes qui améliorent votre expérience numérique quotidienne. Notre objectif est de rendre la technologie plus accessible et plus agréable pour tous.
+
+                    h2.content-title Notre histoire
+                    p.content-text Fondée en 2023, LUMA est née de la passion pour l'innovation et la technologie. Depuis, nous n'avons cessé de développer des solutions qui répondent aux besoins de nos utilisateurs.
+
+                    h2.content-title Nos valeurs
+                    ul.values-list
+                        li.value-item Innovation constante
+                        li.value-item Qualité et fiabilité
+                        li.value-item Satisfaction client
+                        li.value-item Respect de la vie privée
+                        li.value-item Accessibilité pour tous
+
+    section.team-section
+        .container
+            h2.section-title Notre équipe
+            .team-grid
+                .team-card
+                    img.team-image(src="https://media.licdn.com/dms/image/v2/D4E03AQEmm2auOyRjyA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1730710568668?e=1749686400&v=beta&t=sOssBWEdI3n5wumialZh-O_J7nI1EwEB6KrQvMFBIKE" alt="Mathéo Hemery")
+                    h3.team-name Mathéo Hemery
+                    p.team-role Fondateur & Développeur
+                    .social-links
+                        a.social-link(href="https://github.com/Bissiking" aria-label="GitHub")
+                            i.fab.fa-github
+                        a.social-link(href="https://www.linkedin.com/in/mathéo-hemery-5a5a59303" aria-label="LinkedIn")
+                            i.fab.fa-linkedin-in
+
+                .team-card
+                    img.team-image(src="https://media.licdn.com/dms/image/v2/D4E03AQG9R1Dx8-zDKw/profile-displayphoto-shrink_200_200/B4EZYMaIU8HYAk-/0/1743964899130?e=1749686400&v=beta&t=iL9EZm-D92laIAXBn3_B8PcU1JWpWCUOA4xjBRfbVxI" alt="Steven CHEVALLIER")
+                    h3.team-name Steven CHEVALLIER
+                    p.team-role Gestionnaire de serveur
+                    .social-links
+                        a.social-link(href="https://github.com/Enerzein" aria-label="GitHub")
+                            i.fab.fa-github
+                        a.social-link(href="https://www.linkedin.com/in/steven-chevallier-30a7b8176/?originalSubdomain=fr" aria-label="LinkedIn")
+                            i.fab.fa-linkedin-in
+
+                .team-card
+                    img.team-image(src="https://media.licdn.com/dms/image/v2/D5603AQHI4GRkbH5AXg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1684137032453?e=1749686400&v=beta&t=dwx7XNZiOwMypvRwG3_t77ka1esrskH9N9WlmyUhByg" alt="Léo DOUSSET")
+                    h3.team-name Léo DOUSSET
+                    p.team-role Coordinateur de contenu vidéo
+                    .social-links
+                        a.social-link(href="https://www.linkedin.com/in/léo-dousset-082a22276/" aria-label="LinkedIn")
+                            i.fab.fa-linkedin-in
+
+                .team-card
+                    img.team-image(src="/assets/images/luma/gio.jpg" alt="Giovanni BICHON")
+                    h3.team-name Giovanni BICHON
+                    p.team-role Testeur
+                    .social-links
+                        p A venir

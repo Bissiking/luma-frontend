@@ -1,0 +1,65 @@
+aside.admin-sidebar
+  .sidebar-header
+    h3 
+      i.fas.fa-cogs
+      |  Administration
+
+  nav.sidebar-nav
+    ul
+      li(class=currentPage === 'admin-dashboard' ? 'active' : '')
+        a(href='/admin')
+          i.fas.fa-tachometer-alt
+          span Tableau de bord
+
+      li(class=(currentPage && currentPage.startsWith('admin-users') ? 'active has-submenu' : 'has-submenu'))
+        a(href='#')
+          i.fas.fa-users
+          span Utilisateurs
+        ul.submenu
+          li(class=currentPage === 'admin-users-luma' ? 'active' : '')
+            a(href='/admin/users')
+              span LUMA
+          li(class=currentPage === 'admin-users-jellyfin' ? 'active' : '')
+            a(href='/admin/users/jellyfin')
+              span JellyFin
+
+        li(class=(currentPage && currentPage.startsWith('admin-users') ? 'active has-submenu' : 'has-submenu'))
+          a(href='#')
+            i.fas.fa-ticket-alt
+            span Tickets
+          ul.submenu
+            li(class=currentPage === 'tickets-categories' ? 'active' : '')
+              a(href='/tickets/categories')
+                i.fas.fa-tags
+                span Catégories
+            li(class=currentPage === 'tickets-groups' ? 'active' : '')
+              a(href='/tickets/groups')
+                i.fas.fa-users
+                span Groupes d'Affectation
+
+      li(class=(currentPage && currentPage.startsWith('admin-nino') ? 'active has-submenu' : 'has-submenu'))
+        a(href='#')
+          i.fas.fa-video
+          span Nino
+        ul.submenu
+          li(class=currentPage === 'admin-nino-instances' ? 'active' : '')
+            a(href='/admin/nino/instances')
+              span Instance Nino
+          li(class=currentPage === 'admin-nino-videos' ? 'active' : '')
+            a(href='/admin/nino/videos')
+              span Gestion des vidéos
+
+      li(class=currentPage === 'admin-monitoring' ? 'active' : '')
+        a(href='/admin/monitoring/agents')
+          i.fas.fa-chart-line
+          span Monitoring
+
+      li(class=currentPage === 'admin-system' ? 'active' : '')
+        a(href='/admin/system/status')
+          i.fas.fa-server
+          span Système
+
+      li(class=currentPage === 'admin-config' ? 'active' : '')
+        a(href='/admin/config')
+          i.fas.fa-cog
+          span Configuration 

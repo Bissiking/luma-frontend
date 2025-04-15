@@ -167,6 +167,16 @@ i{
     margin-bottom: 1rem;
 }
 
+.form-row{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.form-group-row{
+    width: 50%;
+}
+
 .form-label {
     display: block;
     margin-bottom: 0.5rem;

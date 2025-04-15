@@ -1,0 +1,137 @@
+extends ../layouts/main
+
+block content
+  .dashboard-page
+    .container
+      .dashboard-header
+        .header-content
+          h1.dashboard-title
+            i.fas.fa-tachometer-alt.gradient-icon
+            |  Tableau de bord
+          p.welcome-message
+            | Bienvenue, 
+            span.username #{user.username}
+            |  !
+
+      .dashboard-stats
+        .stat-card.tickets-card
+          .stat-icon.tickets-icon
+            i.fas.fa-ticket-alt
+          .stat-content
+            .stat-title Tickets
+            .stat-value #{stats.tickets.total}
+            .stat-meta
+              span.stat-detail
+                i.fas.fa-folder-open
+                |  #{stats.tickets.open} ouvert(s)
+              span.stat-detail
+                i.fas.fa-check-circle
+                |  #{stats.tickets.closed} fermé(s)
+
+        .stat-card.videos-card
+          .stat-icon.videos-icon
+            i.fas.fa-video
+          .stat-content
+            .stat-title Vidéos
+            .stat-value #{stats.videos.total}
+            .stat-meta
+              span.stat-detail
+                i.fas.fa-eye
+                |  #{stats.videos.viewed} visionnée(s)
+
+        .stat-card.notifications-card
+          .stat-icon.notifications-icon
+            i.fas.fa-bell
+          .stat-content
+            .stat-title Notifications
+            .stat-value #{stats.notifications.unread}
+            .stat-meta
+              span.stat-detail
+                i.fas.fa-circle-exclamation
+                |  non lue(s)
+
+      .dashboard-sections
+        .dashboard-section
+          .section-header
+            h2 
+              i.fas.fa-clock-rotate-left
+              |  Activité récente
+          .activity-list
+            // Les activités seront chargées dynamiquement par JavaScript
+
+        .dashboard-section
+          .section-header
+            h2
+              i.fas.fa-bolt
+              |  Accès rapides
+          .quick-links
+            a.quick-link(href='/nino')
+              .quick-link-icon.primary-gradient
+                i.fas.fa-video
+              span Vidéos Nino
+
+            a.quick-link(href='/tickets')
+              .quick-link-icon.info-gradient
+                i.fas.fa-ticket-alt
+              span Mes tickets
+
+            button.quick-link#create-ticket-btn
+              .quick-link-icon.success-gradient
+                i.fas.fa-plus-circle
+              span Nouveau ticket
+
+            a.quick-link(href='/dashboard/profile')
+              .quick-link-icon.info-gradient
+                i.fas.fa-user
+              span Mon profil
+
+            a.quick-link(href='/monitoring')
+              .quick-link-icon.warning-gradient
+                i.fas.fa-chart-line
+              span Monitoring 
+
+      // Modal de création de ticket
+      link(rel="stylesheet" href="/assets/css/dashboard/modal-tickets.css")
+      .ticket-modal#create-ticket-modal
+        .ticket-modal-content
+          .ticket-modal-header
+            h3.ticket-modal-title
+              i.fas.fa-ticket-alt
+              | Créer un nouveau ticket
+            button.ticket-modal-close &times;
+
+          .ticket-modal-body
+            form#create-ticket-form
+              .ticket-form-group
+                label(for="ticket-title") Titre
+                input.ticket-form-control#ticket-title(type="text" name="title" placeholder="Titre du ticket" required)
+
+              .ticket-form-group
+                label(for="ticket-description") Description
+                textarea.ticket-form-control.ticket-form-textarea#ticket-description(name="description" placeholder="Décrivez votre problème en détail..." required)
+
+              .ticket-form-group
+                label(for="ticket-category") Catégorie
+                select.ticket-form-control.ticket-form-select#ticket-category(name="category_id")
+                  option(value="") Sélectionner une catégorie
+
+              .ticket-form-group
+                label(for="ticket-priority") Priorité
+                select.ticket-form-control.ticket-form-select#ticket-priority(name="priority")
+                  option(value="low") Basse
+                  option(value="medium" selected) Moyenne
+                  option(value="high") Haute
+                  option(value="urgent") Urgente
+
+              .ticket-modal-footer
+                button.btn-ticket.btn-ticket-secondary(type="button" onclick="TicketManager.closeModal()") Annuler
+                button.btn-ticket.btn-ticket-primary(type="submit")
+                  i.fas.fa-paper-plane
+                  | Envoyer
+
+block scripts
+  script.
+    const API_URL = '#{apiUrl}'; // L'URL de l'API récupérée depuis les variables Pug
+  script(src="/assets/js/services/activityService.js")
+  script(src="/assets/js/tickets/tickets.js")
+  script(src="/assets/js/dashboard.js")

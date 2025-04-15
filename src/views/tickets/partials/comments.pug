@@ -1,0 +1,20 @@
+.comments-section
+  h3.h5.mb-3 Commentaires
+  #comments-list.mb-4
+    .empty-state.text-center.py-4
+      i.fas.fa-comments.fa-3x.text-muted.mb-3
+      p.text-muted Aucun commentaire pour le moment.
+  
+  #comment-form-container.mt-4
+    form#commentForm.d-none
+      .mb-3
+        label.form-label(for="commentContent") Ajouter un commentaire
+        textarea.form-control#commentContent(name="content" rows="3" placeholder="Votre commentaire..." required)
+      
+      .form-check.mb-3
+        input.form-check-input#isInternal(type="checkbox" name="is_internal")
+        label.form-check-label(for="isInternal") Commentaire interne (visible uniquement par l'équipe)
+      
+      button.btn.btn-primary(type="submit")
+        i.fas.fa-paper-plane.me-2
+        | Envoyer 

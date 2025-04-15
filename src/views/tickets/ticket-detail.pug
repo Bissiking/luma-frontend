@@ -1,0 +1,198 @@
+extends ../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1#ticketHeader.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-ticket-alt.gradient-icon
+            span#ticketTitle
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/tickets") Tickets
+              li.breadcrumb-item.active#breadcrumbTitle(aria-current="page")
+      
+      #ticketContainer.ticket-container.bg-white.rounded.shadow-sm.p-4.mb-4.d-none
+        .ticket-header.border-bottom.pb-3.mb-4
+          h2#mainTicketTitle.ticket-title.h4.mb-4
+          
+          .ticket-metadata.d-flex.flex-wrap.gap-4.mb-3
+            .metadata-item
+              span.text-muted Statut:
+              span#ticketStatus.badge.ms-2
+            
+            .metadata-item
+              span.text-muted Créé par:
+              span#ticketCreator.ms-2
+                i.fas.fa-user.me-1
+            
+            .metadata-item
+              span.text-muted Créé le:
+              span#ticketCreatedAt.ms-2
+                i.fas.fa-calendar-alt.me-1
+            
+            .metadata-item
+              span.text-muted Catégorie:
+              span#ticketCategory.ms-2
+                i.fas.fa-folder.me-1
+            
+            .metadata-item
+              span.text-muted Priorité:
+              span#ticketPriority.badge.ms-2
+            
+            #assigneeContainer.metadata-item
+              span.text-muted Assigné à:
+              span#ticketAssignedTo.ms-2
+                i.fas.fa-user-check.me-1
+        
+        .ticket-description.mb-4
+          h3.h5.mb-3 Description
+          .description-content.p-3.bg-light.rounded
+            p#ticketDescription.mb-0
+        
+        #ticketActionsContainer.ticket-actions.d-flex.gap-2.mb-4
+          button.btn.btn-primary#assignTicketBtn.d-none(type="button")
+            i.fas.fa-user-plus.me-2
+            | Affecter
+          
+          button.btn.btn-info#takeChargeBtn.d-none(type="button")
+            i.fas.fa-user-check.me-2
+            | Prendre en charge
+          
+          button.btn.btn-success#resolveTicketBtn.d-none(type="button")
+            i.fas.fa-check-circle.me-2
+            | Résoudre
+          
+          button.btn.btn-warning#commentAndCloseBtn.d-none(type="button")
+            i.fas.fa-comment-dots.me-2
+            | Commenter et fermer
+        
+        .ticket-tabs
+          ul.nav.nav-tabs#ticketTabs(role="tablist")
+            li.nav-item(role="presentation")
+              button.nav-link.active#comments-tab(data-tab-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="true")
+                i.fas.fa-comments.me-2
+                | Commentaires
+            li.nav-item(role="presentation")
+              button.nav-link#history-tab(data-tab-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false")
+                i.fas.fa-history.me-2
+                | Historique
+            li.nav-item(role="presentation")
+              button.nav-link#escalations-tab(data-tab-target="#escalations" type="button" role="tab" aria-controls="escalations" aria-selected="false")
+                i.fas.fa-arrow-up-right-dots.me-2
+                | Escalades
+          
+          .tab-content.p-3.border.border-top-0.rounded-bottom.bg-white
+            #comments.tab-pane.fade.show.active(role="tabpanel" aria-labelledby="comments-tab")
+              include ./partials/comments.pug
+            
+            #history.tab-pane.fade(role="tabpanel" aria-labelledby="history-tab")
+              .history-section
+                h3.h5.mb-3 Historique
+                #history-list
+                  .empty-state.text-center.py-4
+                    i.fas.fa-history.fa-3x.text-muted.mb-3
+                    p.text-muted Aucun historique disponible.
+            
+            #escalations.tab-pane.fade(role="tabpanel" aria-labelledby="escalations-tab")
+              include ./partials/escalations.pug
+
+      // Modal d'assignation
+      #assignModal.modal
+        .modal-dialog
+          .modal-content
+            .modal-header
+              h5.modal-title Assigner le ticket
+              button.close-modal(type="button" aria-label="Fermer") ×
+            .modal-body
+              .loading-spinner.d-none
+                .spinner-border.text-primary(role="status")
+                  span.visually-hidden Chargement...
+              
+              form#assignForm
+                .mb-3
+                  label.form-label(for="assignUserSelect") Sélectionner un utilisateur
+                  select.form-select#assignUserSelect(required)
+                    option(value="") Chargement des utilisateurs...
+            .modal-footer
+              button.btn.btn-secondary.close-modal(type="button") Annuler
+              button.btn.btn-primary#assignModalBtn(type="button")
+                i.fas.fa-user-plus.me-2
+                | Assigner
+
+      // Modal de commentaire et fermeture
+      #commentAndCloseModal.modal
+        .modal-dialog
+          .modal-content
+            .modal-header
+              h5.modal-title Commenter et fermer le ticket
+              button.close-modal(type="button" aria-label="Fermer") ×
+            .modal-body
+              form#commentAndCloseForm
+                .mb-3
+                  label.form-label(for="closeComment") Commentaire de fermeture
+                  textarea#closeComment.form-control(rows="4" required)
+            .modal-footer
+              button.btn.btn-secondary.close-modal(type="button") Annuler
+              button.btn.btn-primary#commentAndCloseModalBtn(type="button")
+                i.fas.fa-check-circle.me-2
+                | Fermer le ticket
+
+block append scripts
+  script(src='/assets/js/tickets/ticket-actions.js')
+  script(src='/assets/js/tickets/ticket-manager.js')
+  script(src='/assets/js/tickets/ticket-comments.js')
+  script(src='/assets/js/tickets/ticket-history.js')
+  script(src='/assets/js/tickets/ticket-escalations.js')
+  script(src='/assets/js/tickets/ticket-assignments.js')
+  script(src='/assets/js/tickets/tickets-show.js')
+
+  script.
+    const API_URL = '#{apiUrl}';
+    const token = '#{token}';
+    
+    $(document).ready(function() {
+      // Gestion personnalisée des onglets
+      $('.nav-tabs .nav-link').on('click', function(e) {
+        e.preventDefault();
+        
+        // Retirer la classe active de tous les onglets
+        $('.nav-tabs .nav-link').removeClass('active');
+        $('.tab-pane').removeClass('show active');
+        
+        // Ajouter la classe active à l'onglet cliqué
+        $(this).addClass('active');
+        
+        // Afficher le contenu correspondant
+        const target = $(this).data('tab-target');
+        $(target).addClass('show active');
+      });
+
+      // Gestion des modals
+      $('.modal').hide(); // Cacher tous les modals au démarrage
+      
+      // Fermeture des modals
+      $('.close-modal').on('click', function() {
+        $(this).closest('.modal').fadeOut();
+      });
+
+      // Fermeture des modals en cliquant en dehors
+      $('.modal').on('click', function(e) {
+        if ($(e.target).hasClass('modal')) {
+          $(this).fadeOut();
+        }
+      });
+
+      // Initialiser les actions du ticket
+      if (window.TicketActions) {
+        const urlPath = window.location.pathname;
+        const pathSegments = urlPath.split('/');
+        const ticketId = pathSegments[pathSegments.length - 1];
+        
+        window.TicketActions.init(ticketId);
+      }
+    });

@@ -73,7 +73,7 @@ footer .glass-dark:hover {
 }
 
 .footer-link:hover {
-    color: var(--text-primary);
+    color: var(--accent-primary);
     transform: translateX(5px);
 }
 
@@ -91,7 +91,7 @@ footer .glass-dark:hover {
     margin-right: 10px;
     border-radius: 50%;
     background: rgba(var(--accent-primary-rgb), 0.1);
-    color: var(--text-primary);
+    color: var(--accent-primary);
     transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     position: relative;
     overflow: hidden;

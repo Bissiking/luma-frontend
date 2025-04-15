@@ -1,0 +1,126 @@
+extends ../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-cog.gradient-icon
+            | Paramètres de supervision
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/monitoring") Supervision
+              li.breadcrumb-item.active(aria-current="page") Paramètres
+
+      // Paramètres généraux
+      .card.mb-4
+        .card-header
+          h5.mb-0 Paramètres généraux
+        .card-body
+          form#general-settings-form
+            .mb-3
+              label.form-label(for="refresh-interval") Intervalle de rafraîchissement
+              .input-group
+                input.form-control#refresh-interval(type="number" min="5" value="30")
+                span.input-group-text secondes
+
+            .mb-3
+              label.form-label(for="retention-period") Période de rétention des données
+              select.form-select#retention-period
+                option(value="7d") 7 jours
+                option(value="30d") 30 jours
+                option(value="90d") 90 jours
+                option(value="180d") 180 jours
+                option(value="365d") 365 jours
+
+            .mb-3
+              .form-check
+                input.form-check-input#enable-notifications(type="checkbox" checked)
+                label.form-check-label(for="enable-notifications") Activer les notifications
+
+            button.btn.btn-primary(type="submit") Enregistrer les paramètres
+
+      // Seuils d'alerte par défaut
+      .card.mb-4
+        .card-header
+          h5.mb-0 Seuils d'alerte par défaut
+        .card-body
+          form#alert-thresholds-form
+            .row
+              .col-md-6
+                h6.mb-3 CPU
+                .mb-3
+                  label.form-label(for="cpu-warning") Seuil d'avertissement (%)
+                  input.form-control#cpu-warning(type="number" min="0" max="100" value="80")
+                .mb-3
+                  label.form-label(for="cpu-critical") Seuil critique (%)
+                  input.form-control#cpu-critical(type="number" min="0" max="100" value="90")
+
+              .col-md-6
+                h6.mb-3 Mémoire
+                .mb-3
+                  label.form-label(for="memory-warning") Seuil d'avertissement (%)
+                  input.form-control#memory-warning(type="number" min="0" max="100" value="80")
+                .mb-3
+                  label.form-label(for="memory-critical") Seuil critique (%)
+                  input.form-control#memory-critical(type="number" min="0" max="100" value="90")
+
+            .row.mt-3
+              .col-md-6
+                h6.mb-3 Disque
+                .mb-3
+                  label.form-label(for="disk-warning") Seuil d'avertissement (%)
+                  input.form-control#disk-warning(type="number" min="0" max="100" value="85")
+                .mb-3
+                  label.form-label(for="disk-critical") Seuil critique (%)
+                  input.form-control#disk-critical(type="number" min="0" max="100" value="95")
+
+            button.btn.btn-primary.mt-3(type="submit") Enregistrer les seuils
+
+      // Notifications
+      .card.mb-4
+        .card-header
+          h5.mb-0 Configuration des notifications
+        .card-body
+          form#notifications-form
+            .mb-3
+              label.form-label Canaux de notification
+              .form-check
+                input.form-check-input#email-notifications(type="checkbox" checked)
+                label.form-check-label(for="email-notifications") Email
+              .form-check
+                input.form-check-input#slack-notifications(type="checkbox")
+                label.form-check-label(for="slack-notifications") Slack
+              .form-check
+                input.form-check-input#teams-notifications(type="checkbox")
+                label.form-check-label(for="teams-notifications") Microsoft Teams
+
+            #email-settings.mt-3
+              h6.mb-3 Paramètres Email
+              .mb-3
+                label.form-label(for="email-recipients") Destinataires
+                textarea.form-control#email-recipients(rows="3" placeholder="Un email par ligne")
+
+            #slack-settings.mt-3.d-none
+              h6.mb-3 Paramètres Slack
+              .mb-3
+                label.form-label(for="slack-webhook") Webhook URL
+                input.form-control#slack-webhook(type="text")
+              .mb-3
+                label.form-label(for="slack-channel") Canal
+                input.form-control#slack-channel(type="text" placeholder="#monitoring")
+
+            #teams-settings.mt-3.d-none
+              h6.mb-3 Paramètres Microsoft Teams
+              .mb-3
+                label.form-label(for="teams-webhook") Webhook URL
+                input.form-control#teams-webhook(type="text")
+
+            button.btn.btn-primary.mt-3(type="submit") Enregistrer la configuration
+
+block scripts
+  script(src='/assets/js/monitoring/settings.js') 

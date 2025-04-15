@@ -1,0 +1,71 @@
+extends ../layouts/main
+
+block content
+  .profile-page
+    .container
+      .profile-header
+        h1 
+          i.fas.fa-user
+          |  Mon Profil
+      
+      .profile-content
+        .profile-section
+          h2 Informations personnelles
+          
+          form.profile-form(action='/dashboard/profile/update', method='POST')
+            .form-row
+              .form-group
+                label(for='name') Nom
+                input#name.form-control(type='text', name='name', value=profile.name || '')
+            
+            .form-group
+              label(for='email') Email
+              input#email.form-control(type='email', name='email', value=profile.email || '')
+            
+            .form-group
+              label(for='username') Nom d'utilisateur
+              input#username.form-control(type='text', value=profile.username || '', disabled)
+            
+            .form-actions
+              button.btn.btn-primary(type='submit') Enregistrer les modifications
+        
+        .profile-section
+          h2 Sécurité
+          
+          form.password-form(action='/dashboard/profile/change-password', method='POST')
+            .form-group
+              label(for='currentPassword') Mot de passe actuel
+              input#currentPassword.form-control(type='password', name='currentPassword', required)
+            
+            .form-row
+              .form-group
+                label(for='newPassword') Nouveau mot de passe
+                input#newPassword.form-control(type='password', name='newPassword', required)
+              
+              .form-group
+                label(for='confirmPassword') Confirmer le mot de passe
+                input#confirmPassword.form-control(type='password', name='confirmPassword', required)
+            
+            .form-actions
+              button.btn.btn-secondary(type='submit') Changer le mot de passe
+        
+        .profile-section
+          h2 Informations du compte
+          
+          .account-info
+            .info-item
+              .info-label Identifiant
+              .info-value #{profile.id}
+            
+            .info-item
+              .info-label Rôle
+              .info-value 
+                span.badge.badge-primary #{profile.role}
+            
+            .info-item
+              .info-label Date d'inscription
+              .info-value #{profile.createdAt}
+            
+            .info-item
+              .info-label Dernière connexion
+              .info-value #{profile.lastLogin} 

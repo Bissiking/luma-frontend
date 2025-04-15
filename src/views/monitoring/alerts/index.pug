@@ -1,0 +1,170 @@
+extends ../../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-bell.gradient-icon
+            | Alertes de supervision
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/monitoring") Supervision
+              li.breadcrumb-item.active(aria-current="page") Alertes
+            
+      // Filtres
+      .card.mb-4
+        .card-header
+          h5.mb-0 Filtres
+        .card-body
+          form.row.g-3#alerts-filter-form
+            .col-md-3
+              label.form-label(for="status-filter") Statut
+              select.form-select#status-filter
+                option(value="") Tous
+                option(value="active") Actives
+                option(value="acknowledged") Acquittées
+                option(value="resolved") Résolues
+                
+            .col-md-3
+              label.form-label(for="severity-filter") Sévérité
+              select.form-select#severity-filter
+                option(value="") Toutes
+                option(value="critical") Critique
+                option(value="warning") Avertissement
+                option(value="info") Information
+                
+            .col-md-3
+              label.form-label(for="agent-filter") Agent
+              select.form-select#agent-filter
+                option(value="") Tous
+                // Chargé dynamiquement
+                
+            .col-md-3
+              label.form-label(for="date-filter") Période
+              select.form-select#date-filter
+                option(value="24h") Dernières 24h
+                option(value="7d") 7 derniers jours
+                option(value="30d") 30 derniers jours
+                option(value="all") Toutes les alertes
+                
+            .col-12.text-end
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-filter.me-2
+                | Filtrer
+      
+      // Liste des alertes
+      .card
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0 Alertes
+          .btn-group
+            button.btn.btn-sm.btn-outline-secondary.active#refresh-alerts
+              i.fas.fa-sync-alt.me-1
+              | Rafraîchir
+            button.btn.btn-sm.btn-outline-secondary#acknowledge-all
+              i.fas.fa-check-double.me-1
+              | Acquitter toutes
+        .card-body
+          .table-responsive
+            table.table.table-striped.table-hover#alerts-table
+              thead
+                tr
+                  th 
+                  th Date
+                  th Agent
+                  th Sévérité
+                  th Message
+                  th Statut
+                  th Actions
+              tbody
+                // Les données seront chargées dynamiquement
+                tr.placeholder-glow
+                  td(colspan="7").text-center
+                    span.placeholder.col-12 Chargement des alertes...
+                    
+      // Pagination
+      nav.d-flex.justify-content-center.mt-4#alerts-pagination
+        ul.pagination
+          li.page-item.disabled
+            a.page-link(href="#", tabindex="-1", aria-disabled="true") Précédent
+          li.page-item.active
+            a.page-link(href="#") 1
+          li.page-item
+            a.page-link(href="#") 2
+          li.page-item
+            a.page-link(href="#") 3
+          li.page-item
+            a.page-link(href="#") Suivant
+              
+  // Modal de détail d'alerte
+  .modal.fade#alert-details-modal(tabindex="-1" aria-labelledby="alert-details-modal-label" aria-hidden="true")
+    .modal-dialog.modal-lg
+      .modal-content
+        .modal-header
+          h5.modal-title#alert-details-modal-label Détails de l'alerte
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
+        .modal-body
+          .row
+            .col-md-6
+              .info-item
+                .info-label ID
+                .info-value#alert-id -
+              .info-item
+                .info-label Date de déclenchement
+                .info-value#alert-date -
+              .info-item
+                .info-label Agent
+                .info-value#alert-agent -
+              .info-item
+                .info-label Service
+                .info-value#alert-service -
+            .col-md-6
+              .info-item
+                .info-label Sévérité
+                .info-value#alert-severity -
+              .info-item
+                .info-label Statut
+                .info-value#alert-status -
+              .info-item
+                .info-label Acquitté par
+                .info-value#alert-ack-by -
+              .info-item
+                .info-label Résolu le
+                .info-value#alert-resolved -
+          
+          hr
+          
+          .mb-3
+            h6 Message
+            .alert.alert-secondary#alert-message -
+          
+          .mb-3
+            h6 Métrique concernée
+            .alert.alert-info#alert-metric -
+          
+          .mb-3
+            h6 Commentaires
+            .alert.alert-light#alert-comments
+              | Aucun commentaire
+          
+          .mb-3
+            label.form-label(for="new-comment") Ajouter un commentaire
+            textarea.form-control#new-comment(rows="3")
+        
+        .modal-footer
+          .btn-group.me-auto
+            button.btn.btn-warning#acknowledge-alert(type="button")
+              i.fas.fa-check.me-1
+              | Acquitter
+            button.btn.btn-success#resolve-alert(type="button")
+              i.fas.fa-check-double.me-1
+              | Résoudre
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Fermer
+          button.btn.btn-primary#add-comment-btn(type="button") Ajouter commentaire
+
+block scripts
+  script(src='/assets/js/monitoring/alerts-list.js') 

@@ -1,0 +1,57 @@
+extends ../layouts/admin
+
+block content
+  .groups-container
+    .groups-header
+      h1 Groupes d'affectation
+      button.btn.btn-primary#addGroupBtn
+        i.fas.fa-plus
+        |  Ajouter un groupe
+
+    .groups-list
+      table.table#groupsTable
+        thead
+          tr
+            th Nom
+            th Description
+            th Membres
+            th Actions
+        tbody
+          // Les groupes seront chargés dynamiquement ici
+
+    // Modal pour ajouter/modifier un groupe
+    .modal.fade#groupModal(tabindex="-1")
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5.modal-title#groupModalTitle Ajouter un groupe
+            button.btn-close(type="button" data-bs-dismiss="modal")
+          .modal-body
+            form#groupForm
+              .mb-3
+                label.form-label(for="groupName") Nom
+                input.form-control#groupName(type="text" required)
+              .mb-3
+                label.form-label(for="groupDescription") Description
+                textarea.form-control#groupDescription(rows="3")
+              .mb-3
+                label.form-label Membres
+                .members-container
+                  .input-group.mb-2
+                    input.form-control#memberSearch(type="text" placeholder="Rechercher un utilisateur...")
+                    button.btn.btn-outline-secondary#searchMemberBtn(type="button")
+                      i.fas.fa-search
+                  .members-list.mt-2
+                    // Les résultats de recherche seront affichés ici
+                .selected-members.mt-3
+                  // Les membres sélectionnés seront affichés ici
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
+            button.btn.btn-primary#saveGroupBtn(type="button") Enregistrer
+
+block scripts
+  script(src="/assets/js/groups-manager.js")
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const groupsManager = new GroupsManager();
+    }); 

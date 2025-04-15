@@ -1,0 +1,11 @@
+extends ../layouts/main
+
+block content
+  .error-page
+    .error-content
+      h1 404
+      h2 Page non trouvée
+      p= message || "La page que vous recherchez n'existe pas ou a été déplacée."
+      a.btn.btn-primary(href='/')
+        i.fas.fa-home
+        |  Retour à l'accueil 

@@ -1,0 +1,105 @@
+extends ../layouts/main
+
+block content
+  //- Hero Section avec effet de gradient et formes géométriques
+  .hero-wrapper
+    .hero-section
+      //- Formes décoratives en arrière-plan
+      .hero-shapes
+        .hero-shape.hero-shape-1
+        .hero-shape.hero-shape-2
+        .hero-shape.hero-shape-3
+        .hero-shape.hero-shape-4
+      
+      .hero-container
+        .hero-content
+          //- Contenu du hero
+          .hero-text
+            h1.hero-title
+              span.hero-subtitle Bienvenue sur
+              span.hero-main-title Luma
+            p.hero-description
+              | Votre plateforme de services personnels pour simplifier votre quotidien numérique
+            
+            .hero-buttons
+              if !user
+                a.btn-primary(href='/auth/login') Connexion
+                a.btn-secondary(href='/auth/register') Inscription
+              else
+                a.btn-primary(href='/dashboard') Mon tableau de bord
+                a.btn-secondary(href='/nino') Accéder à Nino
+          
+          //- Animation graphique sur la droite
+          .hero-graphic-container
+            .hero-graphic
+              .hero-circle.hero-circle-1
+              .hero-circle.hero-circle-2
+              .hero-circle.hero-circle-3
+              .hero-line
+              .hero-dot.hero-dot-1
+              .hero-dot.hero-dot-2
+              .hero-dot.hero-dot-3
+
+  .services-section
+    h2.section-title Nos services
+    .services-grid
+      .service-card
+        .service-icon
+          i.fas.fa-video
+        h3 Nino
+        p Accédez à notre plateforme vidéo ludique et éducative avec du contenu exclusif.
+        a.service-link(href='/nino') Découvrir Nino
+      
+      .service-card
+        .service-icon
+          i.fas.fa-ticket-alt
+        h3 Support
+        p Bénéficiez d'un support personnalisé grâce à notre système de tickets.
+        a.service-link(href='/tickets') Créer un ticket
+      
+      .service-card
+        .service-icon
+          i.fas.fa-user-tie
+        h3 Agents virtuels
+        p Laissez nos agents intelligents vous assister dans vos tâches quotidiennes.
+        a.service-link(href='/agents') Gérer mes agents
+
+  .features-section
+    h2.section-title Fonctionnalités
+    .features-grid
+      .feature-item
+        .feature-icon
+          i.fas.fa-shield-alt
+        .feature-content
+          h3 Sécurité avancée
+          p Vos données sont protégées par un système de sécurité avancé.
+      
+      .feature-item
+        .feature-icon
+          i.fas.fa-sync
+        .feature-content
+          h3 Synchronisation
+          p Synchronisez vos données sur tous vos appareils.
+      
+      .feature-item
+        .feature-icon
+          i.fas.fa-chart-line
+        .feature-content
+          h3 Statistiques
+          p Suivez votre activité grâce à des statistiques détaillées.
+      
+      .feature-item
+        .feature-icon
+          i.fas.fa-bell
+        .feature-content
+          h3 Notifications
+          p Recevez des notifications pour rester informé.
+
+  .cta-section
+    .cta-content
+      h2 Prêt à commencer ?
+      p Rejoignez notre communauté et profitez de tous nos services.
+      if !user
+        a.btn-primary(href='/auth/register') S'inscrire maintenant
+      else
+        a.btn-primary(href='/dashboard') Accéder à mon espace

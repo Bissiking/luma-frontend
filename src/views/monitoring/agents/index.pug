@@ -1,0 +1,107 @@
+extends ../../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-server.gradient-icon
+            | Agents de supervision
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item.active(aria-current="page") Agents de supervision
+            
+      .card.mb-4
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0 Liste des agents
+          .btn-group
+            button.btn.btn-primary.btn-sm#create-agent-btn(type="button" data-bs-toggle="modal" data-bs-target="#create-agent-modal")
+              i.fas.fa-plus.me-2
+              | Nouvel agent
+            button.btn.btn-outline-secondary.btn-sm#refresh-agents
+              i.fas.fa-sync-alt
+            
+        .card-body
+          .table-responsive
+            table.table.table-striped.table-hover#agents-table
+              thead
+                tr
+                  th ID
+                  th Nom
+                  th Statut
+                  th Type
+                  th Dernière connexion
+                  th Utilisateurs
+                  th Services
+                  th Actions
+              tbody
+                // Les données seront chargées dynamiquement
+                tr.placeholder-glow
+                  td(colspan="8").text-center
+                    span.placeholder.col-12 Chargement des agents...
+              
+  // Modal de création d'agent
+  .modal.fade#create-agent-modal(tabindex="-1" aria-labelledby="create-agent-modal-label" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title#create-agent-modal-label Nouvel agent
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
+        .modal-body
+          form#create-agent-form
+            .mb-3
+              label.form-label(for="agent-name") Nom de l'agent
+              input.form-control#agent-name(type="text" required)
+            
+            .mb-3
+              label.form-label(for="agent-description") Description
+              textarea.form-control#agent-description
+            
+            .mb-3
+              label.form-label(for="agent-type") Type
+              select.form-select#agent-type
+                option(value="server" selected) Serveur
+                option(value="workstation") Poste de travail
+                option(value="container") Conteneur
+                option(value="vm") Machine virtuelle
+                option(value="network") Équipement réseau
+            
+            .mb-3
+              .form-check
+                input.form-check-input#agent-public(type="checkbox")
+                label.form-check-label(for="agent-public") Agent public (visible par tous)
+                
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
+          button.btn.btn-primary#create-agent-submit(type="button") Créer
+  
+  // Modal de suppression d'agent
+  .modal.fade#delete-agent-modal(tabindex="-1" aria-hidden="true")
+    .modal-dialog.modal-sm
+      .modal-content
+        .modal-header
+          h5.modal-title Confirmer la suppression
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
+        .modal-body
+          p Êtes-vous sûr de vouloir supprimer l'agent <strong id="delete-agent-name"></strong> ?
+          p.text-danger Cette action est irréversible.
+          input(type="hidden")#delete-agent-id
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
+          button.btn.btn-danger#delete-agent-confirm(type="button") Supprimer
+  
+  // Template pour les actions
+  template#action-template
+    .d-flex.gap-1
+      a.btn.btn-sm.btn-info.view-agent(href="#" title="Voir les détails")
+        i.fas.fa-eye
+      a.btn.btn-sm.btn-warning.edit-agent(href="#" title="Modifier")
+        i.fas.fa-edit
+      button.btn.btn-sm.btn-danger.delete-agent(type="button" title="Supprimer")
+        i.fas.fa-trash
+
+block scripts
+  script(src='/assets/js/monitoring/agents-list.js') 

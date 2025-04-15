@@ -1,0 +1,110 @@
+header.header
+  .header-container
+    //- Logo
+    a.logo(href='/')
+      img(src=asset('images/luma/luma75.png'), alt=appName)
+
+    //- Navigation principale
+    nav.main-nav
+      a.nav-link(href='/', class=currentPage === 'home' ? 'active' : '') Accueil
+      a.nav-link(href='/about', class=currentPage === 'about' ? 'active' : '') À propos
+
+    //- Menu utilisateur
+    .user-menu
+      button#user-menu-button.user-button(type='button')
+        if user
+          img(src=asset('images/user-default.png'), alt=user.name)
+          span.user-name-display= user.name
+        else
+          img(src=asset('images/user-default.png'), alt='Utilisateur')
+          span.user-name-display Non connecté
+        i.fas.fa-chevron-down
+
+      #user-menu-dropdown.user-dropdown.hidden
+        if user
+          .user-header
+            p.user-fullname= user.name
+            p.user-email= user.email
+
+        //- Thème slider
+        .theme-option
+          span Thème sombre
+          label.theme-switch
+            input#theme-toggle(type='checkbox')
+            span.slider.round
+
+        .user-links
+          if user
+            a.user-link(href='/dashboard')
+              i.fas.fa-tachometer-alt
+              span Dashboard
+            a.user-link(href='/dashboard/profile')
+              i.fas.fa-user
+              span Profil
+            //- a.user-link(href='/dashboard/settings')
+            //-   i.fas.fa-cog
+            //-   span Paramètres
+            .divider
+            a#logout-link.user-link(href='/auth/logout')
+              i.fas.fa-sign-out-alt
+              span Déconnexion
+          else
+            a.user-link(href='/auth/login')
+              i.fas.fa-sign-in-alt
+              span Connexion
+            a.user-link(href='/auth/register')
+              i.fas.fa-user-plus
+              span Inscription
+          .divider
+          a.user-link(href='/help')
+            i.fas.fa-question-circle
+            span Aide
+
+script.
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle du menu utilisateur
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-menu-dropdown');
+
+    if (userMenuButton && userDropdown) {
+      userMenuButton.addEventListener('click', function() {
+        userDropdown.classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', function(event) {
+        if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+          userDropdown.classList.add('hidden');
+        }
+      });
+    }
+
+    // Toggle du thème
+    const themeToggle = document.getElementById('theme-toggle');
+
+    if (themeToggle) {
+      const savedTheme = localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        themeToggle.checked = true;
+      }
+
+      themeToggle.addEventListener('change', function() {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    }
+
+    // Gestion de la déconnexion
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', function(e) {
+        const confirmLogout = confirm('Êtes-vous sûr de vouloir vous déconnecter ?');
+        if (!confirmLogout) {
+          e.preventDefault();
+        }
+      });
+    }
+  });

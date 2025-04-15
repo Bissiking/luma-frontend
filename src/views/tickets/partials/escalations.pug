@@ -1,0 +1,50 @@
+link(rel="stylesheet", href="/assets/css/tickets/escalations.css")
+
+.escalations-section
+  h3.h5.mb-3.d-flex.justify-content-between.align-items-center
+    span 
+      i.fas.fa-arrow-up-right-dots.me-2
+      | Escalades
+    button.btn.btn-primary.btn-sm#newEscalationBtn(type="button")
+      i.fas.fa-plus.me-2
+      | Nouvelle escalade
+  
+  #escalations-list
+    .empty-state
+      i.fas.fa-arrow-up-right-dots
+      p Aucune escalade pour ce ticket.
+
+  // Modal d'escalade
+  #escalateModal.modal.escalation-modal(tabindex="-1" aria-labelledby="escalateModalLabel" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title#escalateModalLabel
+            i.fas.fa-arrow-up-right-dots.me-2
+            | Escalader le ticket
+          button.btn-close.close-modal(type="button" aria-label="Fermer")
+        .modal-body
+          .loading-spinner.d-none
+            .spinner-border.text-primary(role="status")
+            
+          
+          form#escalateForm
+            .mb-3
+              label.form-label(for="escalateUserSelect") 
+                i.fas.fa-user.me-2
+                | Sélectionner un utilisateur
+              select.form-select#escalateUserSelect(required)
+                option(value="") Chargement des utilisateurs...
+            
+            .mb-3
+              label.form-label(for="escalationReason")
+                i.fas.fa-comment.me-2
+                | Raison de l'escalade
+              textarea.form-control#escalationReason(rows="3" required placeholder="Expliquez pourquoi vous souhaitez escalader ce ticket...")
+        .modal-footer
+          button.btn.btn-light.close-modal(type="button")
+            i.fas.fa-times.me-2
+            | Annuler
+          button.btn.btn-primary#escalateModalBtn(type="button")
+            i.fas.fa-arrow-up-right-dots.me-2
+            | Escalader 

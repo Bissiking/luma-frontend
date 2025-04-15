@@ -1,0 +1,77 @@
+extends ../layouts/main
+
+block content
+  .tickets-container
+    .tickets-header
+      .tickets-title
+        h1 Liste des Tickets
+        p Gérez et suivez tous vos tickets de support
+      //- button#createTicketBtn.btn-primary
+      //-   i.fas.fa-plus
+      //-   |  Nouveau Ticket
+
+    .filters-container
+      .filters-grid
+        .filter-group
+          label(for="statusFilter") Statut
+          select#statusFilter
+            option(value="") Tous les statuts
+            option(value="open") Ouvert
+            option(value="in_progress") En cours
+            option(value="resolved") Résolu
+            option(value="closed") Fermé
+        .filter-group
+          label(for="priorityFilter") Priorité
+          select#priorityFilter
+            option(value="") Toutes les priorités
+            option(value="low") Basse
+            option(value="medium") Moyenne
+            option(value="high") Haute
+            option(value="urgent") Urgente
+        .filter-group
+          label(for="categoryFilter") Catégorie
+          select#categoryFilter
+            option(value="") Toutes les catégories
+        .filter-group
+          label(for="creatorFilter") Créé par
+          select#creatorFilter
+            option(value="") Tous les créateurs
+        .filter-group
+          label(for="searchFilter") Rechercher
+          input#searchFilter(type="text" placeholder="Rechercher un ticket...")
+
+    .tickets-table-container
+      table.tickets-table
+        thead
+          tr
+            th ID
+            th Titre
+            th Statut
+            th Priorité
+            th Catégorie
+            th Créé par
+            th Date de création
+            th Actions
+        tbody#ticketsTableBody
+          // Le contenu sera généré dynamiquement par JavaScript
+
+    .pagination
+      .pagination-info
+        | Affichage de 
+        span#startItem 0
+        |  à 
+        span#endItem 0
+        |  sur 
+        span#totalItems 0
+        |  tickets
+      .pagination-controls
+        button#prevPage.pagination-button
+          i.fas.fa-chevron-left
+        .pagination-numbers#paginationNumbers
+          // Les numéros de page seront générés dynamiquement
+        button#nextPage.pagination-button
+          i.fas.fa-chevron-right
+
+block scripts
+  script(src="/assets/js/tickets/tickets-list.js")
+  script(src="/assets/js/tickets/ticket-filters.js")

@@ -1,0 +1,263 @@
+/* Actions container */
+.actions-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 100px;
+}
+
+/* Action Block */
+.action-block {
+    width: 125px;
+}
+
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: var(--accent-primary-transparent);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+/* Styles pour les pages des agents de monitoring */
+
+/* Cartes d'information */
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  width: 40%;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+/* Badges et statuts */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge.bg-success {
+  background: linear-gradient(45deg, #1cc88a, #13855c) !important;
+}
+
+.badge.bg-danger {
+  background: linear-gradient(45deg, #e74a3b, #be2617) !important;
+}
+
+.badge.bg-warning {
+  background: linear-gradient(45deg, #f6c23e, #dda20a) !important;
+  color: #212529;
+}
+
+.badge.bg-info {
+  background: linear-gradient(45deg, #36b9cc, #258391) !important;
+}
+
+.badge.bg-secondary {
+  background: linear-gradient(45deg, #858796, #60616f) !important;
+}
+
+/* Onglets */
+.nav-tabs {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 0;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #4e73df;
+  background-color: rgba(78, 115, 223, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+  color: #4e73df;
+  border-bottom: 2px solid #4e73df;
+  font-weight: 600;
+}
+
+/* Métriques */
+.metric-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.metric-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.metric-title i {
+  color: #4e73df;
+}
+
+.metric-chart {
+  height: 200px;
+}
+
+/* Collecteurs */
+.collector-section {
+  background-color: #f8f9fc;
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.collector-header {
+  margin-bottom: 1rem;
+}
+
+.collector-header h6 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.collector-header i {
+  color: #4e73df;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-tabs .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .metric-chart {
+    height: 180px;
+  }
+  
+  .info-label {
+    width: 50%;
+  }
+}
+
+/* Tables */
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: #f8f9fc;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4e73df;
+  border-top: none;
+  padding: 0.75rem;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Form elements */
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid #e3e6f0;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: rgba(78, 115, 223, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
+}
+
+.form-check-input:checked {
+  background-color: #4e73df;
+  border-color: #4e73df;
+}
+
+.form-switch .form-check-input {
+  width: 2.5em;
+}
+
+/* Styles spécifiques pour différents types d'alertes */
+.alert-critical {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+.alert-ok {
+  background-color: rgba(40, 167, 69, 0.1);
+}

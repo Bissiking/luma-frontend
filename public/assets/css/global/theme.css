@@ -45,9 +45,15 @@
 
     /* Couleurs de statut */
     --success: #10b981;
+    --success_rgb: 16, 185, 129;
     --warning: #f59e0b;
+    --warning_rgb: 245, 158, 11;
     --error: #ef4444;
+    --error_rgb: 239, 68, 68;
     --info: #3b82f6;
+    --info_rgb: 59, 130, 246;
+    --escalated: #2950ff;
+    --escalated_rgb: 41, 80, 255;
 
     /* Ombres */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

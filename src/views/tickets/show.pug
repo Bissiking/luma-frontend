@@ -1,0 +1,64 @@
+extends ../layouts/main
+
+block content
+  .ticket-details-container
+    .ticket-details-header
+      .ticket-details-title
+        h1#ticketTitle Détails du Ticket
+        span#ticketId.badge
+      .ticket-details-actions
+        button#editTicketBtn.btn-secondary
+          i.fas.fa-edit
+          |  Modifier
+        button#closeTicketBtn.btn-primary
+          i.fas.fa-check
+          |  Fermer
+
+    .ticket-details-content
+      .ticket-info
+        .ticket-info-row
+          .ticket-info-label Statut
+          .ticket-info-value
+            span#ticketStatus.badge
+        .ticket-info-row
+          .ticket-info-label Priorité
+          .ticket-info-value
+            span#ticketPriority.badge
+        .ticket-info-row
+          .ticket-info-label Catégorie
+          .ticket-info-value
+            span#ticketCategory
+        .ticket-info-row
+          .ticket-info-label Créé par
+          .ticket-info-value
+            span#ticketCreator
+        .ticket-info-row
+          .ticket-info-label Date de création
+          .ticket-info-value
+            span#ticketCreatedAt
+
+      .ticket-description
+        h3 Description
+        p#ticketDescription
+
+      .ticket-comments
+        h3 Commentaires
+        .comments-list#commentsList
+          // Les commentaires seront chargés dynamiquement
+        .comment-form
+          textarea#commentText.form-control(placeholder="Ajouter un commentaire...")
+          button#addCommentBtn.btn-primary
+            i.fas.fa-paper-plane
+            |  Envoyer
+
+block scripts
+  script(src="/assets/js/tickets/tickets-show.js")
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // TicketDetails est un objet littéral et non une classe constructeur
+      if (typeof TicketDetails !== 'undefined') {
+        TicketDetails.init('#{ticketId}');
+      } else {
+        console.error('Module TicketDetails non trouvé');
+      }
+    }); 

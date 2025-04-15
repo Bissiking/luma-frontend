@@ -1,0 +1,211 @@
+/* Styles pour les alertes de supervision */
+
+/* Cartes et conteneurs */
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+/* Badges de sévérité */
+.badge-severity {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-severity.critical {
+  background: linear-gradient(45deg, #e74a3b, #be2617) !important;
+  color: #fff;
+}
+
+.badge-severity.warning {
+  background: linear-gradient(45deg, #f6c23e, #dda20a) !important;
+  color: #212529;
+}
+
+.badge-severity.info {
+  background: linear-gradient(45deg, #36b9cc, #258391) !important;
+  color: #fff;
+}
+
+/* Badges de statut */
+.badge-status {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-status.active {
+  background-color: #e74a3b;
+  color: #fff;
+}
+
+.badge-status.acknowledged {
+  background-color: #f6c23e;
+  color: #212529;
+}
+
+.badge-status.resolved {
+  background-color: #1cc88a;
+  color: #fff;
+}
+
+/* Tables */
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: #f8f9fc;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4e73df;
+  border-top: none;
+  padding: 0.75rem;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Info items dans le modal */
+.info-item {
+  margin-bottom: 0.75rem;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+/* Filtres */
+.filter-section {
+  padding: 1.25rem;
+  background-color: #f8f9fc;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+/* Pagination */
+.pagination {
+  margin-bottom: 0;
+}
+
+.pagination .page-item .page-link {
+  color: #4e73df;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin: 0 0.25rem;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: rgba(78, 115, 223, 0.1);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #4e73df;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(78, 115, 223, 0.2);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #d1d3e2;
+}
+
+/* Form elements */
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid #e3e6f0;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: rgba(78, 115, 223, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.15);
+}
+
+/* Animation pour le chargement */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .table thead th {
+    font-size: 0.8rem;
+  }
+  
+  .table tbody td {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+  
+  .pagination .page-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+} 

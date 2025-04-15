@@ -92,7 +92,7 @@
     background-color: transparent;
     border: 1px solid var(--border-color);
     border-radius: var(--rounded-md);
-    padding: 8px 12px;
+    padding: 8px 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     color: var(--text-primary);
@@ -110,7 +110,7 @@
 }
 
 #user-menu-button{
-    width: 150px;
+    width: 170px;
 }
 
 .user-button:hover {

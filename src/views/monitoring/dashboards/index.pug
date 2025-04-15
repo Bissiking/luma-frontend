@@ -1,0 +1,155 @@
+extends ../../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-chart-line.gradient-icon
+            | Tableaux de bord
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item
+                a(href="/monitoring") Supervision
+              li.breadcrumb-item.active(aria-current="page") Tableaux de bord
+
+      // Filtres et actions
+      .card.mb-4
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0 Mes tableaux de bord
+          .btn-group
+            button.btn.btn-primary.btn-sm#create-dashboard-btn(type="button" data-bs-toggle="modal" data-bs-target="#create-dashboard-modal")
+              i.fas.fa-plus.me-2
+              | Nouveau tableau de bord
+            button.btn.btn-outline-secondary.btn-sm#refresh-dashboards
+              i.fas.fa-sync-alt
+
+      // Liste des tableaux de bord
+      .row#dashboards-list
+        // Tableau de bord système
+        .col-md-6.col-xl-4.mb-4
+          .card.h-100
+            .card-header.d-flex.justify-content-between.align-items-center
+              h5.mb-0 Système
+              .dropdown
+                button.btn.btn-link.text-muted.p-0(type="button" data-bs-toggle="dropdown")
+                  i.fas.fa-ellipsis-v
+                .dropdown-menu
+                  a.dropdown-item(href="#")
+                    i.fas.fa-edit.me-2
+                    | Modifier
+                  a.dropdown-item(href="#")
+                    i.fas.fa-clone.me-2
+                    | Dupliquer
+                  a.dropdown-item.text-danger(href="#")
+                    i.fas.fa-trash.me-2
+                    | Supprimer
+            .card-body
+              .dashboard-preview.text-center.mb-3
+                i.fas.fa-desktop.fa-3x.text-muted
+              p.card-text Vue d'ensemble des métriques système (CPU, mémoire, disque)
+              .mt-3
+                a.btn.btn-primary.btn-sm.w-100(href="/monitoring/dashboards/system")
+                  i.fas.fa-eye.me-2
+                  | Voir
+
+        // Tableau de bord réseau
+        .col-md-6.col-xl-4.mb-4
+          .card.h-100
+            .card-header.d-flex.justify-content-between.align-items-center
+              h5.mb-0 Réseau
+              .dropdown
+                button.btn.btn-link.text-muted.p-0(type="button" data-bs-toggle="dropdown")
+                  i.fas.fa-ellipsis-v
+                .dropdown-menu
+                  a.dropdown-item(href="#")
+                    i.fas.fa-edit.me-2
+                    | Modifier
+                  a.dropdown-item(href="#")
+                    i.fas.fa-clone.me-2
+                    | Dupliquer
+                  a.dropdown-item.text-danger(href="#")
+                    i.fas.fa-trash.me-2
+                    | Supprimer
+            .card-body
+              .dashboard-preview.text-center.mb-3
+                i.fas.fa-network-wired.fa-3x.text-muted
+              p.card-text Surveillance du trafic réseau et des connexions
+              .mt-3
+                a.btn.btn-primary.btn-sm.w-100(href="/monitoring/dashboards/network")
+                  i.fas.fa-eye.me-2
+                  | Voir
+
+        // Tableau de bord applications
+        .col-md-6.col-xl-4.mb-4
+          .card.h-100
+            .card-header.d-flex.justify-content-between.align-items-center
+              h5.mb-0 Applications
+              .dropdown
+                button.btn.btn-link.text-muted.p-0(type="button" data-bs-toggle="dropdown")
+                  i.fas.fa-ellipsis-v
+                .dropdown-menu
+                  a.dropdown-item(href="#")
+                    i.fas.fa-edit.me-2
+                    | Modifier
+                  a.dropdown-item(href="#")
+                    i.fas.fa-clone.me-2
+                    | Dupliquer
+                  a.dropdown-item.text-danger(href="#")
+                    i.fas.fa-trash.me-2
+                    | Supprimer
+            .card-body
+              .dashboard-preview.text-center.mb-3
+                i.fas.fa-window-restore.fa-3x.text-muted
+              p.card-text Suivi des performances des applications
+              .mt-3
+                a.btn.btn-primary.btn-sm.w-100(href="/monitoring/dashboards/apps")
+                  i.fas.fa-eye.me-2
+                  | Voir
+
+  // Modal de création de tableau de bord
+  .modal.fade#create-dashboard-modal(tabindex="-1" aria-labelledby="create-dashboard-modal-label" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title#create-dashboard-modal-label Nouveau tableau de bord
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Fermer")
+        .modal-body
+          form#create-dashboard-form
+            .mb-3
+              label.form-label(for="dashboard-name") Nom
+              input.form-control#dashboard-name(type="text" required)
+            
+            .mb-3
+              label.form-label(for="dashboard-description") Description
+              textarea.form-control#dashboard-description(rows="3")
+            
+            .mb-3
+              label.form-label Type de tableau de bord
+              .form-check
+                input.form-check-input#type-blank(type="radio" name="dashboard-type" value="blank" checked)
+                label.form-check-label(for="type-blank") Vide
+              .form-check
+                input.form-check-input#type-system(type="radio" name="dashboard-type" value="system")
+                label.form-check-label(for="type-system") Système
+              .form-check
+                input.form-check-input#type-network(type="radio" name="dashboard-type" value="network")
+                label.form-check-label(for="type-network") Réseau
+              .form-check
+                input.form-check-input#type-application(type="radio" name="dashboard-type" value="application")
+                label.form-check-label(for="type-application") Application
+            
+            .mb-3
+              .form-check
+                input.form-check-input#dashboard-public(type="checkbox")
+                label.form-check-label(for="dashboard-public") Tableau de bord public
+                
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
+          button.btn.btn-primary#create-dashboard-submit(type="button") Créer
+
+block scripts
+  script(src='/assets/js/monitoring/dashboards.js') 

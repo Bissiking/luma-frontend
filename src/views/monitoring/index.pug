@@ -1,0 +1,94 @@
+extends ../layouts/main
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-tachometer-alt.gradient-icon
+            | Supervision
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item.active(aria-current="page") Supervision
+      
+      // Aperçu du système
+      .row.mb-4
+        .col-md-3
+          .info-card.bg-gradient-primary
+            .info-card-inner
+              .info-icon
+                i.fas.fa-server
+              .info-content
+                h2.info-value#agents-count 0
+                p.info-label Agents
+        
+        .col-md-3
+          .info-card.bg-gradient-success
+            .info-card-inner
+              .info-icon
+                i.fas.fa-check-circle
+              .info-content
+                h2.info-value#healthy-count 0
+                p.info-label En bonne santé
+        
+        .col-md-3
+          .info-card.bg-gradient-warning
+            .info-card-inner
+              .info-icon
+                i.fas.fa-exclamation-triangle
+              .info-content
+                h2.info-value#warning-count 0
+                p.info-label Avertissements
+        
+        .col-md-3
+          .info-card.bg-gradient-danger
+            .info-card-inner
+              .info-icon
+                i.fas.fa-times-circle
+              .info-content
+                h2.info-value#critical-count 0
+                p.info-label Critiques
+      
+      // Sections de navigation
+      .row
+        .col-md-6.mb-4
+          .card.feature-card
+            .card-body
+              h5.card-title
+                i.fas.fa-server.me-2.text-primary
+                | Agents
+              p.card-text Gérez vos agents de supervision et consultez leurs métriques en temps réel.
+              a.btn.btn-primary(href="/monitoring/agents") Voir les agents
+        
+        .col-md-6.mb-4
+          .card.feature-card
+            .card-body
+              h5.card-title
+                i.fas.fa-bell.me-2.text-warning
+                | Alertes
+              p.card-text Configurez et consultez les alertes déclenchées par vos agents de supervision.
+              a.btn.btn-primary(href="/monitoring/alerts") Voir les alertes
+        
+        .col-md-6.mb-4
+          .card.feature-card
+            .card-body
+              h5.card-title
+                i.fas.fa-chart-line.me-2.text-success
+                | Tableaux de bord
+              p.card-text Visualisez les données de supervision avec des tableaux de bord personnalisés.
+              a.btn.btn-primary(href="/monitoring/dashboards") Voir les tableaux de bord
+        
+        .col-md-6.mb-4
+          .card.feature-card
+            .card-body
+              h5.card-title
+                i.fas.fa-cogs.me-2.text-info
+                | Configuration
+              p.card-text Paramétrez les seuils d'alerte et la configuration globale de la supervision.
+              a.btn.btn-primary(href="/monitoring/settings") Accéder aux paramètres
+
+block scripts
+  script(src='/assets/js/monitoring/index.js') 

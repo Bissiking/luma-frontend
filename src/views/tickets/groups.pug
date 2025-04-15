@@ -1,0 +1,72 @@
+extends ../layouts/main
+
+block content
+  .groups-container
+    .groups-header
+      h1 Groupes d'Affectation [En cours de développement]
+      button.btn.btn-primary#addGroupBtn
+        i.fas.fa-plus
+        |  Ajouter un Groupe
+
+    .groups-content
+      .groups-list
+        table.table
+          thead
+            tr
+              th Nom du Groupe
+              th Description
+              th Membres
+              th Actions
+          tbody#groupsTableBody
+            // Les groupes seront chargés dynamiquement ici
+
+    // Modal pour ajouter/modifier un groupe
+    .modal.fade#groupModal(tabindex="-1" role="dialog" aria-labelledby="groupModalLabel" aria-hidden="true")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title#groupModalLabel Ajouter un Groupe
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form#groupForm
+              input(type="hidden" id="groupId")
+              .form-group
+                label(for="groupName") Nom du Groupe
+                input#groupName.form-control(type="text" required)
+              .form-group
+                label(for="groupDescription") Description
+                textarea#groupDescription.form-control(rows="3")
+              .form-group
+                label Membres du Groupe
+                .members-container
+                  .members-list#membersList
+                    // Les membres seront chargés dynamiquement ici
+                  .members-actions
+                    button.btn.btn-sm.btn-outline-primary#addMemberBtn
+                      i.fas.fa-user-plus
+                      |  Ajouter un Membre
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Annuler
+            button.btn.btn-primary#saveGroupBtn(type="button") Enregistrer
+
+    // Modal pour ajouter un membre au groupe
+    .modal.fade#memberModal(tabindex="-1" role="dialog" aria-labelledby="memberModalLabel" aria-hidden="true")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title#memberModalLabel Ajouter un Membre
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            form#memberForm
+              .form-group
+                label(for="userSearch") Rechercher un utilisateur
+                input#userSearch.form-control(type="text" placeholder="Nom, email...")
+              .search-results#userSearchResults
+                // Les résultats de recherche seront affichés ici
+              .selected-users#selectedUsers
+                // Les utilisateurs sélectionnés seront affichés ici
+
+block scripts
+  script(src="/assets/js/tickets/groups.js") 

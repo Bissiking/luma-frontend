@@ -1,0 +1,83 @@
+extends ../layouts/main
+
+block content
+  .pt-20.pb-16
+    .container.mx-auto.px-6
+      .flex.flex-col.lg-flex-row.items-center.justify-between.gap-12
+        //- Left Column - Form
+        .w-full.lg-w-1-2.max-w-md.mx-auto.lg-mx-0
+          .auth-card
+            .auth-header
+              h1.text-2xl.font-bold.mb-1 Connexion
+              p.text-secondary.text-sm Accédez à votre espace personnel
+              #error-message.hidden.alert.alert-danger(role='alert')
+              span#error-text
+            //- Formulaire de connexion
+            form#login-form.space-y-6
+              //- Username Field
+              .form-group
+                label.form-label(for='username') Identifiant
+                .input-wrapper
+                  i.fas.fa-user.input-icon
+                  input#username.form-input(type='text', name='username', placeholder='Votre identifiant', required)
+
+              //- Password Field
+              .form-group
+                .flex.justify-between.mb-1
+                  label.form-label(for='password') Mot de passe
+                .input-wrapper
+                  i.fas.fa-lock.input-icon
+                  input#password.form-input(type='password', name='password', placeholder='••••••••', required)
+                  button.password-toggle(type='button', onclick='togglePasswordVisibility(this)')
+                    i.fas.fa-eye
+
+              //- Remember Me
+              .flex.form-group.items-center
+                input#remember_me.form-checkbox(type='checkbox', name='remember_me')
+                label.ml-2.text-sm.text-secondary(for='remember_me') Se souvenir de moi
+
+              //- Submit Button
+              button#submitBtn.btn-primary.w-full.py-3(type='submit')
+                i.fas.fa-sign-in-alt.mr-2
+                span.button-text Se connecter
+                span.loading-spinner.hidden
+                  i.fas.fa-spinner.fa-spin
+
+              //- Register Link
+              .mt-6
+                .p-4.bg-gray-50.dark-bg-gray-800.rounded-lg.border.border-gray-200.dark-border-gray-700
+                  p.text-center.mb-2 Vous n'avez pas de compte ?
+                  a.btn-secondary.w-full.py-2.flex.items-center.justify-center(href='/auth/register')
+                    i.fas.fa-user-plus.mr-2
+                    | Créer un compte
+
+        //- Right Column - Interactive Illustration
+        .w-full.lg-w-1-2.lg-block
+          .auth-illustration
+            .illustration-content.text-center
+              .shield-animation.mb-6
+                i.fas.fa-shield-alt.text-6xl.text-accent-primary
+                .shield-ripple
+              h2.text-2xl.font-bold.mb-4 Connexion sécurisée
+              p.text-secondary.mb-6 Accédez à votre espace personnel en toute sécurité.
+
+              .features-grid
+                .feature-item
+                  i.fas.fa-lock.text-accent-primary.mb-2
+                  p Sécurité renforcée
+                .feature-item
+                  i.fas.fa-tachometer-alt.text-accent-primary.mb-2
+                  p Interface intuitive
+                .feature-item
+                  i.fas.fa-mobile-alt.text-accent-primary.mb-2
+                  p Responsive design
+                .feature-item
+                  i.fas.fa-sync.text-accent-primary.mb-2
+                  p Mises à jour régulières
+
+block scripts
+  script.
+    const API_URL = '#{apiUrl}'; // L'URL de l'API récupérée depuis les variables Pug
+  script(src=asset('js/auth/auth-prompts.js'))
+  script(src=asset('js/auth/auth-manager.js'))
+  script(src=asset('js/auth/login.js'))
