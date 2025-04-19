@@ -1,50 +1,24 @@
 /**
- * Routes pour le module Nino
+ * Routes pour la plateforme Nino
  */
+
 const express = require('express');
 const router = express.Router();
-const { isAuthenticated } = require('../middleware/auth.middleware');
+const ninoController = require('../controllers/nino.controller');
 
-// Contrôleur Nino temporaire en attendant son implémentation
-const ninoController = {
-  index: (req, res) => {
-    res.render('nino/index', {
-      title: 'Nino - LUMA',
-      currentPage: 'nino'
-    });
-  },
-  category: (req, res) => {
-    const categoryId = req.params.id;
-    res.render('nino/category', {
-      title: 'Catégorie Nino - LUMA',
-      currentPage: 'nino',
-      categoryId
-    });
-  },
-  video: (req, res) => {
-    const videoId = req.params.id;
-    res.render('nino/video', {
-      title: 'Vidéo Nino - LUMA',
-      currentPage: 'nino',
-      videoId
-    });
-  },
-  search: (req, res) => {
-    const query = req.query.q || '';
-    res.render('nino/search', {
-      title: 'Recherche Nino - LUMA',
-      currentPage: 'nino',
-      query
-    });
-  }
-};
+// Middleware pour vérifier si l'utilisateur est connecté (optionnel)
+const { isLoggedIn } = require('../middleware/auth');
 
-// Routes de Nino protégées par authentification
-router.use(isAuthenticated);
-
+// Page d'accueil de Nino
 router.get('/', ninoController.index);
-router.get('/category/:id', ninoController.category);
+
+// Page vidéo
+router.get('/video', ninoController.video);
+
+// Page vidéo avec ID
 router.get('/video/:id', ninoController.video);
-router.get('/search', ninoController.search);
+
+// Page de découverte
+router.get('/discover', ninoController.discover);
 
 module.exports = router; 

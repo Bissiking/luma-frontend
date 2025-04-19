@@ -1,0 +1,243 @@
+extends ../layouts/main
+
+block append content
+  // Contenu spécifique à Nino
+  style.
+    /* Style pour cacher le header et le footer Luma */
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    header.header, footer.footer, .sidebar {
+      display: none !important;
+    }
+    .main-content {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100%;
+    }
+
+  // Début du contenu Nino
+  .nino-body
+    // En-tête principal
+    header.nino-header
+      .nino-header-left
+        img.nino-logo(src="/assets/images/nino-logo.png", alt="Nino Logo")
+        nav.nino-nav
+          a.nino-nav-link(href="/nino") Accueil
+          a.nino-nav-link.active(href="/nino/discover") Découvrir
+          a.nino-nav-link(href="/nino/series") Séries
+          a.nino-nav-link(href="/nino/movies") Films
+          a.nino-nav-link(href="/nino/watchlist") Ma liste
+      
+      .nino-user-controls
+        .nino-search
+          button.nino-search-toggle
+            i.fas.fa-search
+          form.nino-search-form
+            input.nino-search-input(type="text", placeholder="Rechercher...")
+            button.nino-search-submit(type="submit")
+              i.fas.fa-search
+        
+        .nino-user-menu
+          img.nino-user-avatar(src="/assets/images/avatar.jpg", alt="Avatar")
+          .nino-user-dropdown
+            .nino-dropdown-header
+              img.nino-dropdown-avatar(src="/assets/images/avatar.jpg", alt="Avatar")
+              .nino-dropdown-user-info
+                .nino-dropdown-username Thomas
+                .nino-dropdown-email thomas@example.com
+                .nino-dropdown-stats
+                  .nino-dropdown-stat
+                    .nino-dropdown-stat-value 42
+                    .nino-dropdown-stat-label Favoris
+                  .nino-dropdown-stat
+                    .nino-dropdown-stat-value 156
+                    .nino-dropdown-stat-label Vidéos
+            
+            a.nino-dropdown-item(href="/nino/profile")
+              i.fas.fa-user
+              | Mon profil
+            a.nino-dropdown-item(href="/nino/settings")
+              i.fas.fa-cog
+              | Paramètres
+            a.nino-dropdown-item(href="/nino/history")
+              i.fas.fa-history
+              | Historique
+            .nino-dropdown-divider
+            a.nino-dropdown-item(href="/logout")
+              i.fas.fa-sign-out-alt
+              | Se déconnecter
+    
+    // Section bannière
+    section.nino-discover-banner
+      .nino-container
+        h1.nino-discover-title Découvrez de nouvelles vidéos
+        p.nino-discover-description Explorez des catégories variées et trouvez du contenu qui vous intéresse
+    
+    // Barre de filtres
+    .nino-discover-filters
+      .nino-container
+        .nino-filter-wrapper
+          .nino-filter-group
+            label.nino-filter-label Catégories
+            select.nino-filter-select
+              option(value="all") Toutes les catégories
+              option(value="skateboard") Skateboard
+              option(value="sports") Sports
+              option(value="tutorials") Tutoriels
+              option(value="music") Musique
+              option(value="gaming") Jeux Vidéo
+          
+          .nino-filter-group
+            label.nino-filter-label Trier par
+            select.nino-filter-select
+              option(value="recent") Plus récentes
+              option(value="popular") Plus populaires
+              option(value="rated") Mieux notées
+              option(value="trending") Tendances
+          
+          .nino-filter-group
+            label.nino-filter-label Durée
+            select.nino-filter-select
+              option(value="all") Toutes les durées
+              option(value="short") Courte (< 5 min)
+              option(value="medium") Moyenne (5-20 min)
+              option(value="long") Longue (> 20 min)
+    
+    // Grille de vidéos découverte
+    section.nino-discover-grid
+      .nino-container
+        .nino-grid-header
+          h2.nino-section-title Résultats de découverte
+          .nino-grid-count 48 vidéos
+        
+        .nino-discover-results
+          // Première rangée
+          - for (let i = 1; i <= 4; i++)
+            .nino-discover-card
+              .nino-card-image
+                img(src=`/assets/images/nino/thumb${i}.jpg`, alt=`Découverte ${i}`)
+                .nino-card-overlay
+                  button.nino-play-button
+                    i.fas.fa-play
+                if i % 3 === 0
+                  .nino-badge.nino-badge-new Nouveau
+              h3.nino-card-title Les bases du skateboard - Partie #{i}
+              .nino-card-meta
+                span.nino-card-author Andy William
+                span.nino-card-views 125,908 vues • il y a 2 jours
+          
+          // Deuxième rangée
+          - for (let i = 5; i <= 8; i++)
+            .nino-discover-card
+              .nino-card-image
+                img(src=`/assets/images/nino/thumb${i-4}.jpg`, alt=`Découverte ${i}`)
+                .nino-card-overlay
+                  button.nino-play-button
+                    i.fas.fa-play
+                if i % 2 === 0
+                  .nino-badge.nino-badge-popular Populaire
+              h3.nino-card-title Comment faire un ollie parfait #{i-4}
+              .nino-card-meta
+                span.nino-card-author Jordan Wise
+                span.nino-card-views 87,542 vues • il y a 1 semaine
+          
+          // Troisième rangée
+          .nino-discover-card
+            .nino-card-image
+              img(src="/assets/images/nino/recommended1.jpg", alt="Découverte 9")
+              .nino-card-overlay
+                button.nino-play-button
+                  i.fas.fa-play
+              .nino-badge.nino-badge-4k 4K
+            h3.nino-card-title Préparez-vous pour votre premier saut en skateboard
+            .nino-card-meta
+              span.nino-card-author Jordan Wise
+              span.nino-card-views 125,908 vues • il y a 2 jours
+          
+          .nino-discover-card
+            .nino-card-image
+              img(src="/assets/images/nino/recommended2.jpg", alt="Découverte 10")
+              .nino-card-overlay
+                button.nino-play-button
+                  i.fas.fa-play
+            h3.nino-card-title Conseils pour faire du skateboard sur une rampe
+            .nino-card-meta
+              span.nino-card-author Jordan Wise
+              span.nino-card-views 125,908 vues • il y a 2 jours
+          
+          .nino-discover-card
+            .nino-card-image
+              img(src="/assets/images/nino/thumb3.jpg", alt="Découverte 11")
+              .nino-card-overlay
+                button.nino-play-button
+                  i.fas.fa-play
+              .nino-badge.nino-badge-hdr HDR
+            h3.nino-card-title Comment améliorer votre équilibre
+            .nino-card-meta
+              span.nino-card-author Mike Skatez
+              span.nino-card-views 65,342 vues • il y a 3 semaines
+          
+          .nino-discover-card
+            .nino-card-image
+              img(src="/assets/images/nino/thumb4.jpg", alt="Découverte 12")
+              .nino-card-overlay
+                button.nino-play-button
+                  i.fas.fa-play
+            h3.nino-card-title Équipement de protection essentiel
+            .nino-card-meta
+              span.nino-card-author Safety First
+              span.nino-card-views 74,123 vues • il y a 1 mois
+        
+        // Pagination
+        .nino-pagination
+          button.nino-pagination-prev
+            i.fas.fa-chevron-left
+          
+          .nino-pagination-numbers
+            a.nino-pagination-link.active(href="#") 1
+            a.nino-pagination-link(href="#") 2
+            a.nino-pagination-link(href="#") 3
+            span.nino-pagination-dots ...
+            a.nino-pagination-link(href="#") 8
+          
+          button.nino-pagination-next
+            i.fas.fa-chevron-right
+    
+    // Pied de page
+    footer.nino-footer
+      .nino-container
+        .nino-footer-grid
+          .nino-footer-column
+            h3 À propos
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/about") À propos de Nino
+              li
+                a.nino-footer-link(href="/nino/contact") Contact
+              li
+                a.nino-footer-link(href="/nino/careers") Recrutement
+          
+          .nino-footer-column
+            h3 Aide
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/faq") FAQ
+              li
+                a.nino-footer-link(href="/nino/support") Support
+              li
+                a.nino-footer-link(href="/nino/terms") Conditions d'utilisation
+          
+          .nino-footer-column
+            h3 Communauté
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/creators") Créateurs
+              li
+                a.nino-footer-link(href="/nino/blog") Blog
+              li
+                a.nino-footer-link(href="/nino/forum") Forum
+        
+        .nino-copyright
+          p &copy; 2025 Nino. Tous droits réservés. 

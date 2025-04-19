@@ -25,6 +25,10 @@ i{
     color: var(--text-primary-rgb) !important;
 }
 
+/* nav */
+li{
+    list-style: none;
+}
 
 /* Container */
 .container {

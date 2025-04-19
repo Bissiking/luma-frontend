@@ -5,7 +5,7 @@
 
 $(document).ready(function() {
     // Configuration
-    const apiUrl = '/api';
+    const api = window.api; // Utilisation de l'instance axios configurée
     
     // État
     let agents = [];
@@ -129,10 +129,10 @@ $(document).ready(function() {
         $refreshBtn.on('click', loadAgents);
         
         // Actions sur les agents
-        $(document).on('click', '.action-btn.view', function() {
-            const agentId = $(this).closest('.agent-item').data('id');
-            window.location.href = `/monitoring/agents/metrics?id=${agentId}`;
-        });
+        // $(document).on('click', '.action-btn.view', function() {
+        //     const agentId = $(this).closest('.agent-item').data('id');
+        //     window.location.href = `/monitoring/agents/metrics?id=${agentId}`;
+        // });
         
         $(document).on('click', '.action-btn.edit', function() {
             const agentId = $(this).closest('.agent-item').data('id');
@@ -187,7 +187,7 @@ $(document).ready(function() {
         // Réinitialiser les filtres et la pagination
         currentPage = 1;
         
-        axios.get(`${apiUrl}/monitoring/agents`)
+        api.get('/monitoring/agents')
             .then(function(response) {
                 agents = response.data.agents || [];
                 
@@ -199,7 +199,7 @@ $(document).ready(function() {
             .catch(function(error) {
                 console.error('Erreur lors du chargement des agents:', error);
                 
-                showNotification('error', 'Erreur lors du chargement des agents');
+                showPopup('error', 'Erreur', 'Erreur lors du chargement des agents');
                 hideLoading();
                 showEmpty();
             });
@@ -595,38 +595,33 @@ $(document).ready(function() {
      * Crée un nouvel agent
      */
     function createAgent() {
-        const name = $('#agent-name').val().trim();
-        const type = $('#agent-type').val();
-        const description = $('#agent-description').val().trim();
-        const isPublic = $('#agent-public').is(':checked');
+        const agentName = $('#agent-name').val();
+        const agentType = $('#agent-type').val();
+        const agentDescription = $('#agent-description').val();
+        const agentPublic = $('#agent-public').is(':checked');
         
-        if (!name) {
-            showNotification('error', 'Le nom de l\'agent est requis');
+        if (!agentName) {
+            showPopup('warning', 'Attention', 'Veuillez saisir un nom pour l\'agent');
             return;
         }
         
-        $createAgentSubmit.prop('disabled', true);
+        const newAgent = {
+            name: agentName,
+            type: agentType,
+            description: agentDescription,
+            isPublic: agentPublic
+        };
         
-        axios.post(`${apiUrl}/monitoring/agents`, {
-            name,
-            type,
-            description,
-            isPublic
-        })
-        .then(function(response) {
-            hideCreateModal();
-            showNotification('success', 'Agent créé avec succès');
-            
-            // Recharger les agents
-            loadAgents();
-        })
-        .catch(function(error) {
-            console.error('Erreur lors de la création de l\'agent:', error);
-            showNotification('error', 'Erreur lors de la création de l\'agent');
-        })
-        .finally(function() {
-            $createAgentSubmit.prop('disabled', false);
-        });
+        api.post('/monitoring/agents', newAgent)
+            .then(function(response) {
+                loadAgents();
+                hideCreateModal();
+                showPopup('success', 'Succès', 'Agent créé avec succès');
+            })
+            .catch(function(error) {
+                console.error('Erreur lors de la création de l\'agent:', error);
+                showPopup('error', 'Erreur', 'Erreur lors de la création de l\'agent');
+            });
     }
     
     /**
@@ -651,26 +646,15 @@ $(document).ready(function() {
     function deleteAgent() {
         const agentId = $deleteAgentId.val();
         
-        if (!agentId) {
-            return;
-        }
-        
-        $deleteAgentConfirm.prop('disabled', true);
-        
-        axios.delete(`${apiUrl}/monitoring/agents/${agentId}`)
+        api.delete(`/monitoring/agents/${agentId}`)
             .then(function(response) {
-                hideDeleteModal();
-                showNotification('success', 'Agent supprimé avec succès');
-                
-                // Recharger les agents
                 loadAgents();
+                hideDeleteModal();
+                showPopup('success', 'Succès', 'Agent supprimé avec succès');
             })
             .catch(function(error) {
                 console.error('Erreur lors de la suppression de l\'agent:', error);
-                showNotification('error', 'Erreur lors de la suppression de l\'agent');
-            })
-            .finally(function() {
-                $deleteAgentConfirm.prop('disabled', false);
+                showPopup('error', 'Erreur', 'Erreur lors de la suppression de l\'agent');
             });
     }
     
@@ -702,14 +686,7 @@ $(document).ready(function() {
      * Affiche une notification
      */
     function showNotification(type, message) {
-        // Si une bibliothèque de notification est disponible, on l'utilise
-        if (typeof toastr !== 'undefined') {
-            toastr[type](message);
-            return;
-        }
-        
-        // Sinon, un simple alert
-        alert(message);
+        showPopup(type, type === 'error' ? 'Erreur' : 'Information', message);
     }
     
     /**

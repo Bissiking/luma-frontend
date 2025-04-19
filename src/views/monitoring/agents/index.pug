@@ -1,7 +1,8 @@
 extends ../../layouts/main
 
-block append head
-  include partials/resources
+block append scripts
+  script(src="/assets/js/agents-management.js")
+  script(src="/assets/js/monitoring/agents-list-simple.js" defer)
   
 block content
   .dashboard-page
@@ -85,7 +86,9 @@ block content
               span Dernière activité
               button.sort-btn(data-sort="lastSeen")
                 i.fas.fa-sort
-          
+            .agent-header-actions
+              span Actions
+
           .agents-loading#agents-loading
             i.fas.fa-spinner.fa-spin
             span Chargement des agents...
@@ -152,7 +155,4 @@ block content
       
       .modal-footer
         button.btn-secondary#cancel-delete-agent Annuler
-        button.btn-danger#delete-agent-confirm Supprimer
-
-block page_scripts
-  script(src="/assets/js/agents-management.js") 
+        button.btn-danger#delete-agent-confirm Supprimer 

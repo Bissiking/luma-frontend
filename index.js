@@ -98,6 +98,7 @@ app.use('/dashboard', require('./src/routes/dashboard.routes'));
 app.use('/tickets', require('./src/routes/tickets.routes'));
 app.use('/admin', require('./src/routes/admin.routes'));
 app.use('/monitoring', require('./src/routes/monitoring.routes'));
+app.use('/nino', require('./src/routes/nino.routes'));
 
 // Middleware pour la gestion des erreurs 404
 app.use((req, res, next) => {

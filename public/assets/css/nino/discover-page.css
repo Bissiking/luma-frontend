@@ -1,0 +1,342 @@
+/**
+ * Nino Platform - Page découverte
+ */
+
+/* Bannière de découverte */
+.nino-discover-banner {
+    background: linear-gradient(to right, #002a3a, #00476b);
+    padding: 80px 30px 40px;
+    margin-bottom: 20px;
+}
+
+.nino-discover-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.nino-discover-description {
+    font-size: 18px;
+    max-width: 600px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Barre de filtres */
+.nino-discover-filters {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+
+.nino-filter-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nino-filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.nino-filter-label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nino-filter-select {
+    padding: 10px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-filter-select:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+}
+
+.nino-filter-select option {
+    background-color: var(--bg-dark);
+    color: white;
+}
+
+/* Grille de découverte */
+.nino-discover-grid {
+    padding: 0 30px 50px;
+}
+
+.nino-grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.nino-grid-count {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.nino-discover-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.nino-discover-card {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: var(--nino-card-shadow);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.nino-discover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.nino-discover-card .nino-card-image {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+}
+
+.nino-discover-card .nino-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.nino-discover-card:hover .nino-card-image img {
+    transform: scale(1.05);
+}
+
+.nino-discover-card .nino-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.nino-discover-card:hover .nino-card-overlay {
+    opacity: 1;
+}
+
+.nino-discover-card .nino-play-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-discover-card .nino-play-button:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+}
+
+.nino-discover-card .nino-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 15px 15px 10px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.nino-discover-card .nino-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 15px 15px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Badges */
+.nino-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 5;
+}
+
+.nino-badge-new {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.nino-badge-popular {
+    background-color: #FF9800;
+    color: white;
+}
+
+.nino-badge-4k {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.nino-badge-hdr {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Pagination */
+.nino-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.nino-pagination-prev,
+.nino-pagination-next {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-pagination-prev:hover,
+.nino-pagination-next:hover {
+    background-color: var(--accent);
+}
+
+.nino-pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nino-pagination-link {
+    min-width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.nino-pagination-link.active,
+.nino-pagination-link:hover {
+    background-color: var(--accent);
+}
+
+.nino-pagination-dots {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 5px;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .nino-discover-banner {
+        padding: 70px 20px 30px;
+    }
+    
+    .nino-discover-title {
+        font-size: 28px;
+    }
+    
+    .nino-filter-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nino-filter-group {
+        min-width: unset;
+    }
+    
+    .nino-discover-results {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .nino-discover-banner {
+        padding: 60px 15px 25px;
+    }
+    
+    .nino-discover-title {
+        font-size: 24px;
+    }
+    
+    .nino-discover-description {
+        font-size: 16px;
+    }
+    
+    .nino-discover-grid {
+        padding: 0 15px 40px;
+    }
+    
+    .nino-grid-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .nino-discover-results {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .nino-discover-results {
+        grid-template-columns: 1fr;
+    }
+    
+    .nino-pagination-link:not(.active):not(:first-child):not(:last-child):not(:nth-child(2)):not(:nth-last-child(2)) {
+        display: none;
+    }
+} 

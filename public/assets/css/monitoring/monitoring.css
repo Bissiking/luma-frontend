@@ -1,724 +1,68 @@
-/*
- * LUMA Monitoring - Styles personnalisés
- * CSS pour les fonctionnalités de monitoring (index, show, edit, create)
- * Version: 2.0
- */
-
-/* ========== COMPOSANTS GÉNÉRAUX ========== */
-
-/* Carte principale */
-.monitoring-card {
-    border-radius: var(--rounded-lg);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-card);
-    box-shadow: var(--shadow-sm);
-}
-
-.monitoring-card-header {
-    background-color: var(--bg-secondary);
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.monitoring-card-title {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin: 0;
-}
-
-.monitoring-card-title i {
-    color: var(--accent-primary);
-    margin-right: 0.5rem;
-}
-
-.monitoring-card-body {
-    padding: 1.5rem;
-}
-
-/* Badges de statut avec icônes */
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    border-radius: var(--rounded-full);
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-}
-
-.status-badge .dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background-color: white;
-    border-radius: 50%;
-    margin-right: 0.25rem;
-}
-
-.status-badge.status-active {
-    background-color: var(--color-success);
-}
-
-.status-badge.status-inactive {
-    background-color: var(--secondary);
-}
-
-.status-badge.status-error {
-    background-color: var(--color-error);
-}
-
-.status-badge.status-warning {
-    background-color: var(--color-warning);
-}
-
-/* Alertes et notifications */
-.monitoring-alert {
-    border-radius: var(--rounded);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    color: white;
-}
-
-.monitoring-alert i {
-    margin-right: 0.5rem;
-}
-
-.monitoring-alert.alert-success {
-    background-color: var(--color-success-light);
-}
-
-.monitoring-alert.alert-error {
-    background-color: var(--color-error-light);
-}
-
-.monitoring-alert.alert-info {
-    background-color: var(--color-info-light);
-}
-
-/* État vide */
-.empty-state {
-    text-align: center;
-    padding: 3rem 0;
-    color: var(--text-secondary);
-}
-
-.empty-state i {
-    color: var(--accent-secondary-transparent);
-    margin-bottom: 1rem;
-    font-size: 3rem;
-}
-
-.empty-state h5 {
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-    color: var(--text-secondary);
-    margin: 0.5rem 0 1.5rem;
-}
-
-/* Boutons */
-.monitoring-btn {
-    background-color: var(--accent-primary);
-    color: white;
-    border-radius: var(--rounded);
-    padding: 0.5rem 1rem;
-    transition: all var(--transition-fast);
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-}
-
-.monitoring-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.monitoring-btn.btn-secondary {
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-.monitoring-btn.btn-warning {
-    background-color: var(--color-warning-light);
-}
-
-.monitoring-btn.btn-danger {
-    background-color: var(--color-error-light);
-}
-
-.monitoring-btn-sm {
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-}
-
-/* Boutons d'action (icônes) */
-.btn-action {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--rounded);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: transform var(--transition-fast);
-}
-
-.btn-action:hover {
-    transform: scale(1.1);
-}
-
-.btn-action.action-delete {
-    width: 75px;
-    background-color: var(--error);
-}
-
-/* ========== PAGE INDEX ========== */
-
-/* Barre de filtres */
-.monitoring-filters {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.monitoring-filter-badge {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--rounded-full);
-}
-
-.monitoring-search {
-    position: relative;
-    max-width: 300px;
-}
-
-.monitoring-search input {
-    padding-left: 2.5rem;
-    border-radius: var(--rounded);
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-}
-
-.monitoring-search i {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-}
-
-/* Tableau des agents */
-.monitoring-table {
-    color: var(--text-primary);
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    margin-bottom: 0;
-}
-
-.monitoring-table thead tr {
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.monitoring-table th {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    padding: 1rem;
-    border: none;
-}
-
-.monitoring-table th.text-left {
-    text-align: left;
-}
-
-.monitoring-table th.text-center {
-    text-align: center;
-}
-
-.monitoring-table tbody tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color var(--transition-fast);
-}
-
-.monitoring-table tbody tr:hover {
-    background-color: var(--bg-hover);
-}
-
-.monitoring-table td {
-    padding: 1rem;
-    border: none;
-    vertical-align: middle;
-}
-
-.monitoring-table td.text-center {
-    text-align: center;
-}
-
-/* Cartes d'agent (vue mobile) */
-.monitoring-agent-card {
-    border-radius: var(--rounded-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-fast);
-    margin-bottom: 1rem;
-    height: 100%;
-}
-
-.monitoring-agent-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.monitoring-agent-card-body {
-    padding: 1rem;
-}
-
-.monitoring-agent-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.monitoring-agent-name {
-    display: flex;
-    align-items: center;
-}
-
-.monitoring-agent-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--rounded);
-    background-color: var(--accent-primary-transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.75rem;
-}
-
-.monitoring-agent-icon i {
-    color: var(--accent-primary);
-}
-
-.monitoring-agent-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.monitoring-agent-label {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-}
-
-.monitoring-agent-value {
-    color: var(--text-primary);
-    font-size: 0.75rem;
-}
-
-.monitoring-agent-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-/* ========== PAGE SHOW ========== */
-
-/* Informations de l'agent */
-.agent-info-list {
-    background-color: transparent;
-    border-radius: var(--rounded-lg);
-    padding: 0;
-    list-style: none;
-}
-
-.agent-info-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.agent-info-label {
-    color: var(--text-primary);
-    font-weight: 600;
-    min-width: 120px;
-}
-
-.agent-info-value {
-    color: var(--text-primary);
-    font-size: 0.875rem;
-}
-
-.agent-info-description {
-    padding: 0.75rem 0;
-}
-
-.agent-info-description-label {
-    color: var(--text-primary);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.agent-info-description-value {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    padding: 0.75rem;
-    background-color: var(--bg-secondary-light);
-    border-radius: var(--rounded);
-    border-left: 3px solid var(--accent-primary);
-}
-
-/* Boîte d'informations de connexion */
-.connection-info-box {
-    background-color: var(--bg-secondary-light);
-    border-radius: var(--rounded-lg);
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-}
-
-.connection-info-field {
-    margin-bottom: 1rem;
-}
-
-.connection-info-label {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.connection-info-input-group {
-    position: relative;
-    display: flex;
-}
-
-.connection-info-input {
-    border: 1px solid var(--border-color);
-    border-radius: var(--rounded) 0 0 var(--rounded);
-    padding: 0.75rem;
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    flex-grow: 1;
-}
-
-.connection-info-btn {
-    background-color: var(--accent-primary);
-    color: white;
-    border-radius: 0 var(--rounded) var(--rounded) 0;
-    padding: 0.75rem 1rem;
-    transition: all var(--transition-fast);
-}
-
-/* ========== PAGE CREATE/EDIT ========== */
-
-/* Formulaires */
-.monitoring-form-group {
-    margin-bottom: 1.5rem;
-}
-
-.monitoring-form-label {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.monitoring-form-control {
-    border: 1px solid var(--border-color);
-    border-radius: var(--rounded);
-    padding: 0.75rem;
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    width: 100%;
-}
-
-.monitoring-form-select {
-    border: 1px solid var(--border-color);
-    border-radius: var(--rounded);
-    padding: 0.75rem;
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    width: 100%;
-}
-
-.monitoring-form-text {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-    display: block;
-}
-
-.monitoring-form-info {
-    background-color: var(--bg-secondary-light);
-    border-radius: var(--rounded);
-    border-left: 3px solid var(--accent-primary);
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.monitoring-form-info p {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-}
-
-.monitoring-form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-/* Documentation */
-.docs-section {
-    margin-top: 2rem;
-}
-
-.docs-intro {
-    background-color: var(--accent-primary-transparent);
-    border-radius: var(--rounded);
-    margin-bottom: 1.5rem;
-    padding: 0.5rem;
-}
-
-.docs-intro p {
-    margin: 0;
-    color: var(--text-primary);
-    padding: 0.5rem;
-}
-
-.step-list {
-    margin-bottom: 1.5rem;
-}
-
-.step {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-}
-
-.step:last-child {
-    margin-bottom: 0;
-}
-
-.step-number {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    border-radius: var(--rounded-full);
-    background-color: var(--accent-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 1rem;
-}
-
-.step-title {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.step-description {
-    color: var(--text-secondary);
-    margin: 0;
-}
-
-.docs-notice {
-    background-color: var(--bg-card);
-    border-left: 4px solid var(--accent-primary);
-    box-shadow: var(--shadow);
-    border-radius: var(--rounded);
-    padding: 1rem;
-    margin-top: 1.5rem;
-}
-
-.docs-notice p {
-    margin: 0;
-    color: var(--text-primary);
-}
-
-.docs-notice i {
-    color: var(--accent-primary);
-    margin-right: 0.5rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .monitoring-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .monitoring-search {
-        max-width: none;
-        margin-top: 1rem;
-    }
-    
-    .agent-info-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .agent-info-label {
-        margin-bottom: 0.5rem;
-    }
-    
-    .monitoring-form-actions {
-        flex-direction: column;
-    }
-    
-    .monitoring-form-actions .monitoring-btn {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-/* Ajout des styles pour les animations et l'interface de création d'agent */
-.fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.copied {
-    background-color: #d4edda !important;
-    transition: background-color 0.3s ease;
-}
-
-.agent-details {
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-
-.agent-details code {
-    display: inline-block;
-    max-width: 85%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* Styles pour la page de supervision */
-.dashboard-header {
-  padding: 1.5rem 0;
-  background: linear-gradient(to right, #f8f9fa, #ffffff);
-  border-bottom: 1px solid #e9ecef;
-}
-
-.dashboard-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
-}
+/* Styles pour le dashboard de monitoring */
 
 .gradient-icon {
   background: linear-gradient(45deg, #4e73df, #36b9cc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 1.8rem;
 }
 
-/* Cartes d'information */
-.info-card {
-  border-radius: 15px;
-  padding: 1.5rem;
+/* Personnalisation de l'animation pour la page monitoring */
+.monitoring-dashboard .dashboard-header::after {
+  background: linear-gradient(45deg, #4e73df, #36b9cc, #1cc88a, #f6c23e);
+}
+
+/* Cartes de statut - Style optimisé */
+.status-card {
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  color: white;
+  width: 200px;
   height: 100%;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.info-card:hover {
-  transform: translateY(-5px);
-}
-
-.info-card-inner {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-}
-
-.info-icon {
-  font-size: 2.5rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.info-content {
-  flex-grow: 1;
-}
-
-.info-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-}
-
-.info-label {
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* Cartes de fonctionnalités */
-.feature-card {
-  border: none;
-  border-radius: 15px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.feature-card .card-body {
-  padding: 2rem;
-}
-
-.feature-card .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #2c3e50;
+  transition: transform 0.2s;
   margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 
-.feature-card .card-text {
-  color: #6c757d;
-  margin-bottom: 1.5rem;
+/* Forcer des hauteurs réduites pour les cartes */
+.compact-card {
+  padding: 0.75rem;
+  height: auto;
+  max-height: 100px;
+  margin: 5px;
 }
 
-.feature-card .btn {
-  border-radius: 8px;
-  padding: 0.5rem 1.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
+.compact-card .status-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
 }
 
-/* Gradients pour les cartes d'information */
+.compact-card .status-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.compact-card .status-label {
+  font-size: 0.7rem;
+  margin: 0;
+}
+
+.status-card:hover {
+  transform: translateY(-3px);
+}
+
+.card-system-status {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+/* Gradients de couleur */
 .bg-gradient-primary {
   background: linear-gradient(45deg, #4e73df, #224abe);
 }
@@ -735,23 +79,449 @@
   background: linear-gradient(45deg, #e74a3b, #be2617);
 }
 
-/* Responsive adjustments */
+.status-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+  opacity: 0.8;
+}
+
+.status-content {
+  flex-grow: 1;
+}
+
+.status-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.status-label {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+/* Layout des colonnes principales */
+@media (min-width: 992px) {
+  .col-xl-8 {
+    width: 66.6666% !important;
+    float: left !important;
+  }
+  
+  .col-xl-4 {
+    width: 33.3333% !important;
+    float: left !important;
+  }
+}
+
+/* Navigation rapide - cartes compactes */
+.compact-feature {
+  width: 200px;
+  height: 200px;
+}
+
+.compact-feature .feature-card-icon {
+  padding: 0.85rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compact-feature .feature-card-icon i {
+  font-size: 1.75rem;
+}
+
+.compact-feature .feature-card-content {
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.compact-feature .feature-card-title {
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.compact-feature .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 767px) {
+  .col-6 {
+    width: 50%;
+    float: left;
+  }
+}
+
+/* Ressources système */
+.resource-item {
+  margin-bottom: 1.25rem;
+}
+
+.resource-item:last-child {
+  margin-bottom: 0;
+}
+
+.resource-item .progress {
+  height: 8px;
+  background-color: #eaecf4;
+}
+
+.resource-item .d-flex {
+  font-size: 0.875rem;
+  color: #5a5c69;
+  margin-bottom: 0.5rem;
+}
+
+/* Progress bars pour les ressources système */
+.progress {
+  height: 1rem;
+  border-radius: 0.5rem;
+  background-color: #eaecf4;
+  margin-bottom: 1rem;
+  box-shadow: inset 0 0.1rem 0.1rem rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  border-radius: 0.5rem;
+  transition: width 0.6s ease;
+}
+
+/* Tableau des alertes */
+.table-hover tbody tr:hover {
+  background-color: rgba(78, 115, 223, 0.05);
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem !important;
+  vertical-align: middle;
+  border-top: 1px solid #e3e6f0;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #e3e6f0;
+  background-color: #f8f9fc;
+  color: #6e707e;
+  font-weight: 600;
+}
+
+/* Status des services */
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+.badge.rounded-pill {
+  padding-right: 0.6em;
+  padding-left: 0.6em;
+  border-radius: 10rem;
+}
+
+.bg-success {
+  background-color: #1cc88a !important;
+  color: white;
+}
+
+.bg-warning {
+  background-color: #f6c23e !important;
+  color: white;
+}
+
+.bg-danger {
+  background-color: #e74a3b !important;
+  color: white;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: 0.35rem;
+}
+
+.list-group-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-width: 0 0 1px;
+}
+
+.list-group-item:last-child {
+  border-bottom-width: 0;
+}
+
+.list-group-flush .list-group-item {
+  border-right-width: 0;
+  border-left-width: 0;
+  border-radius: 0;
+}
+
+.list-group-flush:first-child .list-group-item:first-child {
+  border-top-width: 0;
+}
+
+/* Cards */
+.dashboard-card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  margin: 10px 5px;
+  background-color: #fff;
+}
+
+.dashboard-card .card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-card .card-body {
+  padding: 0.75rem;
+}
+
+/* Boutons */
+.btn-primary {
+  color: #fff;
+  background-color: #4e73df;
+  border-color: #4e73df;
+}
+
+.btn-primary:hover {
+  background-color: #2e59d9;
+  border-color: #2653d4;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .info-card {
+  .status-card {
     margin-bottom: 1rem;
   }
   
-  .feature-card {
-    margin-bottom: 1.5rem;
-  }
-  
-  .info-card-inner {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
+  .dashboard-header {
+    padding: 1rem 0;
   }
   
   .dashboard-title {
     font-size: 1.5rem;
   }
+}
+
+/* Cards de fonctionnalités */
+.feature-card {
+  width: 300px;
+  height: 170px;
+  margin: 5px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 2rem rgba(58, 59, 69, 0.25);
+}
+
+.feature-card .card-body {
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card-icon {
+  background: linear-gradient(135deg, #f8f9fc 0%, #eaecf4 100%);
+  padding: 2rem;
+  text-align: center;
+}
+
+.feature-card-icon i {
+  font-size: 3rem;
+  transition: transform 0.3s;
+}
+
+.feature-card:hover .feature-card-icon i {
+  transform: scale(1.1);
+}
+
+.feature-card-content {
+  padding: 1.5rem;
+}
+
+.feature-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #2c3e50;
+}
+
+.feature-card-text {
+  color: #6c757d;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Forcer le display à none pour le texte des cartes compactes */
+.compact-feature .feature-card-text {
+  display: none;
+}
+
+/* Aérer un peu les sections */
+.card.dashboard-card {
+  margin-bottom: 1.25rem;
+}
+
+/* Boutons plus aérés */
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+}
+
+/* Style pour les cartes de navigation en bas de page */
+.navigation-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.navigation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+}
+
+.navigation-card i {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: #4e73df;
+}
+
+.navigation-card.alertes i {
+  color: #f6c23e;
+}
+
+.navigation-card.tableaux i {
+  color: #1cc88a;
+}
+
+.navigation-card.config i {
+  color: #36b9cc;
+}
+
+.navigation-card h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.navigation-card p {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  color: #6c757d;
+}
+
+/* Améliorations des affichages d'état */
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.status-indicator.success {
+  background-color: #1cc88a;
+}
+
+.status-indicator.warning {
+  background-color: #f6c23e;
+}
+
+.status-indicator.danger {
+  background-color: #e74a3b;
+}
+
+.status-value {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Améliorations des spacings pour les statuts */
+.status-section {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+}
+
+.status-section h6 {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #4e73df;
+  font-weight: 600;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Amélioration de l'animation pulse pour la page monitoring */
+.monitoring-dashboard .dashboard-header::after {
+  width: 150px;
+  background: linear-gradient(45deg, #4e73df, #36b9cc, #1cc88a);
+  animation: pulse-monitoring 2.5s infinite;
+}
+
+@keyframes pulse-monitoring {
+  0% {
+    opacity: 0.5;
+    width: 100px;
+  }
+  50% {
+    opacity: 1;
+    width: 150px;
+  }
+  100% {
+    opacity: 0.5;
+    width: 100px;
+  }
+}
+
+/* Amélioration visuelle du gradient-icon pour cette page */
+.monitoring-dashboard .gradient-icon {
+  background: linear-gradient(45deg, #4e73df, #36b9cc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 } 

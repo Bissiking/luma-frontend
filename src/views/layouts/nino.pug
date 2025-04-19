@@ -1,0 +1,110 @@
+doctype html
+html(lang="fr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Nino - Votre Plateforme de Streaming Vidéo
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+    link(rel="stylesheet", href="/assets/css/nino/nino.css")
+    link(rel="stylesheet", href="/assets/css/nino/components.css")
+    link(rel="stylesheet", href="/assets/css/nino/animations.css")
+    block styles
+
+  body
+    // En-tête principal
+    header.nino-header
+      .nino-header-left
+        img.nino-logo(src="/assets/images/nino/nino-logo.png", alt="Nino Logo")
+        nav.nino-nav
+          a.nino-nav-link.active(href="/nino") Accueil
+          a.nino-nav-link(href="/nino/discover") Découvrir
+          a.nino-nav-link(href="/nino/series") Séries
+          a.nino-nav-link(href="/nino/movies") Films
+          a.nino-nav-link(href="/nino/watchlist") Ma liste
+      
+      .nino-user-controls
+        .nino-search
+          button.nino-search-toggle
+            i.fas.fa-search
+          form.nino-search-form
+            input.nino-search-input(type="text", placeholder="Rechercher...")
+            button.nino-search-submit(type="submit")
+              i.fas.fa-search
+        
+        .nino-user-menu
+          img.nino-user-avatar(src="https://i.pravatar.cc/150?img=1", alt="Avatar")
+          .nino-user-dropdown
+            .nino-dropdown-header
+              img.nino-dropdown-avatar(src="https://i.pravatar.cc/150?img=1", alt="Avatar")
+              .nino-dropdown-user-info
+                .nino-dropdown-username Thomas
+                .nino-dropdown-email thomas@example.com
+                .nino-dropdown-stats
+                  .nino-dropdown-stat
+                    .nino-dropdown-stat-value 42
+                    .nino-dropdown-stat-label Favoris
+                  .nino-dropdown-stat
+                    .nino-dropdown-stat-value 156
+                    .nino-dropdown-stat-label Vidéos
+            
+            a.nino-dropdown-item(href="/nino/profile")
+              i.fas.fa-user
+              | Mon profil
+            a.nino-dropdown-item(href="/nino/settings")
+              i.fas.fa-cog
+              | Paramètres
+            a.nino-dropdown-item(href="/nino/history")
+              i.fas.fa-history
+              | Historique
+            .nino-dropdown-divider
+            a.nino-dropdown-item(href="/logout")
+              i.fas.fa-sign-out-alt
+              | Se déconnecter
+
+    // Contenu principal
+    main.nino-main
+      block content
+
+    // Pied de page
+    footer.nino-footer
+      .nino-container
+        .nino-footer-grid
+          .nino-footer-column
+            h3 À propos
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/about") À propos de Nino
+              li
+                a.nino-footer-link(href="/nino/contact") Contact
+              li
+                a.nino-footer-link(href="/nino/careers") Recrutement
+          
+          .nino-footer-column
+            h3 Aide
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/faq") FAQ
+              li
+                a.nino-footer-link(href="/nino/support") Support
+              li
+                a.nino-footer-link(href="/nino/terms") Conditions d'utilisation
+          
+          .nino-footer-column
+            h3 Communauté
+            ul.nino-footer-links
+              li
+                a.nino-footer-link(href="/nino/creators") Créateurs
+              li
+                a.nino-footer-link(href="/nino/blog") Blog
+              li
+                a.nino-footer-link(href="/nino/forum") Forum
+        
+        .nino-copyright
+          p &copy; 2025 Nino. Tous droits réservés.
+
+    // Scripts
+    script(src="/assets/js/lib/jquery.js")
+    script(src="/assets/js/lib/axios.js")
+    script(src="/assets/js/lib/popup.js")
+    script(src="/assets/js/nino/nino.js")
+    block scripts 

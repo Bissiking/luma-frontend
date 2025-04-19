@@ -1,0 +1,572 @@
+/**
+ * Nino Platform - Page vidéo
+ */
+
+/* Layout principal de la page vidéo */
+.nino-video-page {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 20px;
+    padding: 80px 30px 40px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+/* Conteneur principal vidéo */
+.nino-main-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* Lecteur vidéo principal */
+.nino-player-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--nino-card-shadow);
+}
+
+.nino-player-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Contrôles vidéo */
+.nino-video-controls-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nino-player-wrapper:hover .nino-video-controls-container {
+    opacity: 1;
+}
+
+.nino-progress-container {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.nino-progress-bar {
+    height: 100%;
+    background-color: var(--accent);
+    width: 30%;
+    position: relative;
+}
+
+.nino-video-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nino-control-left, .nino-control-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nino-control-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.nino-control-button:hover {
+    color: var(--accent);
+}
+
+.nino-control-button.nino-play {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.nino-volume-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100px;
+}
+
+.nino-volume-slider {
+    width: 70px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.nino-volume-fill {
+    height: 100%;
+    background-color: white;
+    width: 70%;
+}
+
+.nino-time-display {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Informations vidéo */
+.nino-video-info {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.nino-video-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.nino-video-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nino-views-count {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nino-video-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nino-action-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.nino-action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nino-action-button.nino-liked {
+    color: var(--accent);
+}
+
+/* Créateur de la vidéo */
+.nino-creator-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.nino-creator-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nino-creator-details {
+    flex: 1;
+}
+
+.nino-creator-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nino-verified-badge {
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.nino-subscriber-count {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nino-subscribe-button {
+    padding: 8px 16px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.nino-subscribe-button:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+}
+
+.nino-subscribe-button.nino-subscribed {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Description vidéo */
+.nino-video-description {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 20px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.nino-video-description::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nino-video-description::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Chat en direct */
+.nino-live-chat-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    box-shadow: var(--nino-card-shadow);
+}
+
+.nino-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nino-chat-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nino-chat-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.nino-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.nino-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nino-chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.nino-chat-message {
+    display: flex;
+    gap: 10px;
+}
+
+.nino-chat-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nino-chat-content {
+    flex: 1;
+}
+
+.nino-chat-user {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nino-chat-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.nino-chat-text {
+    font-size: 14px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.nino-chat-input-container {
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nino-message-input {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+}
+
+.nino-message-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nino-send-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nino-send-button:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+}
+
+/* Vidéos liées */
+.nino-related-videos {
+    margin-top: 20px;
+}
+
+.nino-related-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.nino-related-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nino-related-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.nino-related-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nino-related-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.nino-related-item {
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.nino-related-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.nino-related-thumbnail {
+    width: 120px;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.nino-related-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nino-related-duration {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nino-related-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nino-related-video-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.nino-related-meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+/* Adaptabilité */
+@media (max-width: 1200px) {
+    .nino-video-page {
+        grid-template-columns: 1fr 300px;
+    }
+}
+
+@media (max-width: 992px) {
+    .nino-video-page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        height: auto;
+        padding: 70px 20px 30px;
+    }
+    
+    .nino-related-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .nino-video-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .nino-video-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .nino-related-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .nino-video-page {
+        padding: 60px 15px 20px;
+    }
+    
+    .nino-video-title {
+        font-size: 20px;
+    }
+    
+    .nino-creator-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .nino-creator-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .nino-subscribe-button {
+        align-self: stretch;
+        width: 100%;
+    }
+} 

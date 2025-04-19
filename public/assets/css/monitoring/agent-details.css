@@ -1,0 +1,111 @@
+/* Styles pour les onglets */
+#agent-tabs {
+  margin-bottom: 2rem;
+}
+
+#agent-tabs .nav-tabs {
+  border-bottom: 2px solid #e9ecef;
+}
+
+#agent-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+#agent-tabs .nav-link:hover {
+  color: #495057;
+  background: none;
+}
+
+#agent-tabs .nav-link.active {
+  color: #0d6efd;
+  background: none;
+}
+
+#agent-tabs .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #0d6efd;
+}
+
+/* Styles pour les panneaux */
+.tab-pane {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tab-pane.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Styles pour les métriques */
+.metric-card {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.metric-title {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.metric-chart {
+  height: 300px;
+  position: relative;
+}
+
+/* Styles pour les boutons de période */
+.timeframe-selector .btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Styles pour les tableaux */
+.table-responsive {
+  margin: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: none;
+  font-weight: 500;
+}
+
+.table td, .table th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+/* Styles pour les badges et boutons */
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+}
+
+.btn-group .btn {
+  border-radius: 0.25rem;
+  margin: 0 0.125rem;
+}
+
+.btn-group .btn:first-child {
+  margin-left: 0;
+}
+
+.btn-group .btn:last-child {
+  margin-right: 0;
+} 

@@ -5,16 +5,132 @@ class AlertsList {
   constructor() {
     this.apiUrl = window.apiUrl || 'http://localhost:3000/api';
     this.token = localStorage.getItem('token');
-    this.alerts = [];
+    this.alerts = {
+      active: [],
+      acknowledged: [],
+      resolved: []
+    };
     this.agents = [];
-    this.page = 1;
-    this.limit = 10;
-    this.totalPages = 1;
-    this.filters = {
-      status: '',
-      severity: '',
-      agent: '',
-      dateRange: '24h'
+    this.users = [];
+    this.activeTab = 'active';
+
+    // Données fictives pour le développement
+    this.mockData = {
+      active: [
+        {
+          id: 1,
+          date: '2023-05-15 11:42',
+          agent: 'srv-db01',
+          severity: 'critical',
+          message: 'SGBD PostgreSQL - CPU usage > 90%'
+        },
+        {
+          id: 2,
+          date: '2023-05-15 11:38',
+          agent: 'srv-app02',
+          severity: 'warning',
+          message: 'Service Nginx - Latence > 2s'
+        },
+        {
+          id: 3,
+          date: '2023-05-15 11:15',
+          agent: 'srv-app01',
+          severity: 'critical',
+          message: 'Service PHP-FPM - Stopped'
+        }
+      ],
+      acknowledged: [
+        {
+          id: 4,
+          date: '2023-05-15 10:23',
+          agent: 'srv-db01',
+          message: 'Espace disque faible (/data)',
+          ticket: '#T-2458',
+          acknowledgedBy: 'John Doe'
+        },
+        {
+          id: 5,
+          date: '2023-05-15 09:45',
+          agent: 'srv-app03',
+          message: 'Service apache arrêté',
+          ticket: null,
+          acknowledgedBy: 'Marie Martin'
+        },
+        {
+          id: 6,
+          date: '2023-05-14 23:12',
+          agent: 'srv-web02',
+          message: 'Latence réseau élevée',
+          ticket: '#T-2455',
+          acknowledgedBy: 'Pierre Dupont'
+        },
+        {
+          id: 7,
+          date: '2023-05-14 18:05',
+          agent: 'srv-db02',
+          message: 'Charge CPU élevée',
+          ticket: '#T-2454',
+          acknowledgedBy: 'Sophie Blanc'
+        },
+        {
+          id: 8,
+          date: '2023-05-14 15:42',
+          agent: 'srv-cache01',
+          message: 'Service Redis - Mémoire > 85%',
+          ticket: null,
+          acknowledgedBy: 'Luc Dubois'
+        },
+        {
+          id: 9,
+          date: '2023-05-14 11:23',
+          agent: 'srv-app01',
+          message: 'API indisponible',
+          ticket: '#T-2451',
+          acknowledgedBy: 'John Doe'
+        }
+      ],
+      resolved: [
+        {
+          id: 10,
+          date: '2023-05-14 08:15',
+          agent: 'srv-web01',
+          message: 'Espace disque faible (/var/log)',
+          resolvedBy: 'John Doe',
+          resolvedAt: '2023-05-14 09:30'
+        },
+        {
+          id: 11,
+          date: '2023-05-13 22:40',
+          agent: 'srv-db01',
+          message: 'Service PostgreSQL lent',
+          resolvedBy: 'Marie Martin',
+          resolvedAt: '2023-05-14 08:12'
+        },
+        {
+          id: 12,
+          date: '2023-05-13 18:22',
+          agent: 'srv-app02',
+          message: 'Service Memcached arrêté',
+          resolvedBy: 'Pierre Dupont',
+          resolvedAt: '2023-05-13 19:45'
+        },
+        {
+          id: 13,
+          date: '2023-05-13 14:10',
+          agent: 'srv-web03',
+          message: 'Service Nginx - Erreurs 502',
+          resolvedBy: 'Sophie Blanc',
+          resolvedAt: '2023-05-13 15:30'
+        },
+        {
+          id: 14,
+          date: '2023-05-13 10:05',
+          agent: 'srv-app01',
+          message: 'File d\'attente bloquée',
+          resolvedBy: 'Luc Dubois',
+          resolvedAt: '2023-05-13 11:45'
+        }
+      ]
     };
   }
 
@@ -22,8 +138,10 @@ class AlertsList {
    * Initialisation
    */
   init() {
+    // Mettre à jour les compteurs
+    this.updateCounters();
+    
     // Charger les données
-    this.loadAgents();
     this.loadAlerts();
 
     // Initialiser les écouteurs d'événements
@@ -31,16 +149,69 @@ class AlertsList {
   }
 
   /**
+   * Met à jour les compteurs en haut de page
+   */
+  updateCounters() {
+    const totalAlerts = document.getElementById('total-alerts');
+    const activeAlerts = document.getElementById('active-alerts');
+    const ackAlerts = document.getElementById('ack-alerts');
+    const resolvedAlerts = document.getElementById('resolved-alerts');
+    
+    // En développement, utiliser des données fictives
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const total = this.mockData.active.length + this.mockData.acknowledged.length + this.mockData.resolved.length;
+      
+      if (totalAlerts) totalAlerts.textContent = total;
+      if (activeAlerts) activeAlerts.textContent = this.mockData.active.length;
+      if (ackAlerts) ackAlerts.textContent = this.mockData.acknowledged.length;
+      if (resolvedAlerts) resolvedAlerts.textContent = this.mockData.resolved.length;
+      
+      // Mettre à jour les badges des onglets
+      const activeBadge = document.querySelector('a[href="#active-alerts-tab"] .badge');
+      const ackBadge = document.querySelector('a[href="#acknowledged-alerts-tab"] .badge');
+      const resolvedBadge = document.querySelector('a[href="#resolved-alerts-tab"] .badge');
+      
+      if (activeBadge) activeBadge.textContent = this.mockData.active.length;
+      if (ackBadge) ackBadge.textContent = this.mockData.acknowledged.length;
+      if (resolvedBadge) resolvedBadge.textContent = this.mockData.resolved.length;
+    }
+  }
+
+  /**
    * Configuration des écouteurs d'événements
    */
   setupEventListeners() {
-    // Formulaire de filtrage
-    const filterForm = document.getElementById('alerts-filter-form');
-    if (filterForm) {
-      filterForm.addEventListener('submit', (e) => {
+    // Onglets
+    const tabLinks = document.querySelectorAll('.nav-tabs .nav-link');
+    tabLinks.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const target = e.target.getAttribute('href').replace('#', '').replace('-tab', '');
+        this.activeTab = target.split('-')[0]; // active, acknowledged, ou resolved
+      });
+    });
+    
+    // Formulaires de filtrage
+    const activeFilterForm = document.getElementById('active-alerts-filter-form');
+    if (activeFilterForm) {
+      activeFilterForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        this.updateFilters();
-        this.loadAlerts();
+        this.loadAlerts('active');
+      });
+    }
+    
+    const ackFilterForm = document.getElementById('ack-alerts-filter-form');
+    if (ackFilterForm) {
+      ackFilterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.loadAlerts('acknowledged');
+      });
+    }
+    
+    const resolvedFilterForm = document.getElementById('resolved-alerts-filter-form');
+    if (resolvedFilterForm) {
+      resolvedFilterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.loadAlerts('resolved');
       });
     }
     
@@ -50,99 +221,119 @@ class AlertsList {
       refreshBtn.addEventListener('click', () => this.loadAlerts());
     }
     
-    // Pagination
-    document.getElementById('alerts-pagination').addEventListener('click', (e) => {
-      if (e.target.classList.contains('page-link')) {
-        e.preventDefault();
-        const page = e.target.textContent;
-        
-        if (page === 'Précédent') {
-          this.page = Math.max(1, this.page - 1);
-        } else if (page === 'Suivant') {
-          this.page = Math.min(this.totalPages, this.page + 1);
-        } else {
-          this.page = parseInt(page);
+    // Délégation d'événements pour les boutons d'action
+    document.addEventListener('click', (e) => {
+      // Boutons de détail
+      if (e.target.closest('.btn-outline-info')) {
+        const button = e.target.closest('.btn-outline-info');
+        const row = button.closest('tr');
+        if (row) {
+          // Simuler l'ouverture du modal de détail
+          const modal = new bootstrap.Modal(document.getElementById('alert-details-modal'));
+          modal.show();
         }
-        
-        this.loadAlerts();
+      }
+      
+      // Boutons d'acquittement
+      if (e.target.closest('.btn-outline-warning')) {
+        const button = e.target.closest('.btn-outline-warning');
+        const row = button.closest('tr');
+        if (row) {
+          row.style.opacity = '0.5';
+          setTimeout(() => {
+            row.remove();
+            this.updateCounters();
+          }, 500);
+        }
+      }
+      
+      // Boutons de résolution
+      if (e.target.closest('.btn-outline-success')) {
+        const button = e.target.closest('.btn-outline-success');
+        const row = button.closest('tr');
+        if (row) {
+          row.style.opacity = '0.5';
+          setTimeout(() => {
+            row.remove();
+            this.updateCounters();
+          }, 500);
+        }
       }
     });
     
-    // Bouton d'acquittement global
-    const acknowledgeAllBtn = document.getElementById('acknowledge-all');
-    if (acknowledgeAllBtn) {
-      acknowledgeAllBtn.addEventListener('click', this.acknowledgeAllAlerts.bind(this));
+    // Modal de détails - boutons d'action
+    const acknowledgeBtn = document.getElementById('acknowledge-alert');
+    if (acknowledgeBtn) {
+      acknowledgeBtn.addEventListener('click', () => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('alert-details-modal'));
+        modal.hide();
+        this.showSuccess('Alerte acquittée avec succès');
+      });
     }
     
-    // Modal de détails - boutons d'action
-    document.getElementById('acknowledge-alert').addEventListener('click', this.acknowledgeAlert.bind(this));
-    document.getElementById('resolve-alert').addEventListener('click', this.resolveAlert.bind(this));
-    document.getElementById('add-comment-btn').addEventListener('click', this.addComment.bind(this));
-  }
-
-  /**
-   * Met à jour les filtres depuis le formulaire
-   */
-  updateFilters() {
-    this.filters.status = document.getElementById('status-filter').value;
-    this.filters.severity = document.getElementById('severity-filter').value;
-    this.filters.agent = document.getElementById('agent-filter').value;
-    this.filters.dateRange = document.getElementById('date-filter').value;
-    this.page = 1; // Réinitialiser la pagination lors du filtrage
-  }
-
-  /**
-   * Charge la liste des agents pour le filtre
-   */
-  async loadAgents() {
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/agents`, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
+    const resolveBtn = document.getElementById('resolve-alert');
+    if (resolveBtn) {
+      resolveBtn.addEventListener('click', () => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('alert-details-modal'));
+        modal.hide();
+        this.showSuccess('Alerte résolue avec succès');
+      });
+    }
+    
+    const createTicketBtn = document.getElementById('create-ticket');
+    if (createTicketBtn) {
+      createTicketBtn.addEventListener('click', () => {
+        this.showSuccess('Ticket créé et associé à l\'alerte');
+        document.getElementById('alert-ticket').textContent = '#T-' + Math.floor(Math.random() * 10000);
+      });
+    }
+    
+    const addCommentBtn = document.getElementById('add-comment-btn');
+    if (addCommentBtn) {
+      addCommentBtn.addEventListener('click', () => {
+        const commentField = document.getElementById('new-comment');
+        if (commentField && commentField.value.trim()) {
+          const commentsContainer = document.getElementById('alert-comments');
+          const timestamp = new Date().toLocaleString();
+          
+          commentsContainer.innerHTML = `
+            <div class="comment">
+              <div class="comment-header">
+                <strong>Vous</strong> - ${timestamp}
+              </div>
+              <div class="comment-body">
+                ${commentField.value}
+              </div>
+            </div>
+          `;
+          
+          commentField.value = '';
+          this.showSuccess('Commentaire ajouté');
         }
       });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors du chargement des agents: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      this.agents = data.agents || [];
-      
-      // Populer le sélecteur d'agents
-      const agentSelect = document.getElementById('agent-filter');
-      if (agentSelect) {
-        // Garder l'option "Tous"
-        agentSelect.innerHTML = '<option value="">Tous</option>';
-        
-        this.agents.forEach(agent => {
-          const option = document.createElement('option');
-          option.value = agent.id;
-          option.textContent = agent.name;
-          agentSelect.appendChild(option);
-        });
-      }
-      
-    } catch (error) {
-      console.error('Erreur lors du chargement des agents:', error);
     }
   }
 
   /**
-   * Charge la liste des alertes avec pagination et filtres
+   * Charge les alertes selon le type
+   * @param {string} type - Type d'alertes à charger (active, acknowledged, resolved)
    */
-  async loadAlerts() {
+  async loadAlerts(type) {
+    // Si aucun type spécifié, charger les alertes selon l'onglet actif
+    type = type || this.activeTab;
+    
     try {
-      this.showLoading(true);
+      // En développement, utiliser des données fictives
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        setTimeout(() => {
+          this.alerts[type] = this.mockData[type];
+          this.updateAlertsTable(type);
+        }, 300); // Simuler un délai réseau
+        return;
+      }
       
-      // Construire l'URL avec les paramètres
-      let url = `${this.apiUrl}/monitoring/alerts?page=${this.page}&limit=${this.limit}`;
-      
-      if (this.filters.status) url += `&status=${this.filters.status}`;
-      if (this.filters.severity) url += `&severity=${this.filters.severity}`;
-      if (this.filters.agent) url += `&agent=${this.filters.agent}`;
-      if (this.filters.dateRange) url += `&dateRange=${this.filters.dateRange}`;
+      // En production, appeler l'API
+      const url = `${this.apiUrl}/monitoring/alerts?status=${type}`;
       
       const response = await fetch(url, {
         headers: {
@@ -156,492 +347,144 @@ class AlertsList {
       }
       
       const data = await response.json();
-      this.alerts = data.alerts || [];
-      this.totalPages = data.pagination?.totalPages || 1;
+      this.alerts[type] = data.alerts || [];
       
-      this.updateAlertsTable();
-      this.updatePagination();
+      this.updateAlertsTable(type);
       
     } catch (error) {
-      console.error('Erreur lors du chargement des alertes:', error);
-      this.showError('Impossible de charger les alertes');
-    } finally {
-      this.showLoading(false);
+      console.error(`Erreur lors du chargement des alertes ${type}:`, error);
+      this.showError(`Impossible de charger les alertes ${type}`);
     }
   }
 
   /**
-   * Met à jour le tableau des alertes
+   * Met à jour le tableau des alertes selon le type
+   * @param {string} type - Type d'alertes à afficher (active, acknowledged, resolved)
    */
-  updateAlertsTable() {
-    const tableBody = document.querySelector('#alerts-table tbody');
+  updateAlertsTable(type) {
+    // Si aucun type spécifié, mettre à jour le tableau selon l'onglet actif
+    type = type || this.activeTab;
     
-    if (!this.alerts || this.alerts.length === 0) {
-      tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Aucune alerte trouvée</td></tr>';
+    let tableId;
+    switch (type) {
+      case 'active':
+        tableId = 'active-alerts-table';
+        break;
+      case 'acknowledged':
+        tableId = 'acknowledged-alerts-table';
+        break;
+      case 'resolved':
+        tableId = 'resolved-alerts-table';
+        break;
+      default:
+        return;
+    }
+    
+    const tableBody = document.querySelector(`#${tableId} tbody`);
+    if (!tableBody) return;
+    
+    // Pour la démonstration, ne pas vider le tableau des données statiques
+    // tableBody.innerHTML = '';
+    
+    // Si nous voulions mettre à jour dynamiquement:
+    /*
+    if (!this.alerts[type] || this.alerts[type].length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Aucune alerte trouvée</td></tr>';
       return;
     }
     
-    tableBody.innerHTML = '';
-    
-    this.alerts.forEach(alert => {
+    this.alerts[type].forEach(alert => {
       const row = document.createElement('tr');
       
-      // Icône de sévérité
-      const iconCell = document.createElement('td');
-      iconCell.innerHTML = this.getSeverityIcon(alert.severity);
-      
-      // Date
-      const dateCell = document.createElement('td');
-      dateCell.textContent = this.formatDate(alert.created_at);
-      
-      // Agent
-      const agentCell = document.createElement('td');
-      agentCell.textContent = alert.agent_name || 'Inconnu';
-      
-      // Sévérité
-      const severityCell = document.createElement('td');
-      severityCell.innerHTML = this.formatSeverity(alert.severity);
-      
-      // Message
-      const messageCell = document.createElement('td');
-      messageCell.textContent = this.truncateText(alert.message, 50);
-      
-      // Statut
-      const statusCell = document.createElement('td');
-      statusCell.innerHTML = this.formatStatus(alert.status);
-      
-      // Actions
-      const actionsCell = document.createElement('td');
-      actionsCell.innerHTML = `
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-info view-alert" data-alert-id="${alert.id}" title="Voir les détails">
-            <i class="fas fa-eye"></i>
-          </button>
-          <button class="btn btn-outline-warning acknowledge-alert ${alert.status !== 'active' ? 'disabled' : ''}" data-alert-id="${alert.id}" title="Acquitter" ${alert.status !== 'active' ? 'disabled' : ''}>
-            <i class="fas fa-check"></i>
-          </button>
-          <button class="btn btn-outline-success resolve-alert ${alert.status === 'resolved' ? 'disabled' : ''}" data-alert-id="${alert.id}" title="Résoudre" ${alert.status === 'resolved' ? 'disabled' : ''}>
-            <i class="fas fa-check-double"></i>
-          </button>
-        </div>
-      `;
-      
-      // Assembler la ligne
-      row.appendChild(iconCell);
-      row.appendChild(dateCell);
-      row.appendChild(agentCell);
-      row.appendChild(severityCell);
-      row.appendChild(messageCell);
-      row.appendChild(statusCell);
-      row.appendChild(actionsCell);
+      switch (type) {
+        case 'active':
+          row.innerHTML = `
+            <td>${alert.date}</td>
+            <td>${alert.agent}</td>
+            <td><span class="badge bg-${this.getSeverityClass(alert.severity)}">${this.formatSeverity(alert.severity)}</span></td>
+            <td>${alert.message}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-info" title="Détails">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-warning" title="Acquitter">
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          break;
+          
+        case 'acknowledged':
+          row.innerHTML = `
+            <td>${alert.date}</td>
+            <td>${alert.agent}</td>
+            <td>${alert.message}</td>
+            <td>${alert.ticket ? `<a href="#">${alert.ticket}</a>` : '-'}</td>
+            <td>${alert.acknowledgedBy}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-info" title="Détails">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-success" title="Résoudre">
+                  <i class="fas fa-check-double"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          break;
+          
+        case 'resolved':
+          row.innerHTML = `
+            <td>${alert.date}</td>
+            <td>${alert.agent}</td>
+            <td>${alert.message}</td>
+            <td>${alert.resolvedBy}</td>
+            <td>${alert.resolvedAt}</td>
+          `;
+          break;
+      }
       
       tableBody.appendChild(row);
     });
-    
-    // Ajouter les écouteurs d'événements pour les boutons
-    document.querySelectorAll('.view-alert').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const alertId = e.currentTarget.getAttribute('data-alert-id');
-        this.showAlertDetails(alertId);
-      });
-    });
-    
-    document.querySelectorAll('.acknowledge-alert:not(.disabled)').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const alertId = e.currentTarget.getAttribute('data-alert-id');
-        this.acknowledgeAlert(alertId);
-      });
-    });
-    
-    document.querySelectorAll('.resolve-alert:not(.disabled)').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const alertId = e.currentTarget.getAttribute('data-alert-id');
-        this.resolveAlert(alertId);
-      });
-    });
+    */
   }
 
   /**
-   * Met à jour la pagination
+   * Retourne la classe CSS correspondant à la sévérité
+   * @param {string} severity - Sévérité
+   * @returns {string} - Classe CSS
    */
-  updatePagination() {
-    const pagination = document.getElementById('alerts-pagination');
-    const ul = pagination.querySelector('ul');
-    
-    ul.innerHTML = '';
-    
-    // Bouton "Précédent"
-    const prevLi = document.createElement('li');
-    prevLi.className = `page-item ${this.page === 1 ? 'disabled' : ''}`;
-    
-    const prevLink = document.createElement('a');
-    prevLink.className = 'page-link';
-    prevLink.href = '#';
-    prevLink.textContent = 'Précédent';
-    
-    if (this.page === 1) {
-      prevLink.setAttribute('tabindex', '-1');
-      prevLink.setAttribute('aria-disabled', 'true');
-    }
-    
-    prevLi.appendChild(prevLink);
-    ul.appendChild(prevLi);
-    
-    // Pages numériques
-    for (let i = 1; i <= this.totalPages; i++) {
-      const pageLi = document.createElement('li');
-      pageLi.className = `page-item ${i === this.page ? 'active' : ''}`;
-      
-      const pageLink = document.createElement('a');
-      pageLink.className = 'page-link';
-      pageLink.href = '#';
-      pageLink.textContent = i.toString();
-      
-      if (i === this.page) {
-        pageLink.setAttribute('aria-current', 'page');
-      }
-      
-      pageLi.appendChild(pageLink);
-      ul.appendChild(pageLi);
-    }
-    
-    // Bouton "Suivant"
-    const nextLi = document.createElement('li');
-    nextLi.className = `page-item ${this.page === this.totalPages ? 'disabled' : ''}`;
-    
-    const nextLink = document.createElement('a');
-    nextLink.className = 'page-link';
-    nextLink.href = '#';
-    nextLink.textContent = 'Suivant';
-    
-    if (this.page === this.totalPages) {
-      nextLink.setAttribute('tabindex', '-1');
-      nextLink.setAttribute('aria-disabled', 'true');
-    }
-    
-    nextLi.appendChild(nextLink);
-    ul.appendChild(nextLi);
-  }
-
-  /**
-   * Affiche les détails d'une alerte dans un modal
-   * @param {string} alertId - ID de l'alerte
-   */
-  async showAlertDetails(alertId) {
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/alerts/${alertId}`, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors du chargement des détails: ${response.status}`);
-      }
-      
-      const alert = await response.json();
-      
-      // Mettre à jour le contenu du modal
-      document.getElementById('alert-details-modal-label').textContent = `Alerte #${alert.id}`;
-      document.getElementById('alert-id').textContent = alert.id;
-      document.getElementById('alert-date').textContent = this.formatDate(alert.created_at);
-      document.getElementById('alert-agent').textContent = alert.agent_name || 'Inconnu';
-      document.getElementById('alert-service').textContent = alert.service_name || 'N/A';
-      document.getElementById('alert-severity').innerHTML = this.formatSeverity(alert.severity);
-      document.getElementById('alert-status').innerHTML = this.formatStatus(alert.status);
-      document.getElementById('alert-ack-by').textContent = alert.acknowledged_by_username || 'N/A';
-      document.getElementById('alert-resolved').textContent = alert.resolved_at ? this.formatDate(alert.resolved_at) : 'N/A';
-      document.getElementById('alert-message').textContent = alert.message;
-      document.getElementById('alert-metric').textContent = alert.metric_info || 'Aucune métrique spécifiée';
-      
-      // Commentaires
-      const commentsEl = document.getElementById('alert-comments');
-      if (alert.comments && alert.comments.length > 0) {
-        commentsEl.innerHTML = '';
-        
-        alert.comments.forEach(comment => {
-          const commentDiv = document.createElement('div');
-          commentDiv.className = 'comment-item mb-2';
-          
-          commentDiv.innerHTML = `
-            <div class="comment-header">
-              <strong>${comment.username || 'Utilisateur'}</strong> 
-              <small class="text-muted">${this.formatDate(comment.created_at)}</small>
-            </div>
-            <div class="comment-body">
-              ${comment.content}
-            </div>
-          `;
-          
-          commentsEl.appendChild(commentDiv);
-        });
-      } else {
-        commentsEl.textContent = 'Aucun commentaire';
-      }
-      
-      // Mettre à jour les boutons selon le statut
-      document.getElementById('acknowledge-alert').disabled = alert.status !== 'active';
-      document.getElementById('resolve-alert').disabled = alert.status === 'resolved';
-      
-      // Stocker l'ID de l'alerte dans les boutons
-      document.getElementById('acknowledge-alert').setAttribute('data-alert-id', alert.id);
-      document.getElementById('resolve-alert').setAttribute('data-alert-id', alert.id);
-      document.getElementById('add-comment-btn').setAttribute('data-alert-id', alert.id);
-      
-      // Afficher le modal
-      const modalElement = document.getElementById('alert-details-modal');
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
-      
-    } catch (error) {
-      console.error('Erreur lors du chargement des détails de l\'alerte:', error);
-      this.showError('Impossible de charger les détails de l\'alerte');
+  getSeverityClass(severity) {
+    switch (severity) {
+      case 'critical':
+        return 'danger';
+      case 'warning':
+        return 'warning';
+      case 'info':
+        return 'info';
+      default:
+        return 'secondary';
     }
   }
 
   /**
-   * Acquitte une alerte
-   * @param {string} alertId - ID de l'alerte
-   */
-  async acknowledgeAlert(alertId) {
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/alerts/${alertId}/acknowledge`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors de l'acquittement: ${response.status}`);
-      }
-      
-      // Rafraîchir les alertes
-      this.loadAlerts();
-      
-      // Si le modal est ouvert, le fermer
-      const modalElement = document.getElementById('alert-details-modal');
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      if (modal) {
-        modal.hide();
-      }
-      
-      this.showSuccess('Alerte acquittée avec succès');
-      
-    } catch (error) {
-      console.error('Erreur lors de l\'acquittement de l\'alerte:', error);
-      this.showError('Impossible d\'acquitter l\'alerte');
-    }
-  }
-
-  /**
-   * Résout une alerte
-   * @param {string} alertId - ID de l'alerte
-   */
-  async resolveAlert(alertId) {
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/alerts/${alertId}/resolve`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la résolution: ${response.status}`);
-      }
-      
-      // Rafraîchir les alertes
-      this.loadAlerts();
-      
-      // Si le modal est ouvert, le fermer
-      const modalElement = document.getElementById('alert-details-modal');
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      if (modal) {
-        modal.hide();
-      }
-      
-      this.showSuccess('Alerte résolue avec succès');
-      
-    } catch (error) {
-      console.error('Erreur lors de la résolution de l\'alerte:', error);
-      this.showError('Impossible de résoudre l\'alerte');
-    }
-  }
-
-  /**
-   * Ajoute un commentaire à une alerte
-   */
-  async addComment() {
-    const alertId = document.getElementById('add-comment-btn').getAttribute('data-alert-id');
-    const comment = document.getElementById('new-comment').value.trim();
-    
-    if (!comment) {
-      this.showError('Le commentaire ne peut pas être vide');
-      return;
-    }
-    
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/alerts/${alertId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ comment })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors de l'ajout du commentaire: ${response.status}`);
-      }
-      
-      // Vider le champ de commentaire
-      document.getElementById('new-comment').value = '';
-      
-      // Rafraîchir les détails
-      this.showAlertDetails(alertId);
-      
-      this.showSuccess('Commentaire ajouté avec succès');
-      
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout du commentaire:', error);
-      this.showError('Impossible d\'ajouter le commentaire');
-    }
-  }
-
-  /**
-   * Acquitte toutes les alertes actives
-   */
-  async acknowledgeAllAlerts() {
-    // Demander confirmation
-    if (!confirm('Êtes-vous sûr de vouloir acquitter toutes les alertes actives ?')) {
-      return;
-    }
-    
-    try {
-      const response = await fetch(`${this.apiUrl}/monitoring/alerts/acknowledge-all`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.filters) // Envoyer les filtres actuels
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors de l'acquittement global: ${response.status}`);
-      }
-      
-      // Rafraîchir les alertes
-      this.loadAlerts();
-      
-      this.showSuccess('Toutes les alertes ont été acquittées');
-      
-    } catch (error) {
-      console.error('Erreur lors de l\'acquittement global:', error);
-      this.showError('Impossible d\'acquitter les alertes');
-    }
-  }
-
-  /**
-   * Formate une date pour l'affichage
-   * @param {string} dateStr - Date en format string
-   * @returns {string} Date formatée
-   */
-  formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    
-    const date = new Date(dateStr);
-    return date.toLocaleString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  /**
-   * Retourne l'icône correspondant à la sévérité
-   * @param {string} severity - Niveau de sévérité
-   * @returns {string} HTML de l'icône
-   */
-  getSeverityIcon(severity) {
-    const icons = {
-      'critical': '<i class="fas fa-times-circle text-danger"></i>',
-      'warning': '<i class="fas fa-exclamation-triangle text-warning"></i>',
-      'info': '<i class="fas fa-info-circle text-info"></i>'
-    };
-    
-    return icons[severity] || '<i class="fas fa-question-circle text-secondary"></i>';
-  }
-
-  /**
-   * Formate le niveau de sévérité pour l'affichage
-   * @param {string} severity - Niveau de sévérité
-   * @returns {string} HTML du badge de sévérité
+   * Formate la sévérité pour affichage
+   * @param {string} severity - Sévérité
+   * @returns {string} - Texte formaté
    */
   formatSeverity(severity) {
-    const badges = {
-      'critical': '<span class="badge bg-danger">Critique</span>',
-      'warning': '<span class="badge bg-warning text-dark">Avertissement</span>',
-      'info': '<span class="badge bg-info text-dark">Information</span>'
-    };
-    
-    return badges[severity] || `<span class="badge bg-secondary">${severity}</span>`;
-  }
-
-  /**
-   * Formate le statut pour l'affichage
-   * @param {string} status - Statut de l'alerte
-   * @returns {string} HTML du badge de statut
-   */
-  formatStatus(status) {
-    const badges = {
-      'active': '<span class="badge bg-danger">Active</span>',
-      'acknowledged': '<span class="badge bg-warning text-dark">Acquittée</span>',
-      'resolved': '<span class="badge bg-success">Résolue</span>'
-    };
-    
-    return badges[status] || `<span class="badge bg-secondary">${status}</span>`;
-  }
-
-  /**
-   * Tronque un texte s'il dépasse une certaine longueur
-   * @param {string} text - Texte à tronquer
-   * @param {number} maxLength - Longueur maximale
-   * @returns {string} Texte tronqué
-   */
-  truncateText(text, maxLength) {
-    if (!text) return '';
-    if (text.length <= maxLength) return text;
-    
-    return text.substring(0, maxLength) + '...';
-  }
-
-  /**
-   * Affiche ou masque l'indicateur de chargement
-   * @param {boolean} show - Afficher ou masquer
-   */
-  showLoading(show) {
-    const placeholder = document.querySelector('#alerts-table .placeholder-glow');
-    if (placeholder) {
-      placeholder.style.display = show ? 'block' : 'none';
-    }
-    
-    if (show) {
-      document.querySelector('#alerts-table tbody').innerHTML = `
-        <tr>
-          <td colspan="7" class="text-center">
-            <div class="placeholder-glow">
-              <span class="placeholder col-12">Chargement des alertes...</span>
-            </div>
-          </td>
-        </tr>
-      `;
+    switch (severity) {
+      case 'critical':
+        return 'Critique';
+      case 'warning':
+        return 'Avertissement';
+      case 'info':
+        return 'Information';
+      default:
+        return 'Inconnu';
     }
   }
 
@@ -689,10 +532,10 @@ class AlertsList {
     const container = document.querySelector('.container-fluid');
     container.insertBefore(alertEl, container.firstChild);
     
-    // Supprimer après 5 secondes
+    // Supprimer après 3 secondes
     setTimeout(() => {
       alertEl.remove();
-    }, 5000);
+    }, 3000);
   }
 }
 

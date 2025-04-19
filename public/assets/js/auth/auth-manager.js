@@ -36,18 +36,29 @@ window.AuthManager = {
                 if (error.response?.status === 401) {
                     const errorMessage = error.response.data?.message;
                     
-                    if (errorMessage.includes('expired')) {
+                    if (errorMessage?.includes('expired')) {
+                        // Vérifier si nous avons un refresh token
+                        const refreshToken = this.getRefreshToken();
+                        if (!refreshToken) {
+                            this.handleAuthError(window.authPrompts?.tokenManagement?.errors?.noRefreshToken || 'Pas de refresh token disponible');
+                            return Promise.reject(error);
+                        }
+
                         // Tentative de rafraîchissement du token
                         try {
                             await this.refreshToken();
-                            // Réessayer la requête originale
+                            // Réessayer la requête originale avec le nouveau token
+                            const token = this.getToken();
+                            if (token) {
+                                error.config.headers.Authorization = `Bearer ${token}`;
+                            }
                             return this.axiosInstance(error.config);
                         } catch (refreshError) {
-                            this.handleAuthError(window.authPrompts.tokenManagement.errors.expired);
+                            this.handleAuthError(window.authPrompts?.tokenManagement?.errors?.expired || 'Session expirée');
                             return Promise.reject(refreshError);
                         }
                     } else {
-                        this.handleAuthError(window.authPrompts.tokenManagement.errors.invalid);
+                        this.handleAuthError(window.authPrompts?.tokenManagement?.errors?.invalid || 'Token invalide');
                         return Promise.reject(error);
                     }
                 }
@@ -100,8 +111,17 @@ window.AuthManager = {
         localStorage.setItem('token', token);
     },
 
-    removeToken: function() {
+    getRefreshToken: function() {
+        return localStorage.getItem('refreshToken');
+    },
+
+    setRefreshToken: function(refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+    },
+
+    removeTokens: function() {
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
     },
 
     getTokenExpirationTime: function(token) {
@@ -116,16 +136,31 @@ window.AuthManager = {
 
     async refreshToken() {
         try {
-            const response = await this.axiosInstance.post('/auth/refresh');
-            if (response.data.success) {
+            const refreshToken = this.getRefreshToken();
+            if (!refreshToken) {
+                throw new Error('Pas de refresh token disponible');
+            }
+
+            const response = await this.axiosInstance.post('/auth/refresh', {
+                refreshToken: refreshToken
+            });
+
+            if (response.data?.token) {
                 this.setToken(response.data.token);
+                // Mettre à jour le refresh token s'il est fourni
+                if (response.data.refreshToken) {
+                    this.setRefreshToken(response.data.refreshToken);
+                }
                 return true;
             }
-            throw new Error(window.authPrompts.tokenManagement.errors.invalid);
+            throw new Error('Réponse invalide du serveur');
         } catch (error) {
             console.error('Erreur lors du rafraîchissement du token:', error);
-            this.handleAuthError(window.authPrompts.tokenManagement.errors.expired);
-            return false;
+            // Si l'erreur est liée à un refresh token invalide ou expiré
+            if (error.response?.status === 400 || error.response?.status === 401) {
+                this.removeTokens();
+            }
+            throw error;
         }
     },
 
@@ -144,11 +179,16 @@ window.AuthManager = {
 
     async logout() {
         try {
-            await this.axiosInstance.post('/auth/logout');
+            const refreshToken = this.getRefreshToken();
+            if (refreshToken) {
+                await this.axiosInstance.post('/auth/logout', {
+                    refreshToken: refreshToken
+                });
+            }
         } catch (error) {
             console.error('Erreur lors de la déconnexion:', error);
         } finally {
-            this.removeToken();
+            this.removeTokens();
             window.location.href = '/login';
         }
     }

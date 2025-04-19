@@ -12,7 +12,7 @@ exports.index = async (req, res) => {
   try {
     res.render('monitoring/index', {
       title: 'Supervision',
-      pageStyles: ['css/monitoring/monitoring.css'],
+      pageStyles: ['css/monitoring/monitoring.css', 'css/agents-management.css'],
       pageScripts: ['js/monitoring/index.js'],
       currentPage: 'monitoring',
       apiUrl: config.API_URL
@@ -33,8 +33,7 @@ exports.agentsIndex = async (req, res) => {
   try {
     res.render('monitoring/agents/index', {
       title: 'Agents de supervision',
-      pageStyles: ['/assets/css/monitoring/agents.css'],
-      pageScripts: ['/assets/js/monitoring/agents-list.js'],
+      pageStyles: ['/css/monitoring/agents.css', 'css/agents-management.css'],
       currentPage: 'monitoring-agents',
       apiUrl: config.API_URL
     });
@@ -52,12 +51,12 @@ exports.agentsIndex = async (req, res) => {
  */
 exports.agentDetails = async (req, res) => {
   try {
-    const agentId = req.params.id;
-    
+    const agentId = req.params.uuid;
+        
     res.render('monitoring/agents/show', {
       title: 'Détail de l\'agent',
-      pageStyles: ['/assets/css/monitoring/agents.css'],
-      pageScripts: ['/assets/js/monitoring/agent-details.js'],
+      pageStyles: ['css/monitoring/agents.css', 'css/agents-management.css'],
+      pageScripts: ['js/monitoring/agent-details.js'],
       currentPage: 'monitoring-agents',
       agentId,
       apiUrl: config.API_URL
@@ -80,7 +79,7 @@ exports.agentConfig = async (req, res) => {
     
     res.render('monitoring/agents/config', {
       title: 'Configuration de l\'agent',
-      pageStyles: ['/assets/css/monitoring/agents.css'],
+      pageStyles: ['/assets/css/monitoring/agents.css', 'css/agents-management.css'],
       pageScripts: ['/assets/js/monitoring/agent-config.js'],
       currentPage: 'monitoring-agents',
       agentId,

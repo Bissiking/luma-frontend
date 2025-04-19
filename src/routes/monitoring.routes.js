@@ -14,8 +14,8 @@ router.get('/', monitoringController.index);
 
 // Routes pour les agents de monitoring
 router.get('/agents', monitoringController.agentsIndex);
-router.get('/agents/:id', monitoringController.agentDetails);
-router.get('/agents/:id/config', monitoringController.agentConfig);
+router.get('/agents/:uuid', monitoringController.agentDetails);
+router.get('/agents/:uuid/config', monitoringController.agentConfig);
 
 // Routes pour les alertes
 router.get('/alerts', monitoringController.alertsIndex);

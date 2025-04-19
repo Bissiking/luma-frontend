@@ -1,9 +1,9 @@
 extends ../layouts/main
 
 block content
-  .dashboard-page
+  .monitoring-dashboard
     .container-fluid
-      .dashboard-header.mb-4
+      .dashboard-header.mb-3
         .header-content
           h1.dashboard-title.d-flex.align-items-center.gap-2
             i.fas.fa-tachometer-alt.gradient-icon
@@ -14,81 +14,216 @@ block content
                 a(href="/dashboard") Tableau de bord
               li.breadcrumb-item.active(aria-current="page") Supervision
       
-      // Aperçu du système
-      .row.mb-4
-        .col-md-3
-          .info-card.bg-gradient-primary
-            .info-card-inner
-              .info-icon
-                i.fas.fa-server
-              .info-content
-                h2.info-value#agents-count 0
-                p.info-label Agents
-        
-        .col-md-3
-          .info-card.bg-gradient-success
-            .info-card-inner
-              .info-icon
-                i.fas.fa-check-circle
-              .info-content
-                h2.info-value#healthy-count 0
-                p.info-label En bonne santé
-        
-        .col-md-3
-          .info-card.bg-gradient-warning
-            .info-card-inner
-              .info-icon
-                i.fas.fa-exclamation-triangle
-              .info-content
-                h2.info-value#warning-count 0
-                p.info-label Avertissements
-        
-        .col-md-3
-          .info-card.bg-gradient-danger
-            .info-card-inner
-              .info-icon
-                i.fas.fa-times-circle
-              .info-content
-                h2.info-value#critical-count 0
-                p.info-label Critiques
+      // Aperçu du système - Cartes compactes sur une ligne
+      .row.mb-3.card-system-status
+        .col-md-3.col-6.mb-2
+          .status-card.bg-gradient-primary.compact-card
+            .status-icon
+              i.fas.fa-server
+            .status-content
+              h3.status-value#agents-count 0
+              p.status-label Agents
+
+        .col-md-3.col-6.mb-2
+          .status-card.bg-gradient-success.compact-card
+            .status-icon
+              i.fas.fa-check-circle
+            .status-content
+              h3.status-value#healthy-count 0
+              p.status-label En bonne santé
+
+        .col-md-3.col-6.mb-2
+          .status-card.bg-gradient-warning.compact-card
+            .status-icon
+              i.fas.fa-exclamation-triangle
+            .status-content
+              h3.status-value#warning-count 0
+              p.status-label Avertissements
+
+        .col-md-3.col-6.mb-2
+          .status-card.bg-gradient-danger.compact-card
+            .status-icon
+              i.fas.fa-times-circle
+            .status-content
+              h3.status-value#critical-count 0
+              p.status-label Critiques
       
-      // Sections de navigation
+      // Contenu principal - 2 colonnes
       .row
-        .col-md-6.mb-4
-          .card.feature-card
-            .card-body
-              h5.card-title
-                i.fas.fa-server.me-2.text-primary
-                | Agents
-              p.card-text Gérez vos agents de supervision et consultez leurs métriques en temps réel.
-              a.btn.btn-primary(href="/monitoring/agents") Voir les agents
-        
-        .col-md-6.mb-4
-          .card.feature-card
-            .card-body
-              h5.card-title
+        // Colonne principale - 8 colonnes
+        .col-xl-8
+          // Dernières alertes acquittées
+          .card.dashboard-card.mb-3
+            .card-header.d-flex.justify-content-between.align-items-center
+              h5.mb-0
                 i.fas.fa-bell.me-2.text-warning
-                | Alertes
-              p.card-text Configurez et consultez les alertes déclenchées par vos agents de supervision.
-              a.btn.btn-primary(href="/monitoring/alerts") Voir les alertes
+                | Alertes acquittées
+              .header-actions
+                button.btn.btn-sm.btn-outline-secondary#refresh-alerts
+                  i.fas.fa-sync-alt
+                a.btn.btn-sm.btn-primary(href="/monitoring/alerts") 
+                  | Voir tout
+            .card-body.p-0
+              .table-responsive
+                table.table.table-hover.table-sm.mb-0#alerts-acknowledged-table
+                  thead
+                    tr
+                      th Date
+                      th Agent
+                      th Message
+                      th Ticket
+                      th Acquitté par
+                      th Actions
+                  tbody
+                    // Données fictives pour la mise en page
+                    tr
+                      td 2023-05-15 10:23
+                      td srv-db01
+                      td Espace disque faible (/data)
+                      td 
+                        a(href="#") #T-2458
+                      td John Doe
+                      td
+                        .btn-group.btn-group-sm
+                          button.btn.btn-outline-info(title="Détails")
+                            i.fas.fa-eye
+                          button.btn.btn-outline-success(title="Résoudre")
+                            i.fas.fa-check-double
+                    tr
+                      td 2023-05-15 09:45
+                      td srv-app03
+                      td Service apache arrêté
+                      td -
+                      td Marie Martin
+                      td
+                        .btn-group.btn-group-sm
+                          button.btn.btn-outline-info(title="Détails")
+                            i.fas.fa-eye
+                          button.btn.btn-outline-success(title="Résoudre")
+                            i.fas.fa-check-double
+                    tr
+                      td 2023-05-14 23:12
+                      td srv-web02
+                      td Latence réseau élevée
+                      td 
+                        a(href="#") #T-2455
+                      td Pierre Dupont
+                      td
+                        .btn-group.btn-group-sm
+                          button.btn.btn-outline-info(title="Détails")
+                            i.fas.fa-eye
+                          button.btn.btn-outline-success(title="Résoudre")
+                            i.fas.fa-check-double
+          
+          // Navigation rapide - en ligne
+          .row.mb-3.navigation-card
+            .col-md-3.col-6.mb-2
+              .card.dashboard-card.feature-card.compact-feature
+                .card-body.p-0
+                  .feature-card-icon
+                    i.fas.fa-server.text-primary
+                  .feature-card-content
+                    h5.feature-card-title Agents
+                    a.btn.btn-sm.btn-primary.mt-1(href="/monitoring/agents") Accéder
+            
+            //- .col-md-3.col-6.mb-2
+            //-   .card.dashboard-card.feature-card.compact-feature
+            //-     .card-body.p-0
+            //-       .feature-card-icon
+            //-         i.fas.fa-bell.text-warning
+            //-       .feature-card-content
+            //-         h5.feature-card-title Alertes
+            //-         a.btn.btn-sm.btn-primary.mt-1(href="/monitoring/alerts") Accéder
+            
+            //- .col-md-3.col-6.mb-2
+            //-   .card.dashboard-card.feature-card.compact-feature
+            //-     .card-body.p-0
+            //-       .feature-card-icon
+            //-         i.fas.fa-chart-line.text-success
+            //-       .feature-card-content
+            //-         h5.feature-card-title Tableaux de bord
+            //-         a.btn.btn-sm.btn-primary.mt-1(href="/monitoring/dashboards") Accéder
+            
+            //- .col-md-3.col-6.mb-2
+            //-   .card.dashboard-card.feature-card.compact-feature
+            //-     .card-body.p-0
+            //-       .feature-card-icon
+            //-         i.fas.fa-cogs.text-info
+            //-       .feature-card-content
+            //-         h5.feature-card-title Configuration
+            //-         a.btn.btn-sm.btn-primary.mt-1(href="/monitoring/settings") Accéder
         
-        .col-md-6.mb-4
-          .card.feature-card
-            .card-body
-              h5.card-title
-                i.fas.fa-chart-line.me-2.text-success
-                | Tableaux de bord
-              p.card-text Visualisez les données de supervision avec des tableaux de bord personnalisés.
-              a.btn.btn-primary(href="/monitoring/dashboards") Voir les tableaux de bord
-        
-        .col-md-6.mb-4
-          .card.feature-card
-            .card-body
-              h5.card-title
+        // Colonne secondaire - 4 colonnes
+        .col-xl-4
+          // Top agents par statut
+          .card.dashboard-card.mb-3
+            .card-header
+              h5.mb-0
+                i.fas.fa-server.me-2.text-primary
+                | Aperçu des agents
+            .card-body.p-0
+              ul.list-group.list-group-flush
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-success.me-2
+                    | Agents en ligne
+                  span.badge.bg-success.rounded-pill#online-agents 5
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-warning.me-2
+                    | Agents en alerte
+                  span.badge.bg-warning.rounded-pill#warning-agents 2
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-danger.me-2
+                    | Agents hors-ligne
+                  span.badge.bg-danger.rounded-pill#offline-agents 1
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-info.me-2
+                    | Moyenne d'utilisation CPU
+                  span#avg-cpu 45%
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-info.me-2
+                    | Moyenne d'utilisation mémoire
+                  span#avg-memory 62%
+          
+          // Statut des services
+          .card.dashboard-card
+            .card-header
+              h5.mb-0
                 i.fas.fa-cogs.me-2.text-info
-                | Configuration
-              p.card-text Paramétrez les seuils d'alerte et la configuration globale de la supervision.
-              a.btn.btn-primary(href="/monitoring/settings") Accéder aux paramètres
+                | Statut global des services
+            .card-body.p-0
+              ul.list-group.list-group-flush
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-success.me-2
+                    | Services en ligne
+                  span.badge.bg-success.rounded-pill#online-services 12
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-warning.me-2
+                    | Services dégradés
+                  span.badge.bg-warning.rounded-pill#degraded-services 3
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-circle.text-danger.me-2
+                    | Services hors-ligne
+                  span.badge.bg-danger.rounded-pill#offline-services 1
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-database.me-2
+                    | Bases de données
+                  span.service-status
+                    span.badge.bg-success.rounded-pill En ligne
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  span
+                    i.fas.fa-globe.me-2
+                    | Serveurs web
+                  span.service-status
+                    span.badge.bg-warning.rounded-pill Dégradé
 
 block scripts
   script(src='/assets/js/monitoring/index.js') 

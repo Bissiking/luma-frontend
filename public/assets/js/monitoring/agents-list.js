@@ -1,121 +1,99 @@
 /**
- * Gestion de la liste des agents de supervision
+ * Gestion des agents de supervision
  */
 class AgentsList {
   constructor() {
-    this.apiUrl = window.API_URL || '';
-    this.agentsTable = document.getElementById('agents-table');
-    this.actionTemplate = document.getElementById('action-template');
-    this.createAgentForm = document.getElementById('create-agent-form');
-    this.createAgentSubmit = document.getElementById('create-agent-submit');
-    
-    // État
-    this.loading = false;
+    this.api = window.api;
     this.agents = [];
+    this.loading = false;
     
-    // Bootstrap modals
-    this.createAgentModal = new bootstrap.Modal(document.getElementById('create-agent-modal'));
-    this.deleteAgentModal = new bootstrap.Modal(document.getElementById('delete-agent-modal'));
+    // Éléments DOM
+    this.listEl = document.querySelector('#agents-list');
+    this.emptyEl = document.querySelector('#agents-empty');
+    this.loadingEl = document.querySelector('#agents-loading');
+    this.refreshBtn = document.getElementById('refresh-agents');
+    this.createBtn = document.getElementById('create-agent-btn');
+    this.searchInput = document.querySelector('input[placeholder*="Rechercher"]');
     
-    // DOM elements pour la suppression
-    this.deleteAgentId = document.getElementById('delete-agent-id');
-    this.deleteAgentName = document.getElementById('delete-agent-name');
-    this.deleteAgentConfirm = document.getElementById('delete-agent-confirm');
+    // Modals
+    this.createModal = document.getElementById('create-agent-modal');
+    this.deleteModal = document.getElementById('delete-agent-modal');
+    this.createForm = document.getElementById('create-agent-form');
+    this.deleteId = document.getElementById('delete-agent-id');
+    this.deleteName = document.getElementById('delete-agent-name');
+    this.deleteBtn = document.getElementById('delete-agent-confirm');
+    
+    this.addStyles();
   }
-  
+
   /**
    * Initialisation
    */
   init() {
-    this.setupEventListeners();
-    this.loadAgents();
-  }
-  
-  /**
-   * Mise en place des écouteurs d'événements
-   */
-  setupEventListeners() {
-    // Formulaire de création d'agent
-    this.createAgentSubmit.addEventListener('click', this.handleCreateAgent.bind(this));
-    
-    // Bouton de rafraîchissement
-    document.getElementById('refresh-agents').addEventListener('click', this.loadAgents.bind(this));
-    
-    // Événement de confirmation de suppression
-    if (this.deleteAgentConfirm) {
-      this.deleteAgentConfirm.addEventListener('click', this.handleDeleteAgent.bind(this));
+    // Rafraîchir
+    if (this.refreshBtn) {
+      this.refreshBtn.addEventListener('click', () => this.loadAgents());
     }
     
-    // Délégation d'événements pour les boutons d'action
-    document.addEventListener('click', (event) => {
-      // Suppression d'agent
-      if (event.target.closest('.delete-agent')) {
-        const button = event.target.closest('.delete-agent');
-        const agentId = button.dataset.id;
-        const agentName = button.dataset.name;
-        this.showDeleteModal(agentId, agentName);
+    // Créer un agent
+    if (this.createBtn) {
+      this.createBtn.addEventListener('click', () => this.showModal(this.createModal));
+    }
+    
+    // Formulaire de création
+    if (this.createForm) {
+      this.createForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.createAgent();
+      });
+    }
+    
+    // Recherche
+    if (this.searchInput) {
+      this.searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        this.filterAgents(term);
+      });
+    }
+    
+    // Suppression
+    document.addEventListener('click', (e) => {
+      const deleteBtn = e.target.closest('.delete-agent');
+      if (deleteBtn) {
+        const id = deleteBtn.dataset.id;
+        const name = deleteBtn.dataset.name;
+        
+        if (this.deleteId) this.deleteId.value = id;
+        if (this.deleteName) this.deleteName.textContent = name;
+        
+        if (this.deleteBtn) {
+          this.deleteBtn.onclick = () => this.deleteAgent(id);
+        }
+        
+        this.showModal(this.deleteModal);
       }
     });
+    
+    // Chargement initial
+    this.loadAgents();
   }
-  
+
   /**
-   * Affiche le modal de confirmation de suppression
+   * Affichage d'un modal
    */
-  showDeleteModal(agentId, agentName) {
-    if (this.deleteAgentId && this.deleteAgentName) {
-      this.deleteAgentId.value = agentId;
-      this.deleteAgentName.textContent = agentName;
-      this.deleteAgentModal.show();
-    } else {
-      // Fallback si le modal n'existe pas encore (création dynamique)
-      this.createDeleteModal(agentId, agentName);
-    }
+  showModal(modal) {
+    if (modal) modal.classList.add('show');
   }
-  
+
   /**
-   * Crée dynamiquement le modal de suppression s'il n'existe pas
+   * Masquage d'un modal
    */
-  createDeleteModal(agentId, agentName) {
-    const modalHtml = `
-      <div class="modal fade" id="delete-agent-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Confirmer la suppression</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-              <p>Êtes-vous sûr de vouloir supprimer l'agent <strong id="delete-agent-name">${agentName}</strong> ?</p>
-              <p class="text-danger">Cette action est irréversible.</p>
-              <input type="hidden" id="delete-agent-id" value="${agentId}">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-              <button type="button" class="btn btn-danger" id="delete-agent-confirm">Supprimer</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Ajout du modal au DOM
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    // Récupération des éléments et initialisation
-    this.deleteAgentModal = new bootstrap.Modal(document.getElementById('delete-agent-modal'));
-    this.deleteAgentId = document.getElementById('delete-agent-id');
-    this.deleteAgentName = document.getElementById('delete-agent-name');
-    this.deleteAgentConfirm = document.getElementById('delete-agent-confirm');
-    
-    // Ajout de l'écouteur d'événement
-    this.deleteAgentConfirm.addEventListener('click', this.handleDeleteAgent.bind(this));
-    
-    // Affichage du modal
-    this.deleteAgentModal.show();
+  hideModal(modal) {
+    if (modal) modal.classList.remove('show');
   }
-  
+
   /**
-   * Chargement des agents depuis l'API
+   * Chargement des agents
    */
   async loadAgents() {
     if (this.loading) return;
@@ -123,364 +101,209 @@ class AgentsList {
     this.setLoading(true);
     
     try {
-      const response = await fetch(`${this.apiUrl}/api/monitoring/agents`);
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors du chargement des agents: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      this.agents = data.agents || [];
-      
-      this.renderAgents();
-      this.showMessage('success', 'Agents chargés avec succès');
-    } catch (error) {
-      console.error('Erreur lors du chargement des agents:', error);
-      this.showMessage('error', `Erreur lors du chargement des agents: ${error.message}`);
-      
-      // Affichage d'un message dans le tableau
-      this.renderErrorState();
+      const res = await this.api.get('/monitoring/agents');
+      this.agents = res.data.data || [];
+      this.renderAgents(this.agents);
+    } catch (err) {
+      console.error(err);
+      if (this.listEl) this.listEl.innerHTML = '<div class="error-state">Erreur: Impossible de charger les agents</div>';
     } finally {
       this.setLoading(false);
     }
   }
-  
+
   /**
-   * Gestion de la création d'un agent
+   * Rendu des agents
    */
-  async handleCreateAgent(event) {
-    event.preventDefault();
+  renderAgents(agents) {
+    if (!this.listEl) return;
     
-    // Validation du formulaire
-    const agentName = document.getElementById('agent-name').value.trim();
-    const agentDescription = document.getElementById('agent-description').value.trim();
-    const agentType = document.getElementById('agent-type').value;
-    const isPublic = document.getElementById('agent-public').checked;
+    this.listEl.innerHTML = '';
     
-    if (!agentName) {
-      this.showMessage('error', 'Le nom de l\'agent est requis');
+    if (!agents || agents.length === 0) {
+      if (this.emptyEl) this.emptyEl.classList.remove('hidden');
+      this.listEl.classList.add('hidden');
       return;
     }
     
-    this.setLoading(true);
-    this.createAgentSubmit.disabled = true;
+    this.listEl.classList.remove('hidden');
+    if (this.emptyEl) this.emptyEl.classList.add('hidden');
     
-    try {
-      const response = await fetch(`${this.apiUrl}/api/monitoring/agents`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: agentName,
-          description: agentDescription,
-          type: agentType,
-          isPublic
-        })
-      });
+    agents.forEach(agent => {
+      const el = document.createElement('div');
+      el.className = 'agent-item';
       
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la création de l'agent: ${response.status}`);
-      }
+      const lastSeen = agent.last_check_in ? new Date(agent.last_check_in).toLocaleString() : 'Jamais';
+      const status = agent.status === 'active' ? 'En ligne' : 'Hors ligne';
+      const statusClass = agent.status === 'active' ? 'bg-success' : 'bg-danger';
       
-      const data = await response.json();
-      
-      // Fermeture du modal et réinitialisation du formulaire
-      this.createAgentModal.hide();
-      this.createAgentForm.reset();
-      
-      // Ajout du nouvel agent à la liste et rafraîchissement
-      this.agents.push(data.agent);
-      this.renderAgents();
-      
-      this.showMessage('success', 'Agent créé avec succès');
-    } catch (error) {
-      console.error('Erreur lors de la création de l\'agent:', error);
-      this.showMessage('error', `Erreur lors de la création de l'agent: ${error.message}`);
-    } finally {
-      this.setLoading(false);
-      this.createAgentSubmit.disabled = false;
-    }
-  }
-  
-  /**
-   * Gestion de la suppression d'un agent
-   */
-  async handleDeleteAgent() {
-    const agentId = this.deleteAgentId.value;
-    
-    if (!agentId) {
-      this.showMessage('error', 'ID d\'agent invalide');
-      return;
-    }
-    
-    this.setLoading(true);
-    this.deleteAgentConfirm.disabled = true;
-    
-    try {
-      const response = await fetch(`${this.apiUrl}/api/monitoring/agents/${agentId}`, {
-        method: 'DELETE'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la suppression de l'agent: ${response.status}`);
-      }
-      
-      // Fermeture du modal
-      this.deleteAgentModal.hide();
-      
-      // Suppression de l'agent de la liste et rafraîchissement
-      this.agents = this.agents.filter(agent => agent.id !== agentId);
-      this.renderAgents();
-      
-      this.showMessage('success', 'Agent supprimé avec succès');
-    } catch (error) {
-      console.error('Erreur lors de la suppression de l\'agent:', error);
-      this.showMessage('error', `Erreur lors de la suppression de l'agent: ${error.message}`);
-    } finally {
-      this.setLoading(false);
-      this.deleteAgentConfirm.disabled = false;
-    }
-  }
-  
-  /**
-   * Affichage des agents dans le tableau
-   */
-  renderAgents() {
-    if (!this.agentsTable) return;
-    
-    const tbody = this.agentsTable.querySelector('tbody');
-    tbody.innerHTML = '';
-    
-    if (this.agents.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="8" class="text-center">
-            Aucun agent trouvé
-          </td>
-        </tr>
-      `;
-      return;
-    }
-    
-    this.agents.forEach(agent => {
-      const tr = document.createElement('tr');
-      tr.classList.add('fade-in');
-      
-      // Formatage de la date
-      const lastConnection = agent.lastConnection 
-        ? new Date(agent.lastConnection).toLocaleString() 
-        : 'Jamais';
-      
-      // Status badge
-      const status = this.getStatusBadge(agent.status);
-      
-      // Services count
-      const servicesCount = agent.services ? agent.services.length : 0;
-      
-      // Users count
-      const usersCount = agent.users ? agent.users.length : 0;
-      
-      tr.innerHTML = `
-        <td>${agent.id}</td>
-        <td>${agent.name}</td>
-        <td>${status}</td>
-        <td>${this.formatAgentType(agent.type)}</td>
-        <td>${lastConnection}</td>
-        <td>${usersCount}</td>
-        <td>${servicesCount}</td>
-        <td>${this.getActionButtons(agent)}</td>
+      el.innerHTML = `
+        <div class="agent-header-name">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-${agent.type === 'windows' ? 'windows' : 'linux'} text-muted"></i>
+            <span>${agent.name || 'Sans nom'}</span>
+          </div>
+        </div>
+        <div class="agent-header-version">${agent.version || '-'}</div>
+        <div class="agent-header-status">
+          <span class="badge ${statusClass}">
+            <i class="fas fa-${agent.status === 'active' ? 'check-circle' : 'times-circle'} me-1"></i>
+            ${status}
+          </span>
+        </div>
+        <div class="agent-header-metrics">
+          <div class="d-flex gap-2">
+            <span class="badge bg-secondary">CPU: -</span>
+            <span class="badge bg-secondary">RAM: -</span>
+            <span class="badge bg-secondary">DISK: -</span>
+          </div>
+        </div>
+        <div class="agent-header-last-seen">${lastSeen}</div>
+        <div class="agent-actions">
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-primary" onclick="window.location.href='/monitoring/agents/${agent.id}'">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-danger delete-agent" data-id="${agent.id}" data-name="${agent.name || 'Sans nom'}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
       `;
       
-      tbody.appendChild(tr);
+      this.listEl.appendChild(el);
     });
   }
-  
+
   /**
-   * Affichage d'un état d'erreur dans le tableau
+   * Filtrage des agents
    */
-  renderErrorState() {
-    if (!this.agentsTable) return;
-    
-    const tbody = this.agentsTable.querySelector('tbody');
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="8" class="text-center text-danger">
-          <i class="fas fa-exclamation-circle me-2"></i>
-          Erreur lors du chargement des agents
-        </td>
-      </tr>
-    `;
-  }
-  
-  /**
-   * Génère les boutons d'action pour un agent
-   */
-  getActionButtons(agent) {
-    if (this.actionTemplate) {
-      const actionsHtml = this.actionTemplate.innerHTML;
-      const container = document.createElement('div');
-      container.innerHTML = actionsHtml;
-      
-      // Ajout des attributs data
-      const viewBtn = container.querySelector('.view-agent');
-      if (viewBtn) {
-        viewBtn.href = `/monitoring/agents/${agent.id}`;
-        viewBtn.setAttribute('data-id', agent.id);
-      }
-      
-      const editBtn = container.querySelector('.edit-agent');
-      if (editBtn) {
-        editBtn.href = `/monitoring/agents/${agent.id}/edit`;
-        editBtn.setAttribute('data-id', agent.id);
-      }
-      
-      const deleteBtn = container.querySelector('.delete-agent');
-      if (deleteBtn) {
-        deleteBtn.setAttribute('data-id', agent.id);
-        deleteBtn.setAttribute('data-name', agent.name);
-      }
-      
-      return container.innerHTML;
+  filterAgents(term) {
+    if (!term) {
+      this.renderAgents(this.agents);
+      return;
     }
     
-    // Fallback si le template n'existe pas
-    return `
-      <div class="d-flex gap-1">
-        <a href="/monitoring/agents/${agent.id}" class="btn btn-sm btn-info" title="Voir les détails">
-          <i class="fas fa-eye"></i>
-        </a>
-        <a href="/monitoring/agents/${agent.id}/edit" class="btn btn-sm btn-warning" title="Modifier">
-          <i class="fas fa-edit"></i>
-        </a>
-        <button type="button" class="btn btn-sm btn-danger delete-agent" 
-          data-id="${agent.id}" data-name="${agent.name}" title="Supprimer">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    `;
-  }
-  
-  /**
-   * Génère un badge de statut pour un agent
-   */
-  getStatusBadge(status) {
-    let badgeClass = 'bg-secondary';
-    let icon = 'question-circle';
-    let label = 'Inconnu';
+    const filtered = this.agents.filter(agent => {
+      return (
+        agent.name?.toLowerCase().includes(term) ||
+        agent.description?.toLowerCase().includes(term) ||
+        agent.type?.toLowerCase().includes(term) ||
+        agent.status?.toLowerCase().includes(term)
+      );
+    });
     
-    switch (status) {
-      case 'online':
-        badgeClass = 'bg-success';
-        icon = 'check-circle';
-        label = 'En ligne';
-        break;
-      case 'offline':
-        badgeClass = 'bg-danger';
-        icon = 'times-circle';
-        label = 'Hors ligne';
-        break;
-      case 'warning':
-        badgeClass = 'bg-warning';
-        icon = 'exclamation-triangle';
-        label = 'Avertissement';
-        break;
-      case 'maintenance':
-        badgeClass = 'bg-info';
-        icon = 'tools';
-        label = 'Maintenance';
-        break;
+    this.renderAgents(filtered);
+  }
+
+  /**
+   * Création d'un agent
+   */
+  async createAgent() {
+    if (this.loading) return;
+    
+    const name = document.getElementById('agent-name')?.value.trim();
+    const description = document.getElementById('agent-description')?.value.trim();
+    const type = document.getElementById('agent-type')?.value;
+    const isPublic = document.getElementById('agent-public')?.checked;
+    
+    if (!name) {
+      alert('Le nom de l\'agent est requis');
+      return;
     }
     
-    return `<span class="badge ${badgeClass}"><i class="fas fa-${icon} me-1"></i>${label}</span>`;
-  }
-  
-  /**
-   * Formate le type d'agent pour l'affichage
-   */
-  formatAgentType(type) {
-    switch (type) {
-      case 'server':
-        return '<i class="fas fa-server me-1"></i> Serveur';
-      case 'workstation':
-        return '<i class="fas fa-desktop me-1"></i> Poste de travail';
-      case 'container':
-        return '<i class="fab fa-docker me-1"></i> Conteneur';
-      case 'vm':
-        return '<i class="fas fa-box me-1"></i> VM';
-      case 'network':
-        return '<i class="fas fa-network-wired me-1"></i> Réseau';
-      default:
-        return `<i class="fas fa-question-circle me-1"></i> ${type || 'Inconnu'}`;
+    this.setLoading(true);
+    
+    try {
+      await this.api.post('/monitoring/agents', { name, description, type, isPublic });
+      this.hideModal(this.createModal);
+      if (this.createForm) this.createForm.reset();
+      await this.loadAgents();
+      alert('Agent créé avec succès');
+    } catch (err) {
+      console.error(err);
+      alert('Erreur lors de la création de l\'agent');
+    } finally {
+      this.setLoading(false);
     }
   }
-  
+
   /**
-   * Définit l'état de chargement
+   * Suppression d'un agent
+   */
+  async deleteAgent(id) {
+    if (this.loading || !id) return;
+    
+    this.setLoading(true);
+    
+    try {
+      await this.api.delete(`/monitoring/agents/${id}`);
+      this.hideModal(this.deleteModal);
+      await this.loadAgents();
+      alert('Agent supprimé avec succès');
+    } catch (err) {
+      console.error(err);
+      alert('Erreur lors de la suppression de l\'agent');
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
+  /**
+   * Gestion de l'état de chargement
    */
   setLoading(isLoading) {
     this.loading = isLoading;
     
-    // Affichage d'un indicateur de chargement
-    const refreshButton = document.getElementById('refresh-agents');
-    if (refreshButton) {
-      if (isLoading) {
-        refreshButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        refreshButton.disabled = true;
-      } else {
-        refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
-        refreshButton.disabled = false;
-      }
+    if (this.loadingEl) {
+      this.loadingEl.classList[isLoading ? 'remove' : 'add']('hidden');
+    }
+    
+    if (this.listEl && isLoading) {
+      this.listEl.classList.add('hidden');
+    }
+    
+    if (this.refreshBtn) {
+      this.refreshBtn.disabled = isLoading;
     }
   }
-  
+
   /**
-   * Affiche un message à l'utilisateur
+   * Ajout des styles CSS
    */
-  showMessage(type, message) {
-    // Utilisation de toasts Bootstrap ou d'un système similaire
-    const toastContainer = document.getElementById('toast-container');
+  addStyles() {
+    if (document.getElementById('agents-style')) return;
     
-    if (!toastContainer) {
-      // Création du conteneur de toast s'il n'existe pas
-      const container = document.createElement('div');
-      container.id = 'toast-container';
-      container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-      document.body.appendChild(container);
-    }
-    
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : 'success'} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-    
-    toast.innerHTML = `
-      <div class="d-flex">
-        <div class="toast-body">
-          ${message}
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
-      </div>
+    const style = document.createElement('style');
+    style.id = 'agents-style';
+    style.textContent = `
+      .agents-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .agent-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 2fr 1.5fr 1fr;
+        align-items: center;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+      
+      .error-state {
+        text-align: center;
+        color: red;
+        padding: 20px;
+      }
     `;
     
-    document.getElementById('toast-container').appendChild(toast);
-    
-    const bsToast = new bootstrap.Toast(toast, {
-      delay: 3000
-    });
-    
-    bsToast.show();
-    
-    // Suppression après la fermeture
-    toast.addEventListener('hidden.bs.toast', () => {
-      toast.remove();
-    });
+    document.head.appendChild(style);
   }
 }
 
-// Initialisation quand le DOM est chargé
-document.addEventListener('DOMContentLoaded', () => {
-  const agentsList = new AgentsList();
-  agentsList.init();
-}); 
+// Initialisation
+window.agentsList = new AgentsList();
+document.addEventListener('DOMContentLoaded', () => window.agentsList.init());

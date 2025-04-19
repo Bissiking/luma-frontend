@@ -1,6 +1,81 @@
 extends ../../layouts/main
 
+block append scripts
+  script(src="/assets/js/lib/tabs-manager.js")
+
 block content
+  style.
+    /* Jauges */
+    .gauge-container {
+      margin: 1rem 0;
+    }
+
+    .gauge {
+      height: 25px;
+      background-color: #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .gauge-value {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .gauge-normal {
+      background-color: #28a745;
+    }
+
+    .gauge-warning {
+      background-color: #ffc107;
+    }
+
+    .gauge-critical {
+      background-color: #dc3545;
+    }
+
+    .gauge-label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .gauge-details {
+      font-size: 0.9rem;
+      color: #6c757d;
+      text-align: center;
+    }
+
+    /* Réseau */
+    .network-usage {
+      padding: 1rem;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+    }
+
+    .network-rx, .network-tx {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .network-rx i {
+      color: #28a745;
+    }
+
+    .network-tx i {
+      color: #dc3545;
+    }
+
+    .network-total {
+      margin-top: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #e9ecef;
+      font-size: 1.2rem;
+    }
+
   .dashboard-page
     .container-fluid
       .dashboard-header.mb-4
@@ -16,7 +91,7 @@ block content
               li.breadcrumb-item
                 a(href="/monitoring/agents") Agents de supervision
               li.breadcrumb-item.active(aria-current="page") Détail de l'agent
-            
+
       .row
         .col-md-3.mb-4
           .card
@@ -26,9 +101,6 @@ block content
                 i.fas.fa-edit
             .card-body
               .info-item
-                .info-label ID
-                .info-value#agent-id -
-              .info-item
                 .info-label Statut
                 .info-value#agent-status
                   span.badge.bg-secondary Chargement...
@@ -37,7 +109,10 @@ block content
                 .info-value#agent-type -
               .info-item
                 .info-label UUID
-                .info-value#agent-uuid -
+                .info-value#agent-uuid #{agentId}
+              .info-item
+                .info-label Token
+                .info-value#agent-token -
               .info-item
                 .info-label IP
                 .info-value#agent-ip -
@@ -70,267 +145,276 @@ block content
                     tr.placeholder-glow
                       td(colspan="3").text-center
                         span.placeholder.col-12 Chargement...
-              
+
         .col-md-9
-          // Onglets
-          ul.nav.nav-tabs.mb-4#agent-tabs(role="tablist")
-            li.nav-item(role="presentation")
-              button.nav-link.active#metrics-tab(data-bs-toggle="tab" data-bs-target="#metrics-panel" type="button" role="tab" aria-controls="metrics-panel" aria-selected="true")
-                i.fas.fa-chart-line.me-2
-                | Métriques
-            li.nav-item(role="presentation")
-              button.nav-link#services-tab(data-bs-toggle="tab" data-bs-target="#services-panel" type="button" role="tab" aria-controls="services-panel" aria-selected="false")
-                i.fas.fa-cogs.me-2
-                | Services
-            li.nav-item(role="presentation")
-              button.nav-link#config-tab(data-bs-toggle="tab" data-bs-target="#config-panel" type="button" role="tab" aria-controls="config-panel" aria-selected="false")
-                i.fas.fa-wrench.me-2
-                | Configuration
-            li.nav-item(role="presentation")
-              button.nav-link#alerts-tab(data-bs-toggle="tab" data-bs-target="#alerts-panel" type="button" role="tab" aria-controls="alerts-panel" aria-selected="false")
-                i.fas.fa-bell.me-2
-                | Alertes
-                span.badge.bg-danger.ms-1#alerts-count 0
-          
-          // Contenu des onglets
-          .tab-content
-            // Métriques
-            .tab-pane.fade.show.active#metrics-panel(role="tabpanel" aria-labelledby="metrics-tab")
-              .card
-                .card-header
-                  .d-flex.justify-content-between.align-items-center
-                    h5.mb-0 Métriques
-                    .btn-group
-                      button.btn.btn-sm.btn-outline-secondary.active#metrics-hour 1h
-                      button.btn.btn-sm.btn-outline-secondary#metrics-day 24h
-                      button.btn.btn-sm.btn-outline-secondary#metrics-week 7j
-                .card-body
-                  .row
-                    .col-md-6.mb-4
-                      .metric-card
-                        h6.metric-title 
-                          i.fas.fa-microchip.me-2
-                          | CPU
-                        .metric-chart#cpu-chart
-                          .placeholder-glow
-                            span.placeholder.col-12
-                    .col-md-6.mb-4
-                      .metric-card
-                        h6.metric-title
-                          i.fas.fa-memory.me-2
-                          | Mémoire
-                        .metric-chart#memory-chart
-                          .placeholder-glow
-                            span.placeholder.col-12
-                    .col-md-6.mb-4
-                      .metric-card
-                        h6.metric-title
-                          i.fas.fa-hdd.me-2
-                          | Disque
-                        .metric-chart#disk-chart
-                          .placeholder-glow
-                            span.placeholder.col-12
-                    .col-md-6.mb-4
-                      .metric-card
-                        h6.metric-title
-                          i.fas.fa-network-wired.me-2
-                          | Réseau
-                        .metric-chart#network-chart
-                          .placeholder-glow
-                            span.placeholder.col-12
-            
-            // Services
-            .tab-pane.fade#services-panel(role="tabpanel" aria-labelledby="services-tab")
-              .card
-                .card-header
-                  .d-flex.justify-content-between.align-items-center
-                    h5.mb-0 Services
-                    .btn-group
-                      button.btn.btn-sm.btn-outline-secondary.active#services-all Tous
-                      button.btn.btn-sm.btn-outline-secondary#services-windows Windows
-                      button.btn.btn-sm.btn-outline-secondary#services-linux Linux
-                      button.btn.btn-sm.btn-outline-secondary#services-docker Docker
-                .card-body
-                  .table-responsive
-                    table.table.table-striped#services-table
-                      thead
-                        tr
-                          th Type
-                          th Nom
-                          th État
-                          th Surveiller
-                          th Actions
-                      tbody
-                        // Données chargées dynamiquement
-                        tr.placeholder-glow
-                          td(colspan="5").text-center
-                            span.placeholder.col-12 Chargement des services...
-            
-            // Configuration
-            .tab-pane.fade#config-panel(role="tabpanel" aria-labelledby="config-tab")
-              .card
-                .card-header
-                  h5.mb-0 Configuration de l'agent
-                .card-body
-                  form#config-form
-                    h6.mb-3 Paramètres généraux
+          #agent-tabs
+            ul.nav.nav-tabs.mb-4
+              li.nav-item
+                a.nav-link.active(href="#metrics-panel") 
+                  i.fas.fa-chart-line.me-2
+                  | Métriques
+              li.nav-item
+                a.nav-link(href="#services-panel")
+                  i.fas.fa-cogs.me-2
+                  | Services
+              li.nav-item
+                a.nav-link(href="#config-panel")
+                  i.fas.fa-wrench.me-2
+                  | Configuration
+              li.nav-item
+                a.nav-link(href="#alerts-panel")
+                  i.fas.fa-bell.me-2
+                  | Alertes
+                  span.badge.bg-danger.ms-1#alerts-count 0
+
+            #agent-content
+              #metrics-panel.tab-pane
+                .card
+                  .card-header
+                    .d-flex.justify-content-between.align-items-center
+                      h5.mb-0 Métriques
+                      .btn-group.timeframe-selector
+                        button.btn.btn-sm.btn-outline-secondary(data-timeframe="1h") 1h
+                        button.btn.btn-sm.btn-outline-secondary.active(data-timeframe="24h") 24h
+                        button.btn.btn-sm.btn-outline-secondary(data-timeframe="7d") 7j
+                  .card-body
                     .row
-                      .col-md-6.mb-3
-                        label.form-label(for="interval") Intervalle de collecte (secondes)
-                        input.form-control#interval(type="number" min="10" max="3600")
-                      .col-md-6.mb-3
-                        label.form-label(for="log-level") Niveau de logs
-                        select.form-select#log-level
-                          option(value="DEBUG") DEBUG
-                          option(value="INFO") INFO
-                          option(value="WARNING") WARNING
-                          option(value="ERROR") ERROR
-                    
-                    .mb-4
-                      .form-check.form-switch
-                        input.form-check-input#alerts-enabled(type="checkbox")
-                        label.form-check-label(for="alerts-enabled") Activer les alertes
-                    
-                    h6.mb-3 Collecteurs
-                    
-                    // CPU
-                    .collector-section.mb-4
-                      .collector-header.d-flex.align-items-center.justify-content-between.mb-2
-                        h6.mb-0 
-                          i.fas.fa-microchip.me-2
-                          | CPU
+                      .col-md-6.mb-4
+                        .metric-card
+                          h6.metric-title 
+                            i.fas.fa-microchip.me-2
+                            | CPU
+                          .gauge-container#cpu-chart
+                            .gauge
+                              .gauge-value.gauge-normal(style="width: 0%")
+                            .gauge-label 0%
+                      .col-md-6.mb-4
+                        .metric-card
+                          h6.metric-title
+                            i.fas.fa-memory.me-2
+                            | Mémoire
+                          .gauge-container#memory-chart
+                            .gauge
+                              .gauge-value.gauge-normal(style="width: 0%")
+                            .gauge-label 0%
+                            .gauge-details
+                              span 0 MB utilisés / 0 MB total
+                      .col-md-6.mb-4
+                        .metric-card
+                          h6.metric-title
+                            i.fas.fa-hdd.me-2
+                            | Disque
+                          .gauge-container#disk-chart
+                            .gauge
+                              .gauge-value.gauge-normal(style="width: 0%")
+                            .gauge-label 0%
+                            .gauge-details
+                              span 0 GB utilisés / 0 GB total
+                      .col-md-6.mb-4
+                        .metric-card
+                          h6.metric-title
+                            i.fas.fa-network-wired.me-2
+                            | Réseau
+                          .network-usage#network-chart
+                            .network-rx
+                              i.fas.fa-arrow-down
+                              |  0 MB/s
+                            .network-tx
+                              i.fas.fa-arrow-up
+                              |  0 MB/s
+                            .network-total
+                              strong Total: 
+                              | 0 MB/s
+
+              #services-panel.tab-pane
+                .card
+                  .card-header
+                    .d-flex.justify-content-between.align-items-center
+                      h5.mb-0 Services
+                      .btn-group
+                        button.btn.btn-sm.btn-outline-secondary.active(data-filter="all") Tous
+                        button.btn.btn-sm.btn-outline-secondary(data-filter="windows") Windows
+                        button.btn.btn-sm.btn-outline-secondary(data-filter="linux") Linux
+                        button.btn.btn-sm.btn-outline-secondary(data-filter="docker") Docker
+                  .card-body
+                    .table-responsive
+                      table.table.table-striped#services-table
+                        thead
+                          tr
+                            th Type
+                            th Nom
+                            th État
+                            th Surveiller
+                            th Actions
+                        tbody
+                          // Données chargées dynamiquement
+                          tr.placeholder-glow
+                            td(colspan="5").text-center
+                              span.placeholder.col-12 Chargement des services...
+
+              #config-panel.tab-pane
+                .card
+                  .card-header
+                    h5.mb-0 Configuration
+                  .card-body
+                    form#config-form
+                      h6.mb-3 Paramètres généraux
+                      .row
+                        .col-md-6.mb-3
+                          label.form-label(for="interval") Intervalle de collecte (secondes)
+                          input.form-control#interval(type="number" min="10" max="3600")
+                        .col-md-6.mb-3
+                          label.form-label(for="log-level") Niveau de logs
+                          select.form-select#log-level
+                            option(value="DEBUG") DEBUG
+                            option(value="INFO") INFO
+                            option(value="WARNING") WARNING
+                            option(value="ERROR") ERROR
+
+                      .mb-4
                         .form-check.form-switch
-                          input.form-check-input#cpu-collector-enabled(type="checkbox")
-                          label.form-check-label(for="cpu-collector-enabled") Activer
-                      
-                      .collector-body
-                        .row
-                          .col-md-6.mb-3
-                            label.form-label(for="cpu-warning") Seuil d'avertissement (%)
-                            input.form-control#cpu-warning(type="number" min="0" max="100")
-                          .col-md-6.mb-3
-                            label.form-label(for="cpu-critical") Seuil critique (%)
-                            input.form-control#cpu-critical(type="number" min="0" max="100")
-                    
-                    // Mémoire
-                    .collector-section.mb-4
-                      .collector-header.d-flex.align-items-center.justify-content-between.mb-2
-                        h6.mb-0 
-                          i.fas.fa-memory.me-2
-                          | Mémoire
-                        .form-check.form-switch
-                          input.form-check-input#memory-collector-enabled(type="checkbox")
-                          label.form-check-label(for="memory-collector-enabled") Activer
-                      
-                      .collector-body
-                        .row
-                          .col-md-6.mb-3
-                            label.form-label(for="memory-warning") Seuil d'avertissement (%)
-                            input.form-control#memory-warning(type="number" min="0" max="100")
-                          .col-md-6.mb-3
-                            label.form-label(for="memory-critical") Seuil critique (%)
-                            input.form-control#memory-critical(type="number" min="0" max="100")
-                    
-                    // Disque
-                    .collector-section.mb-4
-                      .collector-header.d-flex.align-items-center.justify-content-between.mb-2
-                        h6.mb-0 
-                          i.fas.fa-hdd.me-2
-                          | Disque
-                        .form-check.form-switch
-                          input.form-check-input#disk-collector-enabled(type="checkbox")
-                          label.form-check-label(for="disk-collector-enabled") Activer
-                      
-                      .collector-body
-                        .row
-                          .col-md-6.mb-3
-                            label.form-label(for="disk-warning") Seuil d'avertissement (%)
-                            input.form-control#disk-warning(type="number" min="0" max="100")
-                          .col-md-6.mb-3
-                            label.form-label(for="disk-critical") Seuil critique (%)
-                            input.form-control#disk-critical(type="number" min="0" max="100")
-                    
-                    // Réseau
-                    .collector-section.mb-4
-                      .collector-header.d-flex.align-items-center.justify-content-between.mb-2
-                        h6.mb-0 
-                          i.fas.fa-network-wired.me-2
-                          | Réseau
-                        .form-check.form-switch
-                          input.form-check-input#network-collector-enabled(type="checkbox")
-                          label.form-check-label(for="network-collector-enabled") Activer
-                      
-                      .collector-body
-                        .row
-                          .col-md-6.mb-3
-                            label.form-label(for="network-warning") Seuil d'avertissement (%)
-                            input.form-control#network-warning(type="number" min="0" max="100")
-                          .col-md-6.mb-3
-                            label.form-label(for="network-critical") Seuil critique (%)
-                            input.form-control#network-critical(type="number" min="0" max="100")
-                    
-                    // Docker
-                    .collector-section.mb-4
-                      .collector-header.d-flex.align-items-center.justify-content-between.mb-2
-                        h6.mb-0 
-                          i.fab.fa-docker.me-2
-                          | Docker
-                        .form-check.form-switch
-                          input.form-check-input#docker-collector-enabled(type="checkbox")
-                          label.form-check-label(for="docker-collector-enabled") Activer
-                      
-                      .collector-body
-                        .row
-                          .col-md-6.mb-3
-                            label.form-label(for="docker-warning") Seuil d'avertissement (%)
-                            input.form-control#docker-warning(type="number" min="0" max="100")
-                          .col-md-6.mb-3
-                            label.form-label(for="docker-critical") Seuil critique (%)
-                            input.form-control#docker-critical(type="number" min="0" max="100")
-                    
-                    // Notifications
-                    h6.mb-3 Notifications
-                    
-                    .mb-3
-                      label.form-label(for="notification-email") Email
-                      input.form-control#notification-email(type="email")
-                    
-                    .mb-3
-                      label.form-label(for="notification-discord") Webhook Discord
-                      input.form-control#notification-discord(type="text")
-                    
-                    .mb-3
-                      label.form-label(for="notification-slack") Webhook Slack
-                      input.form-control#notification-slack(type="text")
-                    
-                    .text-end
-                      button.btn.btn-primary#save-config-btn(type="button")
-                        i.fas.fa-save.me-2
-                        | Enregistrer
-            
-            // Alertes
-            .tab-pane.fade#alerts-panel(role="tabpanel" aria-labelledby="alerts-tab")
-              .card
-                .card-header
-                  h5.mb-0 Alertes
-                .card-body
-                  .table-responsive
-                    table.table.table-striped#alerts-table
-                      thead
-                        tr
-                          th Date
-                          th Type
-                          th Message
-                          th Valeur
-                          th Seuil
-                          th État
-                          th Actions
-                      tbody
-                        // Données chargées dynamiquement
-                        tr.placeholder-glow
-                          td(colspan="7").text-center
-                            span.placeholder.col-12 Chargement des alertes...
-  
+                          input.form-check-input#alerts-enabled(type="checkbox")
+                          label.form-check-label(for="alerts-enabled") Activer les alertes
+
+                      h6.mb-3 Collecteurs
+
+                      // CPU
+                      .collector-section.mb-4
+                        .collector-header.d-flex.align-items-center.justify-content-between.mb-2
+                          h6.mb-0 
+                            i.fas.fa-microchip.me-2
+                            | CPU
+                          .form-check.form-switch
+                            input.form-check-input#cpu-collector-enabled(type="checkbox")
+                            label.form-check-label(for="cpu-collector-enabled") Activer
+
+                        .collector-body
+                          .row
+                            .col-md-6.mb-3
+                              label.form-label(for="cpu-warning") Seuil d'avertissement (%)
+                              input.form-control#cpu-warning(type="number" min="0" max="100")
+                            .col-md-6.mb-3
+                              label.form-label(for="cpu-critical") Seuil critique (%)
+                              input.form-control#cpu-critical(type="number" min="0" max="100")
+
+                      // Mémoire
+                      .collector-section.mb-4
+                        .collector-header.d-flex.align-items-center.justify-content-between.mb-2
+                          h6.mb-0 
+                            i.fas.fa-memory.me-2
+                            | Mémoire
+                          .form-check.form-switch
+                            input.form-check-input#memory-collector-enabled(type="checkbox")
+                            label.form-check-label(for="memory-collector-enabled") Activer
+
+                        .collector-body
+                          .row
+                            .col-md-6.mb-3
+                              label.form-label(for="memory-warning") Seuil d'avertissement (%)
+                              input.form-control#memory-warning(type="number" min="0" max="100")
+                            .col-md-6.mb-3
+                              label.form-label(for="memory-critical") Seuil critique (%)
+                              input.form-control#memory-critical(type="number" min="0" max="100")
+
+                      // Disque
+                      .collector-section.mb-4
+                        .collector-header.d-flex.align-items-center.justify-content-between.mb-2
+                          h6.mb-0 
+                            i.fas.fa-hdd.me-2
+                            | Disque
+                          .form-check.form-switch
+                            input.form-check-input#disk-collector-enabled(type="checkbox")
+                            label.form-check-label(for="disk-collector-enabled") Activer
+
+                        .collector-body
+                          .row
+                            .col-md-6.mb-3
+                              label.form-label(for="disk-warning") Seuil d'avertissement (%)
+                              input.form-control#disk-warning(type="number" min="0" max="100")
+                            .col-md-6.mb-3
+                              label.form-label(for="disk-critical") Seuil critique (%)
+                              input.form-control#disk-critical(type="number" min="0" max="100")
+
+                      // Réseau
+                      .collector-section.mb-4
+                        .collector-header.d-flex.align-items-center.justify-content-between.mb-2
+                          h6.mb-0 
+                            i.fas.fa-network-wired.me-2
+                            | Réseau
+                          .form-check.form-switch
+                            input.form-check-input#network-collector-enabled(type="checkbox")
+                            label.form-check-label(for="network-collector-enabled") Activer
+
+                        .collector-body
+                          .row
+                            .col-md-6.mb-3
+                              label.form-label(for="network-warning") Seuil d'avertissement (%)
+                              input.form-control#network-warning(type="number" min="0" max="100")
+                            .col-md-6.mb-3
+                              label.form-label(for="network-critical") Seuil critique (%)
+                              input.form-control#network-critical(type="number" min="0" max="100")
+
+                      // Docker
+                      .collector-section.mb-4
+                        .collector-header.d-flex.align-items-center.justify-content-between.mb-2
+                          h6.mb-0 
+                            i.fab.fa-docker.me-2
+                            | Docker
+                          .form-check.form-switch
+                            input.form-check-input#docker-collector-enabled(type="checkbox")
+                            label.form-check-label(for="docker-collector-enabled") Activer
+
+                        .collector-body
+                          .row
+                            .col-md-6.mb-3
+                              label.form-label(for="docker-warning") Seuil d'avertissement (%)
+                              input.form-control#docker-warning(type="number" min="0" max="100")
+                            .col-md-6.mb-3
+                              label.form-label(for="docker-critical") Seuil critique (%)
+                              input.form-control#docker-critical(type="number" min="0" max="100")
+
+                      // Notifications
+                      h6.mb-3 Notifications
+
+                      .mb-3
+                        label.form-label(for="notification-email") Email
+                        input.form-control#notification-email(type="email")
+
+                      .mb-3
+                        label.form-label(for="notification-discord") Webhook Discord
+                        input.form-control#notification-discord(type="text")
+
+                      .mb-3
+                        label.form-label(for="notification-slack") Webhook Slack
+                        input.form-control#notification-slack(type="text")
+
+                      .text-end
+                        button.btn.btn-primary#save-config-btn(type="button")
+                          i.fas.fa-save.me-2
+                          | Enregistrer
+
+              #alerts-panel.tab-pane
+                .card
+                  .card-header
+                    h5.mb-0 Alertes
+                  .card-body
+                    .table-responsive
+                      table.table.table-striped#alerts-table
+                        thead
+                          tr
+                            th Date
+                            th Type
+                            th Message
+                            th Valeur
+                            th Seuil
+                            th État
+                            th Actions
+                        tbody
+                          // Données chargées dynamiquement
+                          tr.placeholder-glow
+                            td(colspan="7").text-center
+                              span.placeholder.col-12 Chargement des alertes...
+
   // Modal pour ajouter un utilisateur
   .modal.fade#add-user-modal(tabindex="-1" aria-labelledby="add-user-modal-label" aria-hidden="true")
     .modal-dialog
@@ -345,7 +429,7 @@ block content
               select.form-select#user-select(required)
                 option(value="") Sélectionner un utilisateur
                 // Options chargées dynamiquement
-            
+
             .mb-3
               label.form-label(for="user-role") Rôle
               select.form-select#user-role
@@ -373,6 +457,3 @@ block content
     .d-flex.gap-1
       button.btn.btn-sm.btn-primary.acknowledge-alert(type="button" title="Acquitter")
         i.fas.fa-check
-
-block scripts
-  script(src='https://cdn.jsdelivr.net/npm/chart.js') 
