@@ -1,281 +1,330 @@
 class GroupsManager {
   constructor() {
-    this.groups = [];
-    this.selectedMembers = new Set();
-    this.currentGroupId = null;
-    this.modal = new bootstrap.Modal(document.getElementById('groupModal'));
-    
+    this.selectedTicketMembers = [];
+    this.initializeElements();
     this.initializeEventListeners();
     this.loadGroups();
   }
 
+  initializeElements() {
+    // Tables
+    this.userGroupsTable = $('#userGroupsTable tbody');
+    this.ticketGroupsTable = $('#ticketGroupsTable tbody');
+
+    // Modals
+    this.userGroupModal = $('#userGroupModal');
+    this.ticketGroupModal = $('#ticketGroupModal');
+
+    // Forms
+    this.userGroupForm = $('#userGroupForm');
+    this.ticketGroupForm = $('#ticketGroupForm');
+    this.ticketGroupMembersSelect = $('#ticketGroupMembers');
+    this.ticketGroupSelectedContainer = $('#selectedTicketGroupMembers');
+
+    // Buttons
+    this.addUserGroupBtn = $('#addUserGroupBtn');
+    this.addTicketGroupBtn = $('#addTicketGroupBtn');
+    this.saveUserGroupBtn = $('#saveUserGroupBtn');
+    this.saveTicketGroupBtn = $('#saveTicketGroupBtn');
+
+    // Modal titles
+    this.userGroupModalTitle = $('#userGroupModalTitle');
+    this.ticketGroupModalTitle = $('#ticketGroupModalTitle');
+
+    this.currentGroupId = null;
+  }
+
   initializeEventListeners() {
-    // Bouton d'ajout de groupe
-    document.getElementById('addGroupBtn').addEventListener('click', () => {
-      this.resetForm();
-      this.modal.show();
+    // Gestion des onglets
+    $('.tab').on('click', (e) => {
+      const tab = $(e.currentTarget);
+      const tabId = tab.data('tab');
+      
+      $('.tab').removeClass('active');
+      tab.addClass('active');
+      
+      $('.tab-content').removeClass('active');
+      $(`#${tabId}`).addClass('active');
     });
 
-    // Recherche de membres
-    document.getElementById('searchMemberBtn').addEventListener('click', () => {
-      this.searchMembers();
+    // Boutons d'ajout
+    this.addUserGroupBtn.on('click', () => this.showUserGroupModal());
+    this.addTicketGroupBtn.on('click', () => this.showTicketGroupModal());
+
+    // Boutons de sauvegarde
+    this.saveUserGroupBtn.on('click', () => this.saveUserGroup());
+    this.saveTicketGroupBtn.on('click', () => this.saveTicketGroup());
+
+    // Fermeture des modales
+    $('.close-btn, .cancel-btn').on('click', () => {
+      this.userGroupModal.hide();
+      this.ticketGroupModal.hide();
     });
 
-    // Sauvegarde du groupe
-    document.getElementById('saveGroupBtn').addEventListener('click', () => {
-      this.saveGroup();
-    });
-
-    // Recherche de membres avec la touche Entrée
-    document.getElementById('memberSearch').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        this.searchMembers();
+    // Fermeture des modales en cliquant en dehors
+    $(window).on('click', (e) => {
+      if ($(e.target).is('.modal')) {
+        this.userGroupModal.hide();
+        this.ticketGroupModal.hide();
       }
     });
   }
 
   async loadGroups() {
     try {
-      const response = await fetch('/api/groups', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Erreur lors du chargement des groupes');
-
-      this.groups = await response.json();
-      this.renderGroups();
+      const response = await window.api.get('/groups');
+      this.renderGroups(response.data.data);
     } catch (error) {
-      console.error('Erreur:', error);
-      this.showAlert('Erreur lors du chargement des groupes', 'danger');
+      showPopup('error', 'Erreur', 'Impossible de charger les groupes');
     }
   }
 
-  renderGroups() {
-    const tbody = document.querySelector('#groupsTable tbody');
-    tbody.innerHTML = '';
+  renderGroups(groups) {
+    this.userGroupsTable.empty();
+    this.ticketGroupsTable.empty();
 
-    this.groups.forEach(group => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
+    groups.forEach(group => {
+      if (group.type === 'user') {
+        this.renderUserGroup(group);
+      } else if (group.type === 'ticket') {
+        this.renderTicketGroup(group);
+      }
+    });
+  }
+
+  renderUserGroup(group) {
+    const row = `
+      <tr data-id="${group.id}">
+        <td>${group.name}</td>
+        <td>${group.description || ''}</td>
+        <td>${this.renderPermissionsBadges(group.permissions)}</td>
+        <td>${group.members?.length || 0} membres</td>
+        <td>
+          <button class="edit-btn" data-id="${group.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="delete-btn" data-id="${group.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+    this.userGroupsTable.append(row);
+
+    // Ajouter les événements pour les boutons
+    $(`#userGroupsTable [data-id="${group.id}"] .edit-btn`).on('click', () => this.showUserGroupModal(group));
+    $(`#userGroupsTable [data-id="${group.id}"] .delete-btn`).on('click', () => this.deleteUserGroup(group.id));
+  }
+
+  renderTicketGroup(group) {
+    const row = `
+      <tr data-id="${group.id}">
         <td>${group.name}</td>
         <td>${group.description || ''}</td>
         <td>${group.members?.length || 0} membres</td>
         <td>
-          <button class="btn btn-sm btn-primary edit-group" data-id="${group._id}">
+          <button class="edit-btn" data-id="${group.id}">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="btn btn-sm btn-danger delete-group" data-id="${group._id}">
+          <button class="delete-btn" data-id="${group.id}">
             <i class="fas fa-trash"></i>
           </button>
         </td>
-      `;
-
-      tr.querySelector('.edit-group').addEventListener('click', () => this.editGroup(group));
-      tr.querySelector('.delete-group').addEventListener('click', () => this.deleteGroup(group._id));
-
-      tbody.appendChild(tr);
-    });
-  }
-
-  async searchMembers() {
-    const searchTerm = document.getElementById('memberSearch').value;
-    if (!searchTerm) return;
-
-    try {
-      const response = await fetch(`/api/groups/search-users?q=${encodeURIComponent(searchTerm)}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Erreur lors de la recherche des utilisateurs');
-
-      const users = await response.json();
-      this.renderSearchResults(users);
-    } catch (error) {
-      console.error('Erreur:', error);
-      this.showAlert('Erreur lors de la recherche des utilisateurs', 'danger');
-    }
-  }
-
-  renderSearchResults(users) {
-    const membersList = document.querySelector('.members-list');
-    membersList.innerHTML = '';
-
-    users.forEach(user => {
-      if (!this.selectedMembers.has(user._id)) {
-        const div = document.createElement('div');
-        div.className = 'member-item p-2 border-bottom';
-        div.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <span>${user.name} (${user.email})</span>
-            <button class="btn btn-sm btn-primary add-member" data-id="${user._id}">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-        `;
-
-        div.querySelector('.add-member').addEventListener('click', () => {
-          this.addMember(user);
-        });
-
-        membersList.appendChild(div);
-      }
-    });
-  }
-
-  addMember(user) {
-    this.selectedMembers.add(user._id);
-    this.renderSelectedMembers();
-    this.renderSearchResults(
-      document.querySelector('.members-list')
-        .querySelectorAll('.member-item')
-        .map(item => ({
-          _id: item.querySelector('.add-member').dataset.id,
-          name: item.querySelector('span').textContent.split(' (')[0],
-          email: item.querySelector('span').textContent.match(/\((.*?)\)/)[1]
-        }))
-    );
-  }
-
-  removeMember(userId) {
-    this.selectedMembers.delete(userId);
-    this.renderSelectedMembers();
-  }
-
-  renderSelectedMembers() {
-    const container = document.querySelector('.selected-members');
-    container.innerHTML = '';
-
-    this.selectedMembers.forEach(memberId => {
-      const member = this.groups
-        .flatMap(g => g.members || [])
-        .find(m => m._id === memberId);
-
-      if (member) {
-        const div = document.createElement('div');
-        div.className = 'selected-member-item p-2 border-bottom';
-        div.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <span>${member.name} (${member.email})</span>
-            <button class="btn btn-sm btn-danger remove-member" data-id="${member._id}">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        `;
-
-        div.querySelector('.remove-member').addEventListener('click', () => {
-          this.removeMember(member._id);
-        });
-
-        container.appendChild(div);
-      }
-    });
-  }
-
-  async saveGroup() {
-    const name = document.getElementById('groupName').value;
-    const description = document.getElementById('groupDescription').value;
-
-    if (!name) {
-      this.showAlert('Le nom du groupe est requis', 'warning');
-      return;
-    }
-
-    const groupData = {
-      name,
-      description,
-      members: Array.from(this.selectedMembers)
-    };
-
-    try {
-      const url = this.currentGroupId 
-        ? `/api/groups/${this.currentGroupId}`
-        : '/api/groups';
-      
-      const method = this.currentGroupId ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(groupData)
-      });
-
-      if (!response.ok) throw new Error('Erreur lors de la sauvegarde du groupe');
-
-      this.modal.hide();
-      this.loadGroups();
-      this.showAlert(
-        `Groupe ${this.currentGroupId ? 'modifié' : 'créé'} avec succès`,
-        'success'
-      );
-    } catch (error) {
-      console.error('Erreur:', error);
-      this.showAlert('Erreur lors de la sauvegarde du groupe', 'danger');
-    }
-  }
-
-  editGroup(group) {
-    this.currentGroupId = group._id;
-    document.getElementById('groupModalTitle').textContent = 'Modifier le groupe';
-    document.getElementById('groupName').value = group.name;
-    document.getElementById('groupDescription').value = group.description || '';
-    
-    this.selectedMembers = new Set((group.members || []).map(m => m._id));
-    this.renderSelectedMembers();
-    
-    this.modal.show();
-  }
-
-  async deleteGroup(groupId) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce groupe ?')) return;
-
-    try {
-      const response = await fetch(`/api/groups/${groupId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Erreur lors de la suppression du groupe');
-
-      this.loadGroups();
-      this.showAlert('Groupe supprimé avec succès', 'success');
-    } catch (error) {
-      console.error('Erreur:', error);
-      this.showAlert('Erreur lors de la suppression du groupe', 'danger');
-    }
-  }
-
-  resetForm() {
-    this.currentGroupId = null;
-    document.getElementById('groupModalTitle').textContent = 'Ajouter un groupe';
-    document.getElementById('groupForm').reset();
-    document.getElementById('memberSearch').value = '';
-    this.selectedMembers = new Set();
-    this.renderSelectedMembers();
-    document.querySelector('.members-list').innerHTML = '';
-  }
-
-  showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </tr>
     `;
+    this.ticketGroupsTable.append(row);
 
-    document.querySelector('.groups-container').insertAdjacentElement('afterbegin', alertDiv);
+    // Ajouter les événements pour les boutons
+    $(`#ticketGroupsTable [data-id="${group.id}"] .edit-btn`).on('click', () => this.showTicketGroupModal(group));
+    $(`#ticketGroupsTable [data-id="${group.id}"] .delete-btn`).on('click', () => this.deleteTicketGroup(group.id));
+  }
 
-    setTimeout(() => {
-      alertDiv.remove();
-    }, 5000);
+  renderPermissionsBadges(permissions) {
+    if (!permissions) return '';
+    
+    const badges = [];
+    for (const [module, rights] of Object.entries(permissions)) {
+      if (rights.canView) badges.push(`<span class="badge">${module}: Voir</span>`);
+      if (rights.canCreate) badges.push(`<span class="badge">${module}: Créer</span>`);
+      if (rights.canEdit) badges.push(`<span class="badge">${module}: Modifier</span>`);
+      if (rights.canDelete) badges.push(`<span class="badge">${module}: Supprimer</span>`);
+    }
+    
+    return badges.join(' ');
+  }
+
+  showUserGroupModal(group = null) {
+    this.currentGroupId = group?.id || null;
+    this.userGroupModalTitle.text(group ? 'Modifier le groupe' : 'Ajouter un groupe');
+    
+    if (group) {
+      $('#groupName').val(group.name);
+      $('#groupDescription').val(group.description || '');
+      
+      // Réinitialiser les permissions
+      $('input[type="checkbox"]').prop('checked', false);
+      
+      // Cocher les permissions existantes
+      if (group.permissions) {
+        for (const [module, rights] of Object.entries(group.permissions)) {
+          if (rights.canView) $(`#${module}-view`).prop('checked', true);
+          if (rights.canCreate) $(`#${module}-create`).prop('checked', true);
+          if (rights.canEdit) $(`#${module}-edit`).prop('checked', true);
+          if (rights.canDelete) $(`#${module}-delete`).prop('checked', true);
+        }
+      }
+    } else {
+      this.userGroupForm[0].reset();
+    }
+    
+    this.userGroupModal.css('display', 'flex');
+  }
+
+  showTicketGroupModal(group = null) {
+    this.currentGroupId = group?.id || null;
+    this.ticketGroupModalTitle.text(group ? 'Modifier le groupe de tickets' : 'Ajouter un groupe de tickets');
+    
+    if (group) {
+      $('#ticketGroupName').val(group.name);
+      $('#ticketGroupDescription').val(group.description || '');
+      this.loadUsersForTicketGroup(group);
+    } else {
+      this.ticketGroupForm[0].reset();
+      this.loadUsersForTicketGroup();
+    }
+    
+    this.ticketGroupModal.css('display', 'flex');
+  }
+
+  async loadUsersForTicketGroup(group = null) {
+    try {
+      const response = await window.api.get('/users');
+      this.allUsersForTicketGroup = response.data.data;
+      const select = this.ticketGroupMembersSelect;
+      select.empty();
+      this.selectedTicketMembers = [];
+      this.ticketGroupSelectedContainer.empty();
+      
+      response.data.data.forEach(user => {
+        const option = new Option(user.name, user.id);
+        if (group?.members?.includes(user.id)) {
+          option.selected = true;
+          this.addTicketMember({ id: user.id, name: user.name });
+        }
+        select.append(option);
+      });
+      select.off('change').on('change', (e) => {
+        const selectedOptions = $(e.currentTarget).find('option:selected');
+        selectedOptions.each((_, opt) => {
+          const id = opt.value;
+          const name = opt.text;
+          this.addTicketMember({ id, name });
+        });
+      });
+    } catch (error) {
+      showPopup('error', 'Erreur', 'Impossible de charger les utilisateurs');
+    }
+  }
+
+  addTicketMember(member) {
+    if (this.selectedTicketMembers.find(m => m.id == member.id)) return;
+    this.selectedTicketMembers.push(member);
+    const tag = $(`<span class="member-tag" data-id="${member.id}">${member.name} <i class="fas fa-times remove-member"></i></span>`);
+    tag.find('.remove-member').on('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      this.removeTicketMember(member.id);
+    });
+    this.ticketGroupSelectedContainer.append(tag);
+    this.ticketGroupMembersSelect.find(`option[value="${member.id}"]`).remove();
+  }
+
+  removeTicketMember(id) {
+    this.selectedTicketMembers = this.selectedTicketMembers.filter(m => m.id != id);
+    this.ticketGroupSelectedContainer.find(`.member-tag[data-id="${id}"]`).remove();
+    const user = this.allUsersForTicketGroup.find(u => u.id == id);
+    if (user) {
+      this.ticketGroupMembersSelect.append(new Option(user.name, user.id));
+    }
+  }
+
+  async saveUserGroup() {
+    try {
+      const formData = {
+        name: $('#groupName').val(),
+        description: $('#groupDescription').val(),
+        permissions: {}
+      };
+
+      // Récupérer les permissions
+      $('.permission-module').each((_, module) => {
+        const moduleName = $(module).find('h6').text().toLowerCase();
+        formData.permissions[moduleName] = {
+          canView: $(`#${moduleName}-view`).is(':checked'),
+          canCreate: $(`#${moduleName}-create`).is(':checked'),
+          canEdit: $(`#${moduleName}-edit`).is(':checked'),
+          canDelete: $(`#${moduleName}-delete`).is(':checked')
+        };
+      });
+
+      if (this.currentGroupId) {
+        await window.api.put(`/groups/${this.currentGroupId}`, formData);
+        showPopup('success', 'Succès', 'Groupe mis à jour avec succès');
+      } else {
+        await window.api.post('/groups', formData);
+        showPopup('success', 'Succès', 'Groupe créé avec succès');
+      }
+
+      this.userGroupModal.hide();
+      this.loadGroups();
+    } catch (error) {
+      showPopup('error', 'Erreur', 'Une erreur est survenue lors de la sauvegarde');
+    }
+  }
+
+  async saveTicketGroup() {
+    try {
+      const formData = {
+        name: $('#ticketGroupName').val(),
+        description: $('#ticketGroupDescription').val(),
+        members: this.selectedTicketMembers.map(m => m.id)
+      };
+
+      if (this.currentGroupId) {
+        await window.api.put(`/ticket-groups/${this.currentGroupId}`, formData);
+        showPopup('success', 'Succès', 'Groupe de tickets mis à jour avec succès');
+      } else {
+        await window.api.post('/ticket-groups', formData);
+        showPopup('success', 'Succès', 'Groupe de tickets créé avec succès');
+      }
+
+      this.ticketGroupModal.hide();
+      this.loadGroups();
+    } catch (error) {
+      showPopup('error', 'Erreur', 'Une erreur est survenue lors de la sauvegarde');
+    }
+  }
+
+  async deleteUserGroup(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce groupe ?')) {
+      try {
+        await window.api.delete(`/groups/${id}`);
+        showPopup('success', 'Succès', 'Groupe supprimé avec succès');
+        this.loadGroups();
+      } catch (error) {
+        showPopup('error', 'Erreur', 'Une erreur est survenue lors de la suppression');
+      }
+    }
+  }
+
+  async deleteTicketGroup(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce groupe de tickets ?')) {
+      try {
+        await window.api.delete(`/ticket-groups/${id}`);
+        showPopup('success', 'Succès', 'Groupe de tickets supprimé avec succès');
+        this.loadGroups();
+      } catch (error) {
+        showPopup('error', 'Erreur', 'Une erreur est survenue lors de la suppression');
+      }
+    }
   }
 } 

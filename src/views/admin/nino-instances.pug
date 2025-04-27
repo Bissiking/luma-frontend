@@ -1,0 +1,53 @@
+extends ../layouts/main
+
+block content
+  .container-fluid
+    .row
+      .col-12
+        h1.mb-4 Gestion des Instances Nino
+
+    .row
+      .col-12
+        .card
+          .card-header
+            h5 Instances Nino
+            button.btn-primary#addInstanceBtn
+              i.fas.fa-plus
+              |  Ajouter une instance
+
+          .card-body
+            .table-responsive
+              table#ninoInstancesTable
+                thead
+                  tr
+                    th ID
+                    th Nom
+                    th Description
+                    th Actions
+                tbody
+                  // Les instances seront chargées dynamiquement ici
+
+  // Modal pour ajouter/modifier une instance Nino
+  .modal#instanceModal
+    .modal-content
+      .modal-header
+        h5#instanceModalTitle Ajouter une instance
+        .close-btn &times;
+      .modal-body
+        form#instanceForm
+          .form-group
+            label(for="instanceName") Nom
+            input#instanceName(type="text" required)
+          .form-group
+            label(for="instanceDescription") Description
+            textarea#instanceDescription(rows="3")
+      .modal-footer
+        button.btn-secondary.cancel-btn Annuler
+        button.btn-primary#saveInstanceBtn Enregistrer
+
+block scripts
+  script(src="/assets/js/nino-instances-manager.js")
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const instancesManager = new InstancesManager();
+    }); 

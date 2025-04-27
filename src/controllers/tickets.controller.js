@@ -62,6 +62,23 @@ const ticketsController = {
      */
     index: async (req, res) => {
         try {
+            // Vérifier si l'utilisateur est authentifié
+            if (!req.session.user || !req.session.token) {
+                // Éviter une boucle de redirection
+                if (req.session.redirectSource === 'dashboard') {
+                    // Si on vient du dashboard, aller directement au login
+                    req.session.error = 'Session expirée, veuillez vous reconnecter.';
+                    return res.redirect('/auth/login');
+                }
+                
+                // Marquer qu'on vient des tickets
+                req.session.redirectSource = 'tickets';
+                return res.redirect('/auth/login');
+            }
+            
+            // Réinitialiser l'indicateur de redirection
+            delete req.session.redirectSource;
+            
             res.render('tickets/index', {
                 title: 'Liste des Tickets - LUMA',
                 user: req.session.user || null,

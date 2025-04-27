@@ -1,0 +1,32 @@
+<!-- Section de débogage -->
+<div class="debug-section">
+    <h3>Informations de session (Débogage)</h3>
+    <div class="debug-info">
+        <p><strong>Token:</strong> <span id="debug-token"><%= debug.token %></span></p>
+        <p><strong>Refresh Token:</strong> <span id="debug-refresh-token"><%= debug.refreshToken %></span></p>
+        <p><strong>Expiration:</strong> <span id="debug-expires"><%= debug.expiresAt %></span></p>
+    </div>
+</div>
+
+<style>
+.debug-section {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.debug-info {
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.debug-info p {
+    margin: 5px 0;
+}
+
+.debug-info span {
+    word-break: break-all;
+}
+</style> 

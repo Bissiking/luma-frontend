@@ -1,0 +1,135 @@
+extends ../../../layouts/admin
+
+block content
+  .dashboard-page
+    .container-fluid
+      .dashboard-header.mb-4
+        .header-content
+          h1.dashboard-title.d-flex.align-items-center.gap-2
+            i.fas.fa-film.gradient-icon
+            | Gestion des Instances NINO
+          nav(aria-label="breadcrumb")
+            ol.breadcrumb.mb-0
+              li.breadcrumb-item
+                a(href="/dashboard") Tableau de bord
+              li.breadcrumb-item.active(aria-current="page") Instances NINO
+
+      .view-controls.mb-4
+        .view-actions
+          button.btn-primary.create-instance-btn#create-instance-btn
+            i.fas.fa-plus
+            span Nouvelle Instance
+          
+          button.btn-secondary.refresh-btn#refresh-instances
+            i.fas.fa-sync-alt
+            span Rafraîchir
+
+      .instances-container
+        .instances-list#instances-list
+          // Les instances seront ajoutées ici dynamiquement
+          
+        .instances-empty.hidden#instances-empty
+          i.fas.fa-film
+          p Aucune instance trouvée
+
+  // Modal de configuration d'instance
+  .modal#instance-modal
+    .modal-content
+      .modal-header
+        h3#modal-title Nouvelle Instance
+        button.close-btn#close-modal
+          i.fas.fa-times
+      .modal-body
+        form#instance-form.space-y-4
+          .form-group
+            label(for="instanceName") Nom de l'instance
+            input#instanceName.form-input(type="text" required)
+          
+          .form-group
+            label(for="instanceId") ID de l'instance
+            input#instanceId.form-input(type="text" required pattern="[a-z0-9-]+" title="Lettres minuscules, chiffres et tirets uniquement")
+          
+          .form-group
+            label(for="instanceRegion") Région
+            select#instanceRegion.form-select
+              option(value="FR") France
+              option(value="EU") Europe
+              option(value="US") États-Unis
+              option(value="AS") Asie
+
+          .form-group
+            label(for="port") Port
+            input#port.form-input(type="number" min="1" max="65535" value="3000")
+
+          .form-group
+            label(for="nodeEnv") Environnement
+            select#nodeEnv.form-select
+              option(value="development") Développement
+              option(value="production") Production
+              option(value="staging") Staging
+
+          .form-group
+            label(for="videoStoragePath") Chemin de stockage des vidéos
+            input#videoStoragePath.form-input(type="text" value="public/videos")
+
+          .form-group
+            label(for="maxFileSize") Taille maximale des fichiers (en Go)
+            input#maxFileSize.form-input(type="number" min="1" step="1" value="2")
+
+          .form-group
+            label(for="diskThreshold") Seuil d'alerte disque (%)
+            input#diskThreshold.form-input(type="number" min="1" max="100" value="80")
+
+          .form-group
+            label(for="hlsSegmentTime") Durée des segments HLS (secondes)
+            input#hlsSegmentTime.form-input(type="number" min="1" value="6")
+
+          .form-group
+            .checkbox-container
+              input#cacheEnabled(type="checkbox")
+              label(for="cacheEnabled") Activer le cache
+
+          .cache-settings.hidden
+            .form-group
+              label(for="cacheDir") Répertoire de cache
+              input#cacheDir.form-input(type="text" value="cache")
+
+            .form-group
+              label(for="cacheTtl") Durée de vie du cache (secondes)
+              input#cacheTtl.form-input(type="number" min="1" value="3600")
+
+          .form-group
+            .checkbox-container
+              input#replicationEnabled(type="checkbox")
+              label(for="replicationEnabled") Activer la réplication
+
+          .replication-settings.hidden
+            .form-group
+              label Instances de réplication
+              .replication-instances
+                // Les instances seront ajoutées ici
+              button.btn-secondary.add-replication-btn(type="button")
+                i.fas.fa-plus
+                span Ajouter une instance
+
+          .form-group
+            label(for="lumaApiUrl") URL de l'API LUMA
+            input#lumaApiUrl.form-input(type="url" required)
+
+          .form-group
+            label(for="lumaApiKey") Clé API LUMA
+            .input-group
+              input#lumaApiKey.form-input(type="password" required)
+              button.btn-secondary.toggle-password(type="button")
+                i.fas.fa-eye
+
+          .form-group
+            label(for="lumaSyncInterval") Intervalle de synchronisation (secondes)
+            input#lumaSyncInterval.form-input(type="number" min="10" value="60")
+
+      .modal-footer
+        button.btn-secondary#cancel-instance Annuler
+        button.btn-primary#save-instance Enregistrer
+
+block scripts
+  script(src=asset('js/admin/nino/instances-manager.js')) 

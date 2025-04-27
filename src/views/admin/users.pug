@@ -1,0 +1,70 @@
+extends ../layouts/admin
+
+block content
+  .container-fluid
+    .row
+      .col-12
+        h1.mb-4 Gestion des Utilisateurs
+
+    .card
+      .card-header.d-flex.justify-content-between.align-items-center
+        h5.mb-0 Liste des Utilisateurs
+        button.btn.btn-primary#addUserBtn
+          i.fas.fa-plus.me-2
+          | Ajouter un utilisateur
+
+      .card-body
+        .table-responsive
+          table.table.table-hover#usersTable
+            thead
+              tr
+                th Nom
+                th Email
+                th Groupe
+                th Statut
+                th Dernière connexion
+                th Actions
+            tbody
+              // Les utilisateurs seront chargés dynamiquement ici
+
+    // Modal pour ajouter/modifier un utilisateur
+    .modal.fade#userModal(tabindex="-1")
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5.modal-title#userModalTitle Ajouter un utilisateur
+            button.btn-close(type="button" data-bs-dismiss="modal")
+          .modal-body
+            form#userForm
+              .mb-3
+                label.form-label(for="userName") Nom
+                input.form-control#userName(type="text" required)
+              .mb-3
+                label.form-label(for="userEmail") Email
+                input.form-control#userEmail(type="email" required)
+              .mb-3
+                label.form-label(for="userGroup") Groupe
+                select.form-select#userGroup(required)
+                  // Les groupes seront chargés dynamiquement ici
+              .mb-3
+                label.form-label(for="userPassword") Mot de passe
+                input.form-control#userPassword(type="password")
+                small.form-text.text-muted Laissez vide pour ne pas modifier le mot de passe
+              .mb-3
+                .form-check
+                  input.form-check-input#userActive(type="checkbox")
+                  label.form-check-label(for="userActive") Compte actif
+
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Annuler
+            button.btn.btn-primary#saveUserBtn(type="button") Enregistrer
+
+block styles
+  link(rel="stylesheet" href="/assets/css/admin/users.css")
+
+block scripts
+  script(src="/assets/js/users-manager.js")
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const usersManager = new UsersManager();
+    }); 

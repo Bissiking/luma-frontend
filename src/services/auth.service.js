@@ -44,7 +44,9 @@ class AuthService {
       return {
         success: true,
         user: response.data.user || response.data.data?.user,
-        token: response.data.token || response.data.data?.token
+        token: response.data.token || response.data.data?.token,
+        expires_at: response.data.expires_at || response.data.data?.expires_at,
+        refresh_expires_at: response.data.refresh_expires_at || response.data.data?.refresh_expires_at
       };
     } catch (error) {
       console.error('Erreur lors de la connexion:', error.response?.data || error.message);

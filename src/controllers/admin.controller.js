@@ -74,6 +74,24 @@ const adminController = {
             req.session.error = 'Une erreur est survenue lors du chargement des utilisateurs du groupe.';
             res.redirect('/admin/groups');
         }
+    },
+
+    /**
+     * Gestion des instances Nino
+     */
+    instances: async (req, res) => {
+        try {
+            res.render('admin/nino-instances', {
+                title: 'Gestion des Instances Nino - LUMA',
+                user: req.session.user || null,
+                currentPage: 'admin-nino-instances',
+                pageStyles: ['css/admin/nino-instances.css']
+            });
+        } catch (error) {
+            console.error('Erreur dans adminController.instances:', error);
+            req.session.error = 'Une erreur est survenue lors du chargement des instances Nino.';
+            res.redirect('/admin');
+        }
     }
 };
 

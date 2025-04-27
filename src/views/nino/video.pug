@@ -1,285 +1,53 @@
-extends ../layouts/main
+extends ../layouts/nino
 
-block append content
-  // Contenu spécifique à Nino
-  style.
-    /* Style pour cacher le header et le footer Luma */
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    header.header, footer.footer, .sidebar {
-      display: none !important;
-    }
-    .main-content {
-      padding: 0 !important;
-      margin: 0 !important;
-      width: 100%;
-    }
+block styles
+    link(rel='stylesheet', href='/assets/css/nino/video-player.css')
 
-  // Début du contenu Nino
-  .nino-body
-    // En-tête principal
-    header.nino-header
-      .nino-header-left
-        img.nino-logo(src="/assets/images/nino-logo.png", alt="Nino Logo")
-        nav.nino-nav
-          a.nino-nav-link(href="/nino") Accueil
-          a.nino-nav-link(href="/nino/discover") Découvrir
-          a.nino-nav-link(href="/nino/series") Séries
-          a.nino-nav-link(href="/nino/movies") Films
-          a.nino-nav-link(href="/nino/watchlist") Ma liste
-      
-      .nino-user-controls
-        .nino-search
-          button.nino-search-toggle
-            i.fas.fa-search
-          form.nino-search-form
-            input.nino-search-input(type="text", placeholder="Rechercher...")
-            button.nino-search-submit(type="submit")
-              i.fas.fa-search
-        
-        .nino-user-menu
-          img.nino-user-avatar(src="/assets/images/avatar.jpg", alt="Avatar")
-          .nino-user-dropdown
-            .nino-dropdown-header
-              img.nino-dropdown-avatar(src="/assets/images/avatar.jpg", alt="Avatar")
-              .nino-dropdown-user-info
-                .nino-dropdown-username Thomas
-                .nino-dropdown-email thomas@example.com
-                .nino-dropdown-stats
-                  .nino-dropdown-stat
-                    .nino-dropdown-stat-value 42
-                    .nino-dropdown-stat-label Favoris
-                  .nino-dropdown-stat
-                    .nino-dropdown-stat-value 156
-                    .nino-dropdown-stat-label Vidéos
-            
-            a.nino-dropdown-item(href="/nino/profile")
-              i.fas.fa-user
-              | Mon profil
-            a.nino-dropdown-item(href="/nino/settings")
-              i.fas.fa-cog
-              | Paramètres
-            a.nino-dropdown-item(href="/nino/history")
-              i.fas.fa-history
-              | Historique
-            .nino-dropdown-divider
-            a.nino-dropdown-item(href="/logout")
-              i.fas.fa-sign-out-alt
-              | Se déconnecter
-    
-    // Contenu de la page vidéo
+block content
     .nino-video-page
-      .nino-main-content
-        // Lecteur vidéo
-        .nino-player-wrapper
-          video(poster="/assets/images/nino/featured.jpg")
-            source(src="#", type="video/mp4")
-          
-          // Contrôles vidéo
-          .nino-video-controls-container
-            .nino-progress-container
-              .nino-progress-bar
-            
-            .nino-video-controls
-              .nino-control-left
-                button.nino-control-button.nino-play
-                  i.fas.fa-play
-                button.nino-control-button
-                  i.fas.fa-step-backward
-                button.nino-control-button
-                  i.fas.fa-step-forward
-                
-                .nino-volume-container
-                  button.nino-control-button
-                    i.fas.fa-volume-up
-                  .nino-volume-slider
-                    .nino-volume-fill
-                
-                .nino-time-display 17:34 / 59:32
-              
-              .nino-control-right
-                button.nino-control-button
-                  i.fas.fa-closed-captioning
-                button.nino-control-button
-                  i.fas.fa-cog
-                button.nino-control-button
-                  i.fas.fa-expand
+        #video-player.nino-video-container
         
-        // Informations de la vidéo
         .nino-video-info
-          h1.nino-video-title Basic how to ride your skateboard comfortly and Basic Equipment to play skateboard safely
-          
-          .nino-video-meta
-            .nino-views-count
-              span
-                i.fas.fa-eye
-                |  125,908 vues
-              span
-                i.fas.fa-calendar-alt
-                |  Il y a 2 heures
+            h1.nino-video-title= video.title
+            .nino-video-meta
+                span.nino-video-views
+                    i.fas.fa-eye
+                    | #{video.views} vues
+                span.nino-video-date
+                    i.fas.fa-calendar
+                    | #{video.uploadDate}
+                span.nino-video-author
+                    i.fas.fa-user
+                    | #{video.author}
             
             .nino-video-actions
-              button.nino-action-button.nino-liked
-                i.fas.fa-thumbs-up
-                |  J'aime
-              button.nino-action-button
-                i.fas.fa-share
-                |  Partager
-              button.nino-action-button
-                i.fas.fa-bookmark
-                |  Sauvegarder
-              button.nino-action-button
-                i.fas.fa-flag
-                |  Signaler
-          
-          // Créateur de la vidéo
-          .nino-creator-info
-            img.nino-creator-avatar(src="/assets/images/nino/andy-profile.jpg", alt="Andy William")
-            .nino-creator-details
-              .nino-creator-name
-                | Andy William 
-                i.fas.fa-check-circle.nino-verified-badge
-              .nino-subscriber-count 1,980,893 abonnés
-            button.nino-subscribe-button S'abonner
-          
-          // Description de la vidéo
-          .nino-video-description
-            p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        
-        // Vidéos liées en version mobile (visible uniquement en responsive)
-        .nino-related-videos.nino-mobile-only
-          .nino-related-header
-            h3.nino-related-title Vidéos similaires
-          
-          .nino-related-list
-            // Cette section est dupliquée pour la version mobile
-      
-      // Colonne de droite - Chat en direct et vidéos liées
-      .nino-sidebar
-        // Chat en direct
-        .nino-live-chat-container
-          .nino-chat-header
-            h3.nino-chat-title Live Chat
-            .nino-chat-count
-              i.fas.fa-users
-              | 16,588 personnes
-          
-          .nino-chat-messages
-            .nino-chat-message
-              img.nino-chat-avatar(src="/assets/images/nino/avatar1.jpg", alt="Avatar")
-              .nino-chat-content
-                .nino-chat-user
-                  | Wijaya Abadi
-                  span.nino-chat-dot
-                .nino-chat-text Duis aute irure dolor in in reprehenderit velit esse cillum dolore eu fugiat
+                button.nino-btn.nino-btn-secondary
+                    i.fas.fa-thumbs-up
+                    | #{video.likes}
+                button.nino-btn.nino-btn-secondary
+                    i.fas.fa-thumbs-down
+                    | #{video.dislikes}
+                button.nino-btn.nino-btn-secondary
+                    i.fas.fa-share
+                    | Partager
+                button.nino-btn.nino-btn-secondary
+                    i.fas.fa-plus
+                    | Ajouter à ma liste
             
-            .nino-chat-message
-              img.nino-chat-avatar(src="/assets/images/nino/avatar2.jpg", alt="Avatar")
-              .nino-chat-content
-                .nino-chat-user
-                  | Johny Wise
-                  span.nino-chat-dot
-                .nino-chat-text tempor incididunt ut labore
+            .nino-video-description
+                p= video.description
             
-            .nino-chat-message
-              img.nino-chat-avatar(src="/assets/images/nino/avatar3.jpg", alt="Avatar")
-              .nino-chat-content
-                .nino-chat-user
-                  | Budi Hakim
-                  span.nino-chat-dot
-                .nino-chat-text Duis aute irure dolor in in reprehenderit velit esse cillum dolore eu fugiat
-            
-            .nino-chat-message
-              img.nino-chat-avatar(src="/assets/images/nino/avatar4.jpg", alt="Avatar")
-              .nino-chat-content
-                .nino-chat-user
-                  | Thomas Hope
-                  span.nino-chat-dot
-                .nino-chat-text velit esse cillum dolore eu fugiat
-          
-          .nino-chat-input-container
-            input.nino-message-input(type="text", placeholder="Écrire un message...")
-            button.nino-send-button
-              i.fas.fa-paper-plane
-        
-        // Vidéos liées
-        .nino-related-videos
-          .nino-related-header
-            h3.nino-related-title Vidéos similaires
-          
-          .nino-related-list
-            // Vidéo liée 1
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/recommended1.jpg", alt="Vidéo liée")
-                .nino-related-duration 15:45
-              .nino-related-info
-                h4.nino-related-video-title Prepare for your first skateboard jump
-                .nino-related-meta
-                  .nino-related-author Jordan Wise
-                  .nino-related-views 125,908 vues • il y a 2 jours
-            
-            // Vidéo liée 2
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/recommended2.jpg", alt="Vidéo liée")
-                .nino-related-duration 10:30
-              .nino-related-info
-                h4.nino-related-video-title Tips to playing skateboard on the ramp
-                .nino-related-meta
-                  .nino-related-author Jordan Wise
-                  .nino-related-views 125,908 vues • il y a 2 jours
-            
-            // Vidéo liée 3
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/thumb1.jpg", alt="Vidéo liée")
-                .nino-related-duration 8:22
-              .nino-related-info
-                h4.nino-related-video-title Les bases du skateboard - Équilibre
-                .nino-related-meta
-                  .nino-related-author Andy William
-                  .nino-related-views 87,502 vues • il y a 1 semaine
-            
-            // Vidéo liée 4
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/thumb2.jpg", alt="Vidéo liée")
-                .nino-related-duration 12:17
-              .nino-related-info
-                h4.nino-related-video-title Comment choisir sa première planche
-                .nino-related-meta
-                  .nino-related-author Andy William
-                  .nino-related-views 65,342 vues • il y a 2 semaines
-            
-            // Vidéo liée 5
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/thumb3.jpg", alt="Vidéo liée")
-                .nino-related-duration 14:55
-              .nino-related-info
-                h4.nino-related-video-title Apprendre le Ollie en 3 étapes simples
-                .nino-related-meta
-                  .nino-related-author Tom Sharp
-                  .nino-related-views 215,908 vues • il y a 1 mois
-            
-            // Vidéo liée 6
-            .nino-related-item
-              .nino-related-thumbnail
-                img(src="/assets/images/nino/thumb4.jpg", alt="Vidéo liée")
-                .nino-related-duration 9:10
-              .nino-related-info
-                h4.nino-related-video-title Sécurité et protections: ce qu'il faut savoir
-                .nino-related-meta
-                  .nino-related-author Safety First
-                  .nino-related-views 74,123 vues • il y a 3 semaines
+            .nino-video-tags
+                each tag in video.tags
+                    span.nino-tag= tag
 
 block scripts
-  script(src="/assets/js/lib/jquery.js")
-  script(src="/assets/js/lib/axios.js")
-  script(src="/assets/js/lib/popup.js")
-  script(src="/assets/js/nino/nino.js")
-  script(src="/assets/js/nino/video-player.js") 
+    script(src='/assets/js/nino/video-player.js')
+    script.
+        // Initialisation du lecteur vidéo
+        document.addEventListener('DOMContentLoaded', function() {
+            const player = new NinoVideoPlayer('video-player', '#{video.id}', {
+                autoplay: true,
+                quality: 'auto'
+            });
+        }); 

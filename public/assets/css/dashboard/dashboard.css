@@ -184,6 +184,7 @@
 .info-gradient { background: var(--info); }
 .primary-gradient { background: var(--primary); }
 .warning-gradient { background: var(--warning); }
+.danger-gradient { background: var(--error); }
 
 .activity-content {
   flex-grow: 1;

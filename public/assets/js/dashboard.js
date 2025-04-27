@@ -91,16 +91,16 @@ const DashboardManager = {
             
             switch (activity.action) {
                 case 'ticket_create':
-                    activityContent = `Ticket #${activity.resourceId} créé`;
+                    activityContent = `Ticket #${activity.resource_id} créé`;
                     break;
                 case 'ticket_update':
-                    activityContent = `Ticket #${activity.resourceId} mis à jour`;
+                    activityContent = `Ticket #${activity.resource_id} mis à jour`;
                     break;
                 case 'login':
-                    activityContent = `${activity.user.name} s'est connecté`;
+                    activityContent = `${activity.user.name} s'est connecté depuis ${activity.details.source}`;
                     break;
                 case 'logout':
-                    activityContent = `${activity.user.name} s'est déconnecté`;
+                    activityContent = `${activity.user.name} s'est déconnecté depuis ${activity.details.source}`;
                     break;
                 case 'password_change':
                     activityContent = `${activity.user.name} a changé son mot de passe`;
@@ -119,7 +119,7 @@ const DashboardManager = {
                 </div>
                 <div class="activity-content">
                     <p class="activity-title">${activityContent}</p>
-                    <div class="activity-meta">${formattedActivity.timeAgo}</div>
+                    <div class="activity-meta">${formattedActivity.timeAgo} depuis ${activity.ip_address}</div>
                 </div>
             `;
             

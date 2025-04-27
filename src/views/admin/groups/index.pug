@@ -1,0 +1,136 @@
+extends ../../layouts/main
+
+block content
+  .container-fluid
+    .row
+      .col-12
+        h1.mb-4 Gestion des Groupes
+
+    // Navigation des onglets
+    .tabs-container
+      .tabs-header
+        .tab.active(data-tab="userGroups") Groupes Utilisateurs
+        .tab(data-tab="ticketGroups") Groupes de Tickets
+
+    // Contenu des onglets
+    .tabs-content
+      // Onglet Groupes Utilisateurs
+      .tab-content.active#userGroups
+        .card
+          .card-header
+            h5 Groupes Utilisateurs
+            button.btn-primary#addUserGroupBtn
+              i.fas.fa-plus
+              | Ajouter un groupe
+
+          .card-body
+            .table-responsive
+              table#userGroupsTable
+                thead
+                  tr
+                    th Nom
+                    th Description
+                    th Permissions
+                    th Membres
+                    th Actions
+                tbody
+                  // Les groupes seront chargés dynamiquement ici
+
+      // Onglet Groupes de Tickets
+      .tab-content#ticketGroups
+        .card
+          .card-header
+            h5 Groupes de Tickets
+            button.btn-primary#addTicketGroupBtn
+              i.fas.fa-plus
+              | Ajouter un groupe
+
+          .card-body
+            .table-responsive
+              table#ticketGroupsTable
+                thead
+                  tr
+                    th Nom
+                    th Description
+                    th Membres
+                    th Actions
+                tbody
+                  // Les groupes seront chargés dynamiquement ici
+
+    // Modal pour ajouter/modifier un groupe utilisateur
+    .modal#userGroupModal
+      .modal-content
+        .modal-header
+          h5#userGroupModalTitle Ajouter un groupe
+          .close-btn &times;
+        .modal-body
+          form#userGroupForm
+            .form-group
+              label(for="groupName") Nom
+              input#groupName(type="text" required)
+            .form-group
+              label(for="groupDescription") Description
+              textarea#groupDescription(rows="3")
+            
+            // Section des permissions
+            .permissions-section
+              h5 Permissions
+              .permissions-grid
+                each module in ['users', 'nino', 'instances', 'tickets', 'monitoring']
+                  .permission-module
+                    h6= module.charAt(0).toUpperCase() + module.slice(1)
+                    .permission-options
+                      .checkbox-group
+                        input(type="checkbox" name=`permissions[${module}][canView]` id=`${module}-view`)
+                        label(for=`${module}-view`) Voir
+                      if module === 'tickets'
+                        // Création de ticket toujours autorisée
+                        input(type="hidden" name=`permissions[${module}][canCreate]` value="true")
+                      else
+                        .checkbox-group
+                          input(type="checkbox" name=`permissions[${module}][canCreate]` id=`${module}-create`)
+                          label(for=`${module}-create`) Créer
+                      .checkbox-group
+                        input(type="checkbox" name=`permissions[${module}][canEdit]` id=`${module}-edit`)
+                        label(for=`${module}-edit`) Modifier
+                      .checkbox-group
+                        input(type="checkbox" name=`permissions[${module}][canDelete]` id=`${module}-delete`)
+                        label(for=`${module}-delete`) Supprimer
+
+        .modal-footer
+          button.btn-secondary.cancel-btn Annuler
+          button.btn-primary#saveUserGroupBtn Enregistrer
+
+    // Modal pour ajouter/modifier un groupe de tickets
+    .modal#ticketGroupModal
+      .modal-content
+        .modal-header
+          h5#ticketGroupModalTitle Ajouter un groupe de tickets
+          .close-btn &times;
+        .modal-body
+          form#ticketGroupForm
+            .form-group
+              label(for="ticketGroupName") Nom
+              input#ticketGroupName(type="text" required)
+            .form-group
+              label(for="ticketGroupDescription") Description
+              textarea#ticketGroupDescription(rows="3")
+            
+            // Sélection des membres
+            .form-group
+              label Membres
+              select#ticketGroupMembers(multiple)
+                // Les utilisateurs seront chargés dynamiquement ici
+              // Conteneur pour afficher les membres sélectionnés sous forme de tags
+              .selected-members#selectedTicketGroupMembers
+
+        .modal-footer
+          button.btn-secondary.cancel-btn Annuler
+          button.btn-primary#saveTicketGroupBtn Enregistrer
+
+block scripts
+  script(src="/assets/js/groups-manager.js")
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const groupsManager = new GroupsManager();
+    }); 

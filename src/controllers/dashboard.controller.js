@@ -10,27 +10,47 @@ const dashboardController = {
   index: async (req, res) => {
     try {
       const user = req.session.user;
-      console.log('User:', user);
-      const authApi = createAuthApi(user.token);
+      
+      // Vérifier si l'utilisateur et le token sont présents
+      if (!user || !req.session.token) {
+        // Éviter une boucle de redirection
+        if (req.session.redirectSource === 'tickets') {
+          // Si on vient des tickets, aller directement au login
+          delete req.session.redirectSource;
+          req.session.error = 'Session expirée, veuillez vous reconnecter.';
+          return res.redirect('/auth/login');
+        }
+        
+        // Marquer qu'on vient du dashboard
+        req.session.redirectSource = 'dashboard';
+        req.session.error = 'Session expirée, veuillez vous reconnecter.';
+        return res.redirect('/auth/login');
+      }
+      
+      // Réinitialiser l'indicateur de redirection
+      delete req.session.redirectSource;
+      
+      console.log('Session Debug:', {
+        user: user,
+        token: req.session.token ? 'présent' : 'absent',
+        refreshToken: req.session.refreshToken ? 'présent' : 'absent',
+        expiresAt: req.session.expiresAt
+      });
       
       // Récupération des statistiques des tickets pour l'utilisateur
       let tickets = { total: 0, open: 0, closed: 0 };
       
       try {
         // Si admin, récupérer tous les tickets, sinon uniquement ceux de l'utilisateur
-        const endpoint = user.role === 'admin' ? '/tickets/stats' : `/tickets/stats/user/${user.id}`;
-        const ticketsResponse = await authApi.get(endpoint);
+        const endpoint = user.role === 'admin' ? 'tickets/stats' : `tickets/stats/user/${user.id}`;
+        const ticketsData = await req.apiCall('get', endpoint);
         
-        if (ticketsResponse.data && ticketsResponse.data.success) {
-          tickets = ticketsResponse.data.stats || tickets;
+        if (ticketsData && ticketsData.success) {
+          tickets = ticketsData.stats || tickets;
         }
       } catch (ticketError) {
         console.error('Erreur lors de la récupération des statistiques de tickets:', ticketError);
-        console.error('Détails de l\'erreur:', ticketError.message);
-        if (ticketError.response) {
-          console.error('Statut:', ticketError.response.status);
-          console.error('Données:', ticketError.response.data);
-        }
+        // Continuer sans les données de tickets
       }
       
       // S'assurer que l'utilisateur a un nom d'utilisateur
@@ -38,7 +58,7 @@ const dashboardController = {
         user.username = user.email ? user.email.split('@')[0] : 'Utilisateur';
       }
       
-      // Simulation de statistiques pour les autres modules non implémentés
+      // Statistiques pour le dashboard
       const stats = {
         tickets: tickets,
         videos: {
@@ -55,12 +75,26 @@ const dashboardController = {
         currentPage: 'dashboard',
         user,
         stats,
+        debug: {
+          token: req.session.token ? 'présent' : 'absent',
+          refreshToken: req.session.refreshToken ? 'présent' : 'absent',
+          expiresAt: req.session.expiresAt
+        },
         pageStyles: ['css/dashboard/dashboard.css']
       });
     } catch (error) {
-      console.error('Erreur dans dashboardController.index:', error);
-      req.session.error = 'Une erreur est survenue lors du chargement du tableau de bord.';
-      res.redirect('/');
+      console.error('Erreur dans le contrôleur dashboard:', error);
+      
+      // Si l'erreur est liée à l'authentification, rediriger vers la page de connexion
+      if (error.response && error.response.status === 401) {
+        req.session.error = 'Session expirée, veuillez vous reconnecter.';
+        return res.redirect('/auth/login');
+      }
+      
+      res.status(500).render('error', {
+        title: 'Erreur',
+        message: 'Une erreur est survenue lors du chargement du tableau de bord'
+      });
     }
   },
   

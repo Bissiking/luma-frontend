@@ -10,31 +10,11 @@ const ActivityService = {
      */
     getRecentActivities: async (limit = 5, offset = 0) => {
         try {
-            // Récupérer le token depuis le localStorage
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('Aucun token d\'authentification trouvé');
-                return [];
-            }
-
-            // Faire la requête avec axios
-            const response = await axios.get(`${API_URL}/activities/recent`, {
-                params: { limit, offset },
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                withCredentials: false // Désactiver les credentials pour éviter les problèmes CORS
+            const response = await window.AxiosService.get('/activities/recent', {
+                params: { limit, offset }
             });
-            
-            console.log('Activités récupérées:', response.data); // Pour le débogage
             return response.data.success ? response.data.data : [];
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                console.error('Token d\'authentification invalide ou expiré');
-                // Rediriger vers la page de connexion si nécessaire
-                window.location.href = '/login';
-                return [];
-            }
             console.error('Erreur lors de la récupération des activités récentes:', error);
             return [];
         }
@@ -49,30 +29,11 @@ const ActivityService = {
      */
     getUserActivities: async (userId, limit = 5, offset = 0) => {
         try {
-            // Récupérer le token depuis le localStorage
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('Aucun token d\'authentification trouvé');
-                return [];
-            }
-
-            const response = await axios.get(`${API_URL}/activities/user/${userId}`, {
-                params: { limit, offset },
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                withCredentials: false // Désactiver les credentials pour éviter les problèmes CORS
+            const response = await window.AxiosService.get(`/activities/user/${userId}`, {
+                params: { limit, offset }
             });
-            
-            console.log('Activités utilisateur récupérées:', response.data); // Pour le débogage
             return response.data.success ? response.data.activities : [];
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                console.error('Token d\'authentification invalide ou expiré');
-                // Rediriger vers la page de connexion si nécessaire
-                window.location.href = '/login';
-                return [];
-            }
             console.error('Erreur lors de la récupération des activités de l\'utilisateur:', error);
             return [];
         }

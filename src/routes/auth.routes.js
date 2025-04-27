@@ -4,20 +4,20 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
-const { redirectIfAuthenticated } = require('../middleware/auth.middleware');
+const { isAuthenticated, redirectIfAuthenticated } = require('../middleware/auth.middleware');
 
-// Routes de rendu des pages (accessibles seulement si non connecté)
+// Routes publiques
 router.get('/login', redirectIfAuthenticated, authController.renderLogin);
 router.get('/register', redirectIfAuthenticated, authController.renderRegister);
-
-// Route pour créer une session à partir des données de l'API
+router.post('/login', authController.login);
+router.post('/register', authController.register);
 router.post('/create-session', authController.createSession);
+router.get('/logout', authController.destroySession);
 
-// Route pour vérifier la session
-router.get('/verify', authController.verifySession);
-
-// Route pour se déconnecter
-router.get('/logout', authController.logout);
+// Routes protégées
+router.get('/verify-session', isAuthenticated, authController.verifySession);
+router.get('/profile', isAuthenticated, authController.getProfile);
+router.put('/profile', isAuthenticated, authController.updateProfile);
 
 // Route pour vérifier l'état de la session
 router.get('/check-session', (req, res) => {
@@ -50,15 +50,16 @@ router.post('/refresh-session', (req, res) => {
     if (!req.session || !req.session.user) {
       return res.status(401).json({
         success: false,
-        message: 'Session inexistante ou expirée'
+        message: 'Session non valide'
       });
     }
-    
-    // On renvoie simplement un succès avec les informations de session
+
+    // On renvoie les informations de la session
+    const { id, name, email, role } = req.session.user;
     res.json({
       success: true,
-      message: 'Session rafraîchie',
-      user: req.session.user,
+      isAuthenticated: true,
+      user: { id, name, email, role },
       timestamp: new Date().toISOString()
     });
   } catch (error) {

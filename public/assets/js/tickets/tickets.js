@@ -99,37 +99,23 @@ const TicketManager = {
             return;
         }
         
-        // Récupérer le token d'authentification
-        const token = localStorage.getItem('token');
-        
-        fetch(`${API_URL}/users?role=admin,support`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.status === 401) {
-                // Token invalide ou expiré
-                this.redirectToLogin();
-                throw new Error('Token invalide ou expiré');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                this.populateUserSelect(data.users);
-            } else {
-                console.error('Erreur lors de la récupération des utilisateurs:', data.message);
-                this.showNotification(data.message || 'Erreur lors de la récupération des utilisateurs', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des utilisateurs:', error);
-            if (error.message !== 'Token invalide ou expiré') {
-                this.showNotification('Erreur lors de la récupération des utilisateurs', 'error');
-            }
-        });
+        axios.get(`${API_URL}/users?role=admin,support`)
+            .then(response => {
+                if (response.data.success) {
+                    this.populateUserSelect(response.data.users);
+                } else {
+                    console.error('Erreur lors de la récupération des utilisateurs:', response.data.message);
+                    this.showNotification(response.data.message || 'Erreur lors de la récupération des utilisateurs', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des utilisateurs:', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
+                    this.showNotification('Erreur lors de la récupération des utilisateurs', 'error');
+                }
+            });
     },
     
     // Remplir le select des utilisateurs
@@ -165,7 +151,7 @@ const TicketManager = {
     redirectToLogin: function() {
         this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
         setTimeout(() => {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
         }, 1500);
     },
     
@@ -177,37 +163,20 @@ const TicketManager = {
             return;
         }
         
-        // Récupérer le token d'authentification
-        const token = localStorage.getItem('token');
-        
-        fetch(`${this.apiBaseUrl}/categories`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        })
+        axios.get(`${this.apiBaseUrl}/categories`)
             .then(response => {
-                if (response.status === 401) {
-                    // Token invalide ou expiré
-                    this.redirectToLogin();
-                    throw new Error('Token invalide ou expiré');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.success) {
-                    console.log("success");
-                    this.populateCategorySelect(data.categories);
+                if (response.data.success) {
+                    this.populateCategorySelect(response.data.categories);
                 } else {
-                    console.log("error");
-                    console.error('Erreur lors de la récupération des catégories:', data.message);
-                    this.showNotification(data.message || 'Erreur lors de la récupération des catégories', 'error');
+                    console.error('Erreur lors de la récupération des catégories:', response.data.message);
+                    this.showNotification(response.data.message || 'Erreur lors de la récupération des catégories', 'error');
                 }
             })
             .catch(error => {
                 console.error('Erreur lors de la récupération des catégories:', error);
-                if (error.message !== 'Token invalide ou expiré') {
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
                     this.showNotification('Erreur lors de la récupération des catégories', 'error');
                 }
             });
@@ -251,14 +220,10 @@ const TicketManager = {
         // Récupérer le token d'authentification
         const token = localStorage.getItem('token');
         
-        fetch(this.apiBaseUrl, {
-            method: 'POST',
+        axios.post(this.apiBaseUrl, ticketData, {
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(ticketData)
+            }
         })
         .then(response => {
             if (response.status === 401) {
@@ -266,30 +231,25 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                this.closeModal();
-                form.reset();
-                this.showNotification('Ticket créé avec succès', 'success');
-                
-                // Recharger la liste des tickets si nécessaire
-                if (typeof this.loadTickets === 'function') {
-                    this.loadTickets();
-                } else {
-                    // Rediriger vers la page des tickets si on est sur le dashboard
-                    setTimeout(() => {
-                        window.location.href = '/tickets';
-                    }, 1500);
-                }
+            this.closeModal();
+            form.reset();
+            this.showNotification('Ticket créé avec succès', 'success');
+            
+            // Recharger la liste des tickets si nécessaire
+            if (typeof this.loadTickets === 'function') {
+                this.loadTickets();
             } else {
-                this.showNotification(data.message || 'Erreur lors de la création du ticket', 'error');
+                // Rediriger vers la page des tickets si on est sur le dashboard
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1500);
             }
         })
         .catch(error => {
             console.error('Erreur lors de la création du ticket:', error);
-            if (error.message !== 'Token invalide ou expiré') {
+            if (error.response && error.response.status === 401) {
+                this.redirectToLogin();
+            } else {
                 this.showNotification('Erreur lors de la création du ticket', 'error');
             }
         });
@@ -351,14 +311,10 @@ const TicketManager = {
         // Récupérer le token d'authentification
         const token = localStorage.getItem('token');
         
-        fetch(`${this.apiBaseUrl}/${ticketId}/comments`, {
-            method: 'POST',
+        axios.post(`${this.apiBaseUrl}/${ticketId}/comments`, commentData, {
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(commentData)
+            }
         })
         .then(response => {
             if (response.status === 401) {
@@ -366,22 +322,17 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                form.reset();
-                this.showNotification('Commentaire ajouté avec succès', 'success');
-                
-                // Recharger les commentaires
-                this.loadTicketDetails(ticketId);
-            } else {
-                this.showNotification(data.message || 'Erreur lors de l\'ajout du commentaire', 'error');
-            }
+            form.reset();
+            this.showNotification('Commentaire ajouté avec succès', 'success');
+            
+            // Recharger les commentaires
+            this.loadTicketDetails(ticketId);
         })
         .catch(error => {
             console.error('Erreur lors de l\'ajout du commentaire:', error);
-            if (error.message !== 'Token invalide ou expiré') {
+            if (error.response && error.response.status === 401) {
+                this.redirectToLogin();
+            } else {
                 this.showNotification('Erreur lors de l\'ajout du commentaire', 'error');
             }
         });
@@ -409,14 +360,10 @@ const TicketManager = {
         // Récupérer le token d'authentification
         const token = localStorage.getItem('token');
         
-        fetch(`${this.apiBaseUrl}/${ticketId}/escalate`, {
-            method: 'POST',
+        axios.post(`${this.apiBaseUrl}/${ticketId}/escalate`, escalationData, {
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(escalationData)
+            }
         })
         .then(response => {
             if (response.status === 401) {
@@ -424,23 +371,18 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                form.reset();
-                this.closeModal();
-                this.showNotification('Ticket escaladé avec succès', 'success');
-                
-                // Recharger les détails du ticket
-                this.loadTicketDetails(ticketId);
-            } else {
-                this.showNotification(data.message || 'Erreur lors de l\'escalade du ticket', 'error');
-            }
+            form.reset();
+            this.closeModal();
+            this.showNotification('Ticket escaladé avec succès', 'success');
+            
+            // Recharger les détails du ticket
+            this.loadTicketDetails(ticketId);
         })
         .catch(error => {
             console.error('Erreur lors de l\'escalade du ticket:', error);
-            if (error.message !== 'Token invalide ou expiré') {
+            if (error.response && error.response.status === 401) {
+                this.redirectToLogin();
+            } else {
                 this.showNotification('Erreur lors de l\'escalade du ticket', 'error');
             }
         });
@@ -469,14 +411,10 @@ const TicketManager = {
         // Récupérer le token d'authentification
         const token = localStorage.getItem('token');
         
-        fetch(`${this.apiBaseUrl}/${ticketId}`, {
-            method: 'PUT',
+        axios.put(`${this.apiBaseUrl}/${ticketId}`, { assigned_to: assignedTo }, {
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ assigned_to: assignedTo })
+            }
         })
         .then(response => {
             if (response.status === 401) {
@@ -484,23 +422,18 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                form.reset();
-                this.closeModal();
-                this.showNotification('Ticket affecté avec succès', 'success');
-                
-                // Recharger la page
-                window.location.reload();
-            } else {
-                this.showNotification(data.message || 'Erreur lors de l\'affectation du ticket', 'error');
-            }
+            form.reset();
+            this.closeModal();
+            this.showNotification('Ticket affecté avec succès', 'success');
+            
+            // Recharger la page
+            window.location.reload();
         })
         .catch(error => {
             console.error('Erreur lors de l\'affectation du ticket:', error);
-            if (error.message !== 'Token invalide ou expiré') {
+            if (error.response && error.response.status === 401) {
+                this.redirectToLogin();
+            } else {
                 this.showNotification('Erreur lors de l\'affectation du ticket', 'error');
             }
         });
@@ -517,9 +450,8 @@ const TicketManager = {
         // Récupérer le token d'authentification
         const token = localStorage.getItem('token');
         
-        fetch(`${this.apiBaseUrl}/${ticketId}`, {
+        axios.get(`${this.apiBaseUrl}/${ticketId}`, {
             headers: {
-                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
@@ -529,28 +461,16 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Mettre à jour les informations du ticket
-                this.updateTicketDetails(data.ticket);
-                
-                // Mettre à jour les commentaires
-                this.updateTicketComments(data.comments);
-                
-                // Mettre à jour l'historique
-                this.updateTicketHistory(data.history);
-                
-                // Mettre à jour les escalades
-                this.updateTicketEscalations(data.escalations);
-            } else {
-                this.showNotification(data.message || 'Erreur lors du chargement du ticket', 'error');
-            }
+            this.updateTicketDetails(response.data.ticket);
+            this.updateTicketComments(response.data.comments);
+            this.updateTicketHistory(response.data.history);
+            this.updateTicketEscalations(response.data.escalations);
         })
         .catch(error => {
             console.error('Erreur lors du chargement du ticket:', error);
-            if (error.message !== 'Token invalide ou expiré') {
+            if (error.response && error.response.status === 401) {
+                this.redirectToLogin();
+            } else {
                 this.showNotification('Erreur lors du chargement du ticket', 'error');
             }
         });
@@ -645,167 +565,76 @@ const TicketManager = {
         }
     },
     
-    // Obtenir le libellé de priorité
+    // Récupérer la date formatée
+    formatDate: function(date) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(date).toLocaleDateString(undefined, options);
+    },
+    
+    // Récupérer le label de priorité
     getPriorityLabel: function(priority) {
         switch (priority) {
             case 'low': return 'Basse';
             case 'medium': return 'Moyenne';
             case 'high': return 'Haute';
-            case 'urgent': return 'Urgente';
             default: return priority;
         }
     },
     
-    // Formater une date
-    formatDate: function(dateStr) {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    },
-    
-    // Mettre à jour les commentaires
+    // Mettre à jour les commentaires du ticket
     updateTicketComments: function(comments) {
-        const commentsContainer = document.getElementById('ticket-comments-list');
-        if (!commentsContainer) return;
-        
-        commentsContainer.innerHTML = '';
-        
-        if (comments.length === 0) {
-            commentsContainer.innerHTML = '<div class="empty-state">Aucun commentaire pour le moment.</div>';
-            return;
-        }
-        
-        comments.forEach(comment => {
-            const commentElement = document.createElement('div');
-            commentElement.classList.add('ticket-comment');
-            if (comment.is_internal) {
-                commentElement.classList.add('ticket-comment-internal');
-            }
+        const commentsContainer = document.getElementById('ticket-comments');
+        if (commentsContainer) {
+            commentsContainer.innerHTML = '';
             
-            const initials = comment.username ? comment.username.substring(0, 2).toUpperCase() : 'UN';
-            
-            commentElement.innerHTML = `
-                <div class="ticket-comment-avatar">${initials}</div>
-                <div class="ticket-comment-content">
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'ticket-comment';
+                commentElement.innerHTML = `
                     <div class="ticket-comment-header">
-                        <div class="ticket-comment-author">${comment.username || 'Utilisateur inconnu'}</div>
-                        <div class="ticket-comment-date">${this.formatDate(comment.created_at)}</div>
+                        <span class="ticket-comment-author">${comment.author_username}</span>
+                        <span class="ticket-comment-date">${this.formatDate(comment.created_at)}</span>
                     </div>
-                    <div class="ticket-comment-body">${comment.content}</div>
-                </div>
-            `;
-            
-            commentsContainer.appendChild(commentElement);
-        });
+                    <div class="ticket-comment-content">${comment.content}</div>
+                `;
+                commentsContainer.appendChild(commentElement);
+            });
+        }
     },
     
-    // Mettre à jour l'historique
+    // Mettre à jour l'historique du ticket
     updateTicketHistory: function(history) {
-        const historyContainer = document.getElementById('ticket-history-list');
-        if (!historyContainer) return;
-        
-        historyContainer.innerHTML = '';
-        
-        if (history.length === 0) {
-            historyContainer.innerHTML = '<div class="empty-state">Aucun historique disponible.</div>';
-            return;
+        const historyContainer = document.getElementById('ticket-history');
+        if (historyContainer) {
+            historyContainer.innerHTML = '';
+            
+            history.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'ticket-history-entry';
+                entryElement.innerHTML = `
+                    <div class="ticket-history-date">${this.formatDate(entry.created_at)}</div>
+                    <div class="ticket-history-action">${entry.action}</div>
+                `;
+                historyContainer.appendChild(entryElement);
+            });
         }
-        
-        history.forEach(item => {
-            const historyElement = document.createElement('div');
-            historyElement.classList.add('ticket-history-item');
-            
-            // Définir les libellés d'action
-            let actionLabel = '';
-            switch (item.action) {
-                case 'create': actionLabel = 'Création'; break;
-                case 'update': actionLabel = 'Mise à jour'; break;
-                case 'comment': actionLabel = 'Commentaire'; break;
-                case 'escalate': actionLabel = 'Escalade'; break;
-                case 'resolve_escalation': actionLabel = 'Résolution d\'escalade'; break;
-                default: actionLabel = item.action;
-            }
-            
-            historyElement.innerHTML = `
-                <div class="ticket-history-header">
-                    <div class="ticket-history-user">
-                        <i class="fas fa-user-clock"></i>
-                        ${item.performed_by_username || 'Système'}
-                    </div>
-                    <div class="ticket-history-date">${this.formatDate(item.performed_at)}</div>
-                </div>
-                <div class="ticket-history-content">
-                    <span class="ticket-history-action">${actionLabel}</span>
-                    <p class="ticket-history-details">${item.details}</p>
-                </div>
-            `;
-            
-            historyContainer.appendChild(historyElement);
-        });
     },
     
-    // Mettre à jour les escalades
+    // Mettre à jour les escalades du ticket
     updateTicketEscalations: function(escalations) {
-        const escalationsContainer = document.getElementById('ticket-escalations-list');
-        if (!escalationsContainer) return;
-        
-        escalationsContainer.innerHTML = '';
-        
-        if (escalations.length === 0) {
-            escalationsContainer.innerHTML = '<div class="empty-state">Aucune escalade pour ce ticket.</div>';
-            return;
+        const escalationsContainer = document.getElementById('ticket-escalations');
+        if (escalationsContainer) {
+            escalationsContainer.innerHTML = '';
+            
+            escalations.forEach(escalation => {
+                const escalationElement = document.createElement('div');
+                escalationElement.className = 'ticket-escalation';
+                escalationElement.innerHTML = `
+                    <div class="ticket-escalation-date">${this.formatDate(escalation.created_at)}</div>
+                    <div class="ticket-escalation-reason">${escalation.reason}</div>
+                `;
+                escalationsContainer.appendChild(escalationElement);
+            });
         }
-        
-        escalations.forEach(escalation => {
-            const escalationElement = document.createElement('div');
-            escalationElement.classList.add('ticket-escalation-item');
-            
-            const isResolved = escalation.resolved_at != null;
-            const statusClass = isResolved ? 'resolved' : 'pending';
-            const statusText = isResolved ? 'Résolu' : 'En attente';
-            
-            escalationElement.innerHTML = `
-                <div class="ticket-escalation-header">
-                    <div class="ticket-escalation-user">
-                        <i class="fas fa-arrow-up-right-dots"></i>
-                        Escaladé à: ${escalation.escalated_to_username || 'Non spécifié'}
-                    </div>
-                    <div class="ticket-escalation-status ${statusClass}">${statusText}</div>
-                </div>
-                <div class="ticket-escalation-content">
-                    <p class="ticket-escalation-reason">
-                        <strong>Raison:</strong> ${escalation.escalation_reason}
-                    </p>
-                    <div class="ticket-escalation-dates">
-                        <div class="ticket-escalation-date">
-                            <i class="fas fa-calendar-plus"></i> Escaladé le: ${this.formatDate(escalation.escalated_at)}
-                        </div>
-                        ${isResolved ? `
-                            <div class="ticket-escalation-date">
-                                <i class="fas fa-calendar-check"></i> Résolu le: ${this.formatDate(escalation.resolved_at)}
-                            </div>
-                            <div class="ticket-escalation-resolver">
-                                <i class="fas fa-user-check"></i> Résolu par: ${escalation.resolved_by_username || 'Non spécifié'}
-                            </div>
-                            <p class="ticket-escalation-resolution">
-                                <strong>Note de résolution:</strong> ${escalation.resolution_note}
-                            </p>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-            
-            escalationsContainer.appendChild(escalationElement);
-        });
     }
 };
-
-// Initialiser le gestionnaire de tickets lorsque le DOM est chargé
-document.addEventListener('DOMContentLoaded', function() {
-    TicketManager.init();
-}); 

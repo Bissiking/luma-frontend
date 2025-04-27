@@ -1,9 +1,9 @@
 extends ../../layouts/main
 
-block append scripts
-  script(src="/assets/js/agents-management.js")
-  script(src="/assets/js/monitoring/agents-list-simple.js" defer)
-  
+block scripts
+  // Charger uniquement le script de gestion des agents
+  script(src="/assets/js/agents-management.js" defer)
+
 block content
   .dashboard-page
     .container-fluid
@@ -63,6 +63,10 @@ block content
               .dropdown-item
                 input(type="checkbox" id="filter-type-windows" checked)
                 label(for="filter-type-windows") Windows
+              .dropdown-item.divider
+              .dropdown-item
+                input(type="checkbox" id="filter-type-arkos" checked)
+                label(for="filter-type-arkos") ARKOS Agent
               .dropdown-item.divider
               button.btn-primary#apply-filters Appliquer
       
@@ -126,15 +130,36 @@ block content
             select#agent-type
               option(value="linux") Linux
               option(value="windows") Windows
+              option(value="arkos") ARKOS Agent
           
-          .form-group
+          .form-group.linux-windows-fields
             label(for="agent-description") Description
             textarea#agent-description
           
-          .form-group
+          .form-group.linux-windows-fields
             .checkbox-container
               input(type="checkbox" id="agent-public")
               label(for="agent-public") Agent public
+
+          .form-group.arkos-fields.hidden
+            label(for="agent-api-key") Clé API
+            .input-group
+              input(type="text" id="agent-api-key" readonly)
+              button.btn-secondary.copy-btn(type="button" data-clipboard="agent-api-key")
+                i.fas.fa-copy
+          
+          .form-group.arkos-fields.hidden
+            label(for="agent-token") Token
+            .input-group
+              input(type="text" id="agent-token" readonly)
+              button.btn-secondary.copy-btn(type="button" data-clipboard="agent-token")
+                i.fas.fa-copy
+          
+          .form-group.arkos-fields.hidden
+            label(for="agent-status") Statut
+            .status-badge.pending
+              i.fas.fa-clock
+              span En attente d'activation
       
       .modal-footer
         button.btn-secondary#cancel-create-agent Annuler

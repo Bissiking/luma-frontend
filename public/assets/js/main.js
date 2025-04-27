@@ -37,7 +37,8 @@ function initScrollAnimations() {
 
 // Initialisation des formulaires
 function initForms() {
-    const forms = document.querySelectorAll('form');
+    // Exclure le formulaire de connexion du comportement générique
+    const forms = document.querySelectorAll('form:not(#login-form)');
     
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {

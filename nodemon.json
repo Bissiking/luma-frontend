@@ -1,0 +1,13 @@
+{
+  "ignore": [
+    "public/assets/**/*",
+    "node_modules/**/*",
+    ".git",
+    "*.log"
+  ],
+  "watch": [
+    "src/**/*",
+    "config/**/*"
+  ],
+  "ext": "js,json,pug"
+} 

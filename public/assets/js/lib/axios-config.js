@@ -4,7 +4,7 @@
 
 // Configuration de base pour Axios
 const api = axios.create({
-  baseURL: window.apiUrl || 'http://localhost:3000',
+  baseURL: window.API_URL || window.apiUrl || 'http://localhost:3000',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

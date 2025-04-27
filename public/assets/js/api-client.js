@@ -8,35 +8,15 @@ class ApiClient {
   constructor() {
     // Récupération de l'URL de base depuis une variable globale ou utilisation d'une URL par défaut
     this.baseUrl = window.apiUrl || 'http://localhost:3000/api';
-    this.token = localStorage.getItem('token');
     
     // Configuration de base pour les requêtes
     this.defaultConfig = {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      withCredentials: true // Important: envoyer les cookies avec chaque requête
     };
-    
-    // Si un token existe, l'ajouter aux headers par défaut
-    if (this.token) {
-      this.setAuthToken(this.token);
-    }
-  }
-
-  /**
-   * Définit le token d'authentification pour les requêtes futures
-   * @param {string} token - Le token JWT
-   */
-  setAuthToken(token) {
-    this.token = token;
-    if (token) {
-      this.defaultConfig.headers['Authorization'] = `Bearer ${token}`;
-      localStorage.setItem('token', token);
-    } else {
-      delete this.defaultConfig.headers['Authorization'];
-      localStorage.removeItem('token');
-    }
   }
 
   /**
@@ -153,15 +133,6 @@ class ApiClient {
 
       if (data && data.message) {
         message = data.message;
-      } else if (status === 401) {
-        message = 'Session expirée, veuillez vous reconnecter';
-        // Si l'erreur est une 401, on peut décider de rediriger vers la page de connexion
-        if (this.token) {
-          this.setAuthToken(null);
-          setTimeout(() => {
-            window.location.href = '/auth/login';
-          }, 1000);
-        }
       }
 
       console.error(`Erreur API (${status}):`, message, 'Données complètes:', data);

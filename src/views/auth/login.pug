@@ -10,8 +10,6 @@ block content
             .auth-header
               h1.text-2xl.font-bold.mb-1 Connexion
               p.text-secondary.text-sm Accédez à votre espace personnel
-              #error-message.hidden.alert.alert-danger(role='alert')
-              span#error-text
             //- Formulaire de connexion
             form#login-form.space-y-6
               //- Username Field
@@ -79,5 +77,5 @@ block scripts
   script.
     const API_URL = '#{apiUrl}'; // L'URL de l'API récupérée depuis les variables Pug
   script(src=asset('js/auth/auth-prompts.js'))
-  script(src=asset('js/auth/auth-manager.js'))
+  // auth-manager.js retiré pour éviter les interférences sur la page de login
   script(src=asset('js/auth/login.js'))

@@ -68,44 +68,56 @@ const TicketFilters = {
         });
     },
 
-    loadCategories: async function() {
-        try {
-            const response = await this.axiosInstance.get('tickets/categories');
-            if (response.data.success) {
-                const $select = $('#categoryFilter');
-                const categories = response.data.categories || [];
-                categories.forEach(category => {
-                    $select.append(`
-                        <option value="${category.id}">
-                            ${category.name}
-                            ${category.description ? ` - ${category.description}` : ''}
-                        </option>
-                    `);
-                });
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement des catégories:', error);
-            if (window.Popup) {
-                window.Popup.error('Erreur', 'Impossible de charger les catégories');
-            }
+    loadCategories: function() {
+        // Vérifier si l'utilisateur est authentifié
+        if (!this.isAuthenticated()) {
+            this.redirectToLogin();
+            return;
         }
+        
+        axios.get(`${API_URL}/tickets/categories`)
+            .then(response => {
+                if (response.data.success) {
+                    this.populateCategorySelect(response.data.categories);
+                } else {
+                    console.error('Erreur lors de la récupération des catégories:', response.data.message);
+                    this.showNotification(response.data.message || 'Erreur lors de la récupération des catégories', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des catégories:', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
+                    this.showNotification('Erreur lors de la récupération des catégories', 'error');
+                }
+            });
     },
 
-    loadCreators: async function() {
-        try {
-            const response = await this.axiosInstance.get('/users');
-            if (response.data.success) {
-                const $select = $('#creatorFilter');
-                response.data.data.forEach(user => {
-                    $select.append(`<option value="${user.id}">${user.username}</option>`);
-                });
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement des utilisateurs:', error);
-            if (window.Popup) {
-                window.Popup.error('Erreur', 'Impossible de charger les utilisateurs');
-            }
+    loadCreators: function() {
+        // Vérifier si l'utilisateur est authentifié
+        if (!this.isAuthenticated()) {
+            this.redirectToLogin();
+            return;
         }
+        
+        axios.get(`${API_URL}/users`)
+            .then(response => {
+                if (response.data.success) {
+                    this.populateCreatorSelect(response.data.users);
+                } else {
+                    console.error('Erreur lors de la récupération des créateurs:', response.data.message);
+                    this.showNotification(response.data.message || 'Erreur lors de la récupération des créateurs', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des créateurs:', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
+                    this.showNotification('Erreur lors de la récupération des créateurs', 'error');
+                }
+            });
     },
 
     applyFilters: async function() {

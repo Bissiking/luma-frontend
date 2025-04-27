@@ -25,9 +25,13 @@ block content
   // Début du contenu Nino
   .nino-body
     // Section Vidéo en vedette
-    section.nino-hero(style="background-image: url('https://source.unsplash.com/random/1920x1080/?skateboard')")
+    section.nino-hero(style="background-image: url('/assets/images/nino/no-image-2.png')")
       .nino-hero-content
         h1.nino-hero-title Basic how to ride your skateboard comfortly and Basic Equipment to play skateboard safely
+        .nino-hero-tags
+          span.nino-tag Gaming
+          span.nino-tag Tutorial
+          span.nino-tag Skateboarding
         p.nino-hero-description Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         .nino-hero-buttons
           button.nino-btn.nino-btn-primary
@@ -36,6 +40,61 @@ block content
           button.nino-btn.nino-btn-secondary
             i.fas.fa-plus
             | Ajouter à ma liste
+
+    // Section Filtres rapides
+    section.nino-quick-filters
+      .nino-container
+        .nino-filters-scroll
+          button.nino-filter-btn.active Tout
+          button.nino-filter-btn
+            i.fas.fa-gamepad
+            | Gaming
+          button.nino-filter-btn
+            i.fas.fa-video
+            | IRL
+          button.nino-filter-btn
+            i.fas.fa-graduation-cap
+            | Tutoriels
+          button.nino-filter-btn
+            i.fas.fa-users
+            | Communauté
+          button.nino-filter-btn
+            i.fas.fa-trophy
+            | Compétition
+          button.nino-filter-btn
+            i.fas.fa-star
+            | Favoris
+
+    // Section Vidéos Populaires
+    section.nino-section
+      .nino-container
+        .nino-section-header
+          h2.nino-section-title Vidéos populaires
+          .nino-section-actions
+            .nino-dropdown
+              button.nino-dropdown-toggle
+                | Trier par 
+                i.fas.fa-chevron-down
+            a.nino-see-all(href="/nino/popular") Voir tout
+        
+        .nino-row
+          // Cartes vidéo
+          - for (let i = 1; i <= 8; i++)
+            .nino-card
+              .nino-card-image
+                img(src="/assets/images/nino/no-image.png", alt=`Vidéo ${i}`)
+                .nino-card-overlay
+                  button.nino-play-button
+                    i.fas.fa-play
+                .nino-card-tags
+                  span.nino-tag= i % 2 === 0 ? 'Gaming' : 'IRL'
+                  if i % 3 === 0
+                    span.nino-tag Tutorial
+              .nino-card-content
+                h3.nino-card-title Les bases du skateboard - Partie #{i}
+                .nino-card-meta
+                  span.nino-card-duration 15:30
+                  span.nino-card-views 125,908 vues
 
     // Section Shorts
     section.nino-section
@@ -48,7 +107,7 @@ block content
           - for (let i = 1; i <= 6; i++)
             .nino-short-card
               .nino-short-image
-                img(src=`https://source.unsplash.com/random/400x600/?skateboard,trick,${i}`, alt=`Short ${i}`)
+                img(src="/assets/images/nino/no-image.png", alt=`Short ${i}`)
                 .nino-short-overlay
                   button.nino-play-button
                     i.fas.fa-play
@@ -69,7 +128,7 @@ block content
           - for (let i = 1; i <= 6; i++)
             .nino-music-card
               .nino-music-image
-                img(src=`https://source.unsplash.com/random/300x300/?music,album,${i}`, alt=`Music ${i}`)
+                img(src="/assets/images/nino/no-image.png", alt=`Music ${i}`)
                 .nino-music-overlay
                   button.nino-play-button
                     i.fas.fa-play
@@ -79,27 +138,6 @@ block content
                 .nino-music-meta
                   span.nino-music-duration #{Math.floor(Math.random() * 2 + 2)}:#{Math.floor(Math.random() * 60).toString().padStart(2, '0')}
                   span.nino-music-plays #{Math.floor(Math.random() * 900 + 100)}K écoutes
-
-    // Section Vidéos Populaires
-    section.nino-section
-      .nino-container
-        .nino-section-header
-          h2.nino-section-title Vidéos populaires
-          a.nino-see-all(href="/nino/popular") Voir tout
-        
-        .nino-row
-          // Cartes vidéo
-          - for (let i = 1; i <= 8; i++)
-            .nino-card
-              .nino-card-image
-                img(src=`https://source.unsplash.com/random/400x225/?skateboard,${i}`, alt=`Vidéo ${i}`)
-                .nino-card-overlay
-                  button.nino-play-button
-                    i.fas.fa-play
-              h3.nino-card-title Les bases du skateboard - Partie #{i}
-              .nino-card-meta
-                span.nino-card-duration 15:30
-                span.nino-card-views 125,908 vues
 
     // Section Continuer à regarder
     section.nino-section
@@ -113,7 +151,7 @@ block content
           - for (let i = 3; i <= 7; i++)
             .nino-card
               .nino-card-image
-                img(src=`https://source.unsplash.com/random/400x225/?skateboard,trick,${i}`, alt=`Continuer ${i}`)
+                img(src="/assets/images/nino/no-image.png", alt=`Continuer ${i}`)
                 .nino-card-overlay
                   button.nino-play-button
                     i.fas.fa-play
@@ -131,54 +169,14 @@ block content
           h2.nino-section-title Diffusions en direct
           a.nino-see-all(href="/nino/live") Voir tout
         
-        .nino-live-container
-          .nino-live-video
-            img(src="https://source.unsplash.com/random/800x450/?skateboard,live", alt="Live Stream")
-            .nino-live-badge
-              i.fas.fa-circle
-              | LIVE
-            .nino-live-overlay
-              button.nino-live-button
-                i.fas.fa-play
-                | Rejoindre
-            .nino-live-info
-              h3 Andy William - Les bases du skateboard
-              p 1,980,893 abonnés • 125,908 spectateurs
-          
-          .nino-live-chat
-            h3.nino-chat-header
-              | Live Chat
-              span.nino-chat-count 16,588 personnes
-            
-            .nino-chat-messages
-              .nino-chat-message
-                img.nino-chat-avatar(src="https://i.pravatar.cc/150?img=2", alt="Avatar")
-                .nino-chat-content
-                  .nino-chat-user Wijaya Abadi
-                  .nino-chat-text Duis aute irure dolor in in reprehenderit velit esse cillum dolore eu fugiat
-              
-              .nino-chat-message
-                img.nino-chat-avatar(src="https://i.pravatar.cc/150?img=3", alt="Avatar")
-                .nino-chat-content
-                  .nino-chat-user Johny Wise
-                  .nino-chat-text tempor incididunt ut labore
-              
-              .nino-chat-message
-                img.nino-chat-avatar(src="https://i.pravatar.cc/150?img=4", alt="Avatar")
-                .nino-chat-content
-                  .nino-chat-user Budi Hakim
-                  .nino-chat-text Duis aute irure dolor in in reprehenderit velit esse cillum dolore eu fugiat
-              
-              .nino-chat-message
-                img.nino-chat-avatar(src="https://i.pravatar.cc/150?img=5", alt="Avatar")
-                .nino-chat-content
-                  .nino-chat-user Thomas Hope
-                  .nino-chat-text velit esse cillum dolore eu fugiat
-            
-            .nino-chat-input
-              input(type="text", placeholder="Écrire un message...")
-              button.nino-chat-send
-                i.fas.fa-paper-plane
+        .nino-live-container.nino-coming-soon
+          .nino-coming-soon-content
+            i.fas.fa-broadcast-tower
+            h3 Bientôt disponible !
+            p Les diffusions en direct arrivent prochainement sur Nino.
+            button.nino-btn.nino-btn-secondary
+              i.fas.fa-bell
+              | Me notifier
 
     // Section Vidéos Recommandées
     section.nino-section
@@ -191,7 +189,7 @@ block content
           // Cartes vidéo recommandées
           .nino-card
             .nino-card-image
-              img(src="https://source.unsplash.com/random/400x225/?skateboard,jump", alt="Recommandé 1")
+              img(src="/assets/images/nino/no-image.png", alt="Recommandé 1")
               .nino-card-overlay
                 button.nino-play-button
                   i.fas.fa-play
@@ -202,7 +200,7 @@ block content
           
           .nino-card
             .nino-card-image
-              img(src="https://source.unsplash.com/random/400x225/?skateboard,ramp", alt="Recommandé 2")
+              img(src="/assets/images/nino/no-image.png", alt="Recommandé 2")
               .nino-card-overlay
                 button.nino-play-button
                   i.fas.fa-play

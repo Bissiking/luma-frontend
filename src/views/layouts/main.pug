@@ -33,19 +33,21 @@ html(lang='fr')
     
     //- JavaScript libraries
     script(src=asset('js/lib/axios.js'))
-    script(src=asset('js/lib/axios-config.js'))
     script(src=asset('js/lib/jquery.js'))
     script(src=asset('js/lib/popup.js'))
-    script(src=asset('js/auth/auth-manager.js'))
 
     //- Script pour exposer les variables d'environnement frontend  
     script.
       window.API_URL = '#{apiUrl}';
       window.USER_ROLE = '#{user ? user.role : ""}';
       window.USER_ID = '#{user ? user.id : ""}';
-    
-    //- Configuration Axios
-    script(src='/assets/js/api/axios-config.js')
+
+    //- Service Axios centralisé
+    script(src=asset('js/api/axios-service.js'))
+
+    //- Auth Manager uniquement si l'utilisateur est déjà connecté (pas sur la page login)
+    if user
+      script(src=asset('js/auth/auth-manager.js'))
     
   body
     //- Header
