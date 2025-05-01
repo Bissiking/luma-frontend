@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: luma-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+    environment:
+      - NODE_ENV=development
+      - API_URL=https://api.mhemery.fr
+    restart: unless-stopped
+    networks:
+      - luma-network
+
+networks:
+  luma-network:
+    driver: bridge 
