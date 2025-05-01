@@ -17,7 +17,10 @@ const TicketManager = {
         // Ouverture du modal de création de ticket
         const createTicketBtn = document.getElementById('create-ticket-btn');
         if (createTicketBtn) {
-            createTicketBtn.addEventListener('click', this.openCreateTicketModal.bind(this));
+            createTicketBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // Empêcher la navigation
+                this.openCreateTicketModal();
+            });
         }
         
         // Bouton d'affectation de ticket
@@ -95,27 +98,27 @@ const TicketManager = {
     loadUsersForAssignment: function() {
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
         axios.get(`${API_URL}/users?role=admin,support`)
-            .then(response => {
+        .then(response => {
                 if (response.data.success) {
                     this.populateUserSelect(response.data.users);
-                } else {
+            } else {
                     console.error('Erreur lors de la récupération des utilisateurs:', response.data.message);
                     this.showNotification(response.data.message || 'Erreur lors de la récupération des utilisateurs', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur lors de la récupération des utilisateurs:', error);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des utilisateurs:', error);
                 if (error.response && error.response.status === 401) {
                     this.redirectToLogin();
                 } else {
-                    this.showNotification('Erreur lors de la récupération des utilisateurs', 'error');
-                }
-            });
+                this.showNotification('Erreur lors de la récupération des utilisateurs', 'error');
+            }
+        });
     },
     
     // Remplir le select des utilisateurs
@@ -159,7 +162,7 @@ const TicketManager = {
     fetchCategories: function() {
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -203,7 +206,7 @@ const TicketManager = {
         
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -231,18 +234,18 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            this.closeModal();
-            form.reset();
-            this.showNotification('Ticket créé avec succès', 'success');
-            
-            // Recharger la liste des tickets si nécessaire
-            if (typeof this.loadTickets === 'function') {
-                this.loadTickets();
-            } else {
-                // Rediriger vers la page des tickets si on est sur le dashboard
-                setTimeout(() => {
+                this.closeModal();
+                form.reset();
+                this.showNotification('Ticket créé avec succès', 'success');
+                
+                // Recharger la liste des tickets si nécessaire
+                if (typeof this.loadTickets === 'function') {
+                    this.loadTickets();
+                } else {
+                    // Rediriger vers la page des tickets si on est sur le dashboard
+                    setTimeout(() => {
                     window.location.href = '/dashboard';
-                }, 1500);
+                    }, 1500);
             }
         })
         .catch(error => {
@@ -295,7 +298,7 @@ const TicketManager = {
         
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -322,11 +325,11 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            form.reset();
-            this.showNotification('Commentaire ajouté avec succès', 'success');
-            
-            // Recharger les commentaires
-            this.loadTicketDetails(ticketId);
+                form.reset();
+                this.showNotification('Commentaire ajouté avec succès', 'success');
+                
+                // Recharger les commentaires
+                this.loadTicketDetails(ticketId);
         })
         .catch(error => {
             console.error('Erreur lors de l\'ajout du commentaire:', error);
@@ -344,7 +347,7 @@ const TicketManager = {
         
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -371,12 +374,12 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            form.reset();
-            this.closeModal();
-            this.showNotification('Ticket escaladé avec succès', 'success');
-            
-            // Recharger les détails du ticket
-            this.loadTicketDetails(ticketId);
+                form.reset();
+                this.closeModal();
+                this.showNotification('Ticket escaladé avec succès', 'success');
+                
+                // Recharger les détails du ticket
+                this.loadTicketDetails(ticketId);
         })
         .catch(error => {
             console.error('Erreur lors de l\'escalade du ticket:', error);
@@ -394,7 +397,7 @@ const TicketManager = {
         
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -422,12 +425,12 @@ const TicketManager = {
                 this.redirectToLogin();
                 throw new Error('Token invalide ou expiré');
             }
-            form.reset();
-            this.closeModal();
-            this.showNotification('Ticket affecté avec succès', 'success');
-            
-            // Recharger la page
-            window.location.reload();
+                form.reset();
+                this.closeModal();
+                this.showNotification('Ticket affecté avec succès', 'success');
+                
+                // Recharger la page
+                window.location.reload();
         })
         .catch(error => {
             console.error('Erreur lors de l\'affectation du ticket:', error);
@@ -443,7 +446,7 @@ const TicketManager = {
     loadTicketDetails: function(ticketId) {
         // Vérifier si l'utilisateur est authentifié
         if (!this.isAuthenticated()) {
-            this.redirectToLogin();
+            this.showNotification('Session expirée. Veuillez vous reconnecter.', 'error');
             return;
         }
         
@@ -585,20 +588,20 @@ const TicketManager = {
     updateTicketComments: function(comments) {
         const commentsContainer = document.getElementById('ticket-comments');
         if (commentsContainer) {
-            commentsContainer.innerHTML = '';
-            
-            comments.forEach(comment => {
-                const commentElement = document.createElement('div');
+        commentsContainer.innerHTML = '';
+        
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
                 commentElement.className = 'ticket-comment';
-                commentElement.innerHTML = `
+            commentElement.innerHTML = `
                     <div class="ticket-comment-header">
                         <span class="ticket-comment-author">${comment.author_username}</span>
                         <span class="ticket-comment-date">${this.formatDate(comment.created_at)}</span>
                     </div>
                     <div class="ticket-comment-content">${comment.content}</div>
-                `;
-                commentsContainer.appendChild(commentElement);
-            });
+            `;
+            commentsContainer.appendChild(commentElement);
+        });
         }
     },
     
@@ -606,17 +609,17 @@ const TicketManager = {
     updateTicketHistory: function(history) {
         const historyContainer = document.getElementById('ticket-history');
         if (historyContainer) {
-            historyContainer.innerHTML = '';
-            
+        historyContainer.innerHTML = '';
+        
             history.forEach(entry => {
                 const entryElement = document.createElement('div');
                 entryElement.className = 'ticket-history-entry';
                 entryElement.innerHTML = `
                     <div class="ticket-history-date">${this.formatDate(entry.created_at)}</div>
                     <div class="ticket-history-action">${entry.action}</div>
-                `;
+            `;
                 historyContainer.appendChild(entryElement);
-            });
+        });
         }
     },
     
@@ -624,17 +627,22 @@ const TicketManager = {
     updateTicketEscalations: function(escalations) {
         const escalationsContainer = document.getElementById('ticket-escalations');
         if (escalationsContainer) {
-            escalationsContainer.innerHTML = '';
-            
-            escalations.forEach(escalation => {
-                const escalationElement = document.createElement('div');
+        escalationsContainer.innerHTML = '';
+        
+        escalations.forEach(escalation => {
+            const escalationElement = document.createElement('div');
                 escalationElement.className = 'ticket-escalation';
-                escalationElement.innerHTML = `
+            escalationElement.innerHTML = `
                     <div class="ticket-escalation-date">${this.formatDate(escalation.created_at)}</div>
                     <div class="ticket-escalation-reason">${escalation.reason}</div>
-                `;
-                escalationsContainer.appendChild(escalationElement);
-            });
+            `;
+            escalationsContainer.appendChild(escalationElement);
+        });
         }
     }
 };
+
+// Initialiser le TicketManager au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    TicketManager.init();
+});

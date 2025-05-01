@@ -1006,7 +1006,7 @@
     color: var(--success);
 }
 
-.status-badge.offline {
+.status-badge.offline, .status-badge.inactive {
     background-color: rgba(var(--error_rgb), 0.15);
     color: var(--error);
 }

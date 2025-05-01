@@ -39,37 +39,96 @@ const authController = {
   login: async (req, res) => {
     try {
       const { username, password, remember_me } = req.body;
+      console.log('Tentative de connexion pour:', username);
+
+      // Définir l'URL de l'API avec une valeur par défaut
+      const apiUrl = process.env.API_URL || 'http://localhost:3000';
+      console.log('URL de l\'API:', apiUrl);
 
       // Appel à l'API pour l'authentification
-      const response = await axios.post(`${process.env.API_URL}/auth/login`, {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
         username,
         password,
-        remember_me
+        remember_me,
+        source: 'LUMA'
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
       });
 
+      console.log(response.data);
+
       if (response.data.success) {
+        // Vérifier que les tokens sont bien présents
+        if (!response.data.token || !response.data.refresh_token) {
+          console.error('Erreur: Tokens manquants dans la réponse de l\'API');
+          return res.status(500).json({
+            success: false,
+            message: 'Erreur: Tokens manquants dans la réponse de l\'API'
+          });
+        }
+
         // Créer la session
         req.session.user = response.data.user;
         req.session.token = response.data.token;
         req.session.refreshToken = response.data.refresh_token;
         req.session.expiresAt = response.data.expires_at;
+        req.session.rememberMe = remember_me === true;
 
-        // Rediriger vers la page demandée ou le tableau de bord
+        console.log('Session créée avec succès', {
+          userId: req.session.user.id,
+          hasToken: !!req.session.token,
+          hasRefreshToken: !!req.session.refreshToken
+        });
+
+        // Stocker localement les tokens pour le frontend
+        const storage = remember_me ? 'localStorage' : 'sessionStorage';
+        
+        // Définir la durée de vie des cookies
+        const tokenMaxAge = 24 * 60 * 60 * 1000; // 24 heures
+        const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7 jours
+        
+        // Envoyer les tokens au frontend via des cookies sécurisés
+        res.cookie('token', response.data.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: tokenMaxAge
+        });
+        
+        res.cookie('refreshToken', response.data.refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: refreshTokenMaxAge
+        });
+
+        // Envoyer également les tokens dans la réponse JSON pour le stockage côté client
         res.json({
           success: true,
-          redirectTo: req.session.redirectTo || '/dashboard'
+          redirectTo: req.session.redirectTo || '/dashboard',
+          token: response.data.token,
+          refreshToken: response.data.refresh_token,
+          expiresAt: response.data.expires_at,
+          storage: storage,
+          user: response.data.user,
+          authorizations: response.data.authorizations,
+          remember_me: remember_me
         });
       } else {
+        console.log('Échec de connexion:', response.data.message);
         res.status(401).json({
           success: false,
           message: response.data.message || 'Identifiants invalides'
         });
       }
     } catch (error) {
-      console.error('Erreur lors de la connexion:', error);
+      console.error('Erreur lors de la connexion:', error.message, error.response?.data);
       res.status(500).json({
         success: false,
-        message: 'Erreur lors de la connexion'
+        message: error.response?.data?.message || 'Erreur lors de la connexion'
       });
     }
   },
@@ -128,6 +187,20 @@ const authController = {
       req.session.refreshToken = refreshToken;
       req.session.expiresAt = expiresAt;
 
+      // Envoyer les tokens au frontend via des cookies sécurisés
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000 // 24 heures
+      });
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+      });
+
       res.json({
         success: true,
         message: 'Session créée avec succès'
@@ -173,12 +246,8 @@ const authController = {
    */
   getProfile: async (req, res) => {
     try {
-      const response = await axios.get(`${process.env.API_URL}/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${req.session.token}`
-        }
-      });
-      res.json(response.data);
+      const response = await axiosService.get('/auth/profile', req, res);
+      res.json(response);
     } catch (error) {
       console.error('Erreur lors de la récupération du profil:', error);
       res.status(500).json({
@@ -193,12 +262,8 @@ const authController = {
    */
   updateProfile: async (req, res) => {
     try {
-      const response = await axios.put(`${process.env.API_URL}/auth/profile`, req.body, {
-        headers: {
-          Authorization: `Bearer ${req.session.token}`
-        }
-      });
-      res.json(response.data);
+      const response = await axiosService.put('/auth/profile', req.body, req, res);
+      res.json(response);
     } catch (error) {
       console.error('Erreur lors de la mise à jour du profil:', error);
       res.status(500).json({
@@ -223,10 +288,12 @@ const authController = {
           });
         }
 
-        res.json({
-          success: true,
-          message: 'Déconnexion réussie'
-        });
+        // Supprimer les cookies
+        res.clearCookie('token');
+        res.clearCookie('refreshToken');
+
+        // Rediriger vers la page de connexion
+        res.redirect('/auth/login');
       });
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);

@@ -56,7 +56,7 @@ exports.agentDetails = async (req, res) => {
     res.render('monitoring/agents/show', {
       title: 'Détail de l\'agent',
       pageStyles: ['css/monitoring/agents.css', 'css/agents-management.css'],
-      pageScripts: ['js/monitoring/agent-details.js'],
+      pageScripts: [],
       currentPage: 'monitoring-agents',
       agentId,
       apiUrl: config.API_URL

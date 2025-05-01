@@ -34,11 +34,16 @@ const AxiosService = {
         this.instance.interceptors.request.use(
             (config) => {
                 // Ajouter l'en-tête Authorization si un token est disponible
-                const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+                const token = sessionStorage.getItem('token');
                 
-                // Ajouter l'en-tête Authorization pour toutes les requêtes sauf login/register
-                if (token && !config.url.includes('/auth/login') && !config.url.includes('/auth/register')) {
-                    config.headers.Authorization = `Bearer ${token}`;
+                if (token) {
+                    console.log('Ajout du token à la requête:', config.url);
+                    // Ajouter l'en-tête Authorization pour toutes les requêtes sauf login/register
+                    if (!config.url.includes('/auth/login') && !config.url.includes('/auth/register')) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
+                } else {
+                    console.log('Pas de token trouvé pour la requête:', config.url);
                 }
                 
                 return config;
@@ -54,11 +59,14 @@ const AxiosService = {
                 
                 // Si c'est une erreur 401 (non autorisé) et que ce n'est pas déjà une tentative de rafraîchissement
                 if (error.response && error.response.status === 401 && !originalRequest._retry) {
+                    console.log('Erreur 401 détectée, tentative de rafraîchissement du token');
+                    
                     // Marquer que c'est une tentative de rafraîchissement
                     originalRequest._retry = true;
 
                     // Si on est déjà en train de rafraîchir, ajouter la requête à la file d'attente
                     if (this.isRefreshing) {
+                        console.log('Déjà en train de rafraîchir, ajout à la file d\'attente');
                         return new Promise((resolve) => {
                             this.refreshQueue.push(() => {
                                 resolve(this.instance(originalRequest));
@@ -69,34 +77,44 @@ const AxiosService = {
                     this.isRefreshing = true;
 
                     try {
-                        // Essayer de rafraîchir le token
-                        const refreshToken = sessionStorage.getItem('refreshToken') || localStorage.getItem('refreshToken');
+                        // Vérifier le refresh token dans sessionStorage
+                        const refreshToken = sessionStorage.getItem('refreshToken');
+                        
+                        console.log('Refresh token trouvé?', !!refreshToken);
                         
                         if (!refreshToken) {
+                            console.error('Pas de refresh token disponible');
                             throw new Error('Pas de refresh token disponible');
                         }
 
                         // Utiliser l'instance Axios configurée pour le rafraîchissement
+                        console.log('Tentative de rafraîchissement du token...');
                         const response = await this.instance.post('/auth/refresh', { refresh_token: refreshToken });
 
                         // Si le rafraîchissement a réussi
                         if (response.data && response.data.token) {
-                            // Mettre à jour les tokens
-                            const remember = localStorage.getItem('remember') === 'true';
-                            const storage = remember ? localStorage : sessionStorage;
+                            console.log('Rafraîchissement réussi, mise à jour des tokens');
                             
-                            storage.setItem('token', response.data.token);
+                            // Stocker dans sessionStorage
+                            sessionStorage.setItem('token', response.data.token);
                             
                             if (response.data.refresh_token) {
-                                storage.setItem('refreshToken', response.data.refresh_token);
+                                sessionStorage.setItem('refreshToken', response.data.refresh_token);
                             }
 
                             // Exécuter toutes les requêtes en attente
+                            console.log(`Exécution de ${this.refreshQueue.length} requêtes en attente`);
                             this.refreshQueue.forEach(callback => callback());
                             this.refreshQueue = [];
                             
+                            // Mise à jour de l'en-tête Authorization pour la requête originale
+                            originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
+                            
                             // Réessayer la requête originale
                             return this.instance(originalRequest);
+                        } else {
+                            console.error('Le rafraîchissement a échoué, pas de nouveau token reçu');
+                            throw new Error('Le rafraîchissement a échoué');
                         }
                     } catch (refreshError) {
                         // Si le rafraîchissement échoue, rediriger vers la page de connexion
@@ -104,18 +122,23 @@ const AxiosService = {
                         
                         // Supprimer les tokens
                         sessionStorage.removeItem('token');
-                        localStorage.removeItem('token');
                         sessionStorage.removeItem('refreshToken');
-                        localStorage.removeItem('refreshToken');
                         
                         // Vider la file d'attente
                         this.refreshQueue = [];
                         
                         // Vérifier si on est sur une page protégée
                         if (!window.location.pathname.includes('/auth/')) {
-                            // Rediriger vers la page de connexion
-                            window.location.href = '/auth/login?redirect_to=' + encodeURIComponent(window.location.pathname);
+                            console.log('Session expirée, affichage du message d\'erreur');
+                            // Afficher un message d'erreur au lieu de rediriger
+                            if (window.showPopup) {
+                                window.showPopup('error', 'Session expirée', 'Votre session a expiré. Veuillez vous reconnecter.', 5000);
+                            } else {
+                                console.error('Session expirée');
+                            }
                         }
+                        
+                        return Promise.reject(refreshError);
                     } finally {
                         this.isRefreshing = false;
                     }

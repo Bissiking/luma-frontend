@@ -1,0 +1,288 @@
+.debug-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.debug-filters {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.debug-filters select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.debug-reports table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.debug-reports th,
+.debug-reports td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.debug-reports th {
+    background-color: var(--table-header-bg);
+    font-weight: 600;
+}
+
+.debug-reports tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+.debug-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.debug-modal-content {
+    position: relative;
+    background-color: var(--bg-primary);
+    margin: 5% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: var(--rounded-lg);
+    box-shadow: var(--shadow-xl);
+    animation: modalFadeIn 0.3s ease;
+    max-height: 90vh;
+    overflow: scroll;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.debug-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.debug-modal-close:hover {
+    color: var(--text-primary);
+}
+
+.debug-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.debug-form input,
+.debug-form textarea,
+.debug-form select {
+    padding: 12px;
+    border-radius: var(--rounded);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.debug-form input:focus,
+.debug-form textarea:focus,
+.debug-form select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-transparent);
+}
+
+.debug-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.debug-form button[type="submit"] {
+    padding: 12px 24px;
+    border-radius: var(--rounded);
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.debug-form button[type="submit"]:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.debug-image-preview {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: var(--rounded);
+    border: 1px solid var(--border-color);
+    object-fit: cover;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.debug-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.status-nouveau {
+    background-color: var(--status-new);
+    color: white;
+}
+
+.status-en_cours {
+    background-color: var(--status-in-progress);
+    color: white;
+}
+
+.status-en_test {
+    background-color: var(--status-testing);
+    color: white;
+}
+
+.status-resolu {
+    background-color: var(--status-resolved);
+    color: white;
+}
+
+.status-ferme {
+    background-color: var(--status-closed);
+    color: white;
+}
+
+.status-rejete {
+    background-color: var(--status-rejected);
+    color: white;
+}
+
+.debug-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.debug-button:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-dark);
+    box-shadow: var(--shadow-xl);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(var(--primary-rgb), 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0);
+    }
+}
+
+.paste-zone {
+    border: 2px dashed var(--border-color);
+    padding: 20px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: var(--rounded);
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--bg-secondary);
+    transition: all 0.3s ease;
+}
+
+.paste-zone:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--primary);
+}
+
+.paste-zone p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.image-preview-container {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+}
+
+.image-delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.image-delete-btn:hover {
+    background-color: rgba(220, 53, 69, 0.8);
+    transform: scale(1.1);
+} 

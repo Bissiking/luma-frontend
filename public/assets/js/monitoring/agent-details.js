@@ -354,6 +354,7 @@ class AgentDetails {
   async loadMetrics() {
     try {
       const data = await this.makeApiRequest(`/monitoring/agents/${this.agentUuid}/metrics`);
+      console.log(data);
       if (!data || !data.success || !data.data || !data.data[0]) {
         throw new Error('Format de réponse invalide');
       }
@@ -1122,7 +1123,7 @@ class AgentDetails {
 
   async makeApiRequest(endpoint, method = 'GET', data = null) {
     try {
-      const response = await window.api({
+      const response = await this.api({
         method,
         url: endpoint,
         data

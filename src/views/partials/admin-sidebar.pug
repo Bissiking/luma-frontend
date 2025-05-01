@@ -67,4 +67,9 @@ aside.admin-sidebar
       li.nav-item
         a.nav-link(href='/admin/groups')
           i.fas.fa-users-cog
-          span Groupes 
+          span Groupes
+
+      li(class=currentPage === 'admin-debug-reports' ? 'active' : '')
+        a(href='/admin/debug-reports')
+          i.fas.fa-bug
+          span Rapports de bug 

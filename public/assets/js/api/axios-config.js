@@ -3,6 +3,22 @@
  * Ce fichier configure Axios pour toute l'application.
  */
 
+// Variables pour gérer le rafraîchissement
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 // URL de base de l'API
 const apiBaseUrl = window.API_URL || 'https://api.mhemery.fr';
 
@@ -21,7 +37,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         // Essayer de récupérer le token de la session
-        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         
         // Si un token est disponible, l'ajouter à l'en-tête d'autorisation
         if (token && !config.url.includes('/auth/')) {
@@ -57,7 +73,23 @@ axiosInstance.interceptors.response.use(
             !originalRequest.url.includes('/auth/refresh') &&
             !originalRequest._retry) {
             
+            // Si une requête de rafraîchissement est déjà en cours, ajouter cette requête à la file d'attente
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({
+                        resolve: (token) => {
+                            originalRequest.headers.Authorization = `Bearer ${token}`;
+                            resolve(axiosInstance(originalRequest));
+                        },
+                        reject: (err) => {
+                            reject(err);
+                        }
+                    });
+                });
+            }
+            
             originalRequest._retry = true;
+            isRefreshing = true;
             
             try {
                 // Tenter de rafraîchir le token
@@ -66,20 +98,32 @@ axiosInstance.interceptors.response.use(
                 });
                 
                 if (response.data && response.data.token) {
+                    const newToken = response.data.token;
+                    
                     // Mettre à jour le token
-                    sessionStorage.setItem('token', response.data.token);
+                    sessionStorage.setItem('token', newToken);
                     
                     // Stocker la date d'expiration si disponible
                     if (response.data.expires_at) {
                         sessionStorage.setItem('tokenExpiresAt', response.data.expires_at);
                     }
                     
-                    // Mettre à jour l'en-tête d'autorisation et réessayer la requête
-                    originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
+                    // Mettre à jour l'en-tête d'autorisation 
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    
+                    // Traiter toutes les requêtes en attente avec le nouveau token
+                    processQueue(null, newToken);
+                    
+                    // Réessayer la requête originale
                     return axiosInstance(originalRequest);
+                } else {
+                    throw new Error('Pas de token reçu lors du rafraîchissement');
                 }
             } catch (refreshError) {
-                // Si le rafraîchissement échoue, journaliser l'erreur
+                // Si le rafraîchissement échoue, rejeter toutes les requêtes en attente
+                processQueue(refreshError, null);
+                
+                // Journaliser l'erreur
                 console.error('Erreur lors du rafraîchissement du token:', refreshError);
                 
                 // Afficher l'erreur si la fonction existe
@@ -91,6 +135,10 @@ axiosInstance.interceptors.response.use(
                 setTimeout(() => {
                     window.location.href = '/auth/login';
                 }, 2000);
+                
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
             }
         }
         

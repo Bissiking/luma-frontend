@@ -1,8 +1,10 @@
 extends ../../layouts/main
 
 block scripts
-  // Charger uniquement le script de gestion des agents
+  // Charger la configuration Axios en premier
+  script(src="/assets/js/api/axios-config.js")
   script(src="/assets/js/agents-management.js" defer)
+  //- script(src="/assets/js/monitoring/agents-list-simple.js" defer)
 
 block content
   .dashboard-page

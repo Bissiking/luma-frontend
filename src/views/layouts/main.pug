@@ -35,20 +35,20 @@ html(lang='fr')
     script(src=asset('js/lib/axios.js'))
     script(src=asset('js/lib/jquery.js'))
     script(src=asset('js/lib/popup.js'))
-
+    
     //- Script pour exposer les variables d'environnement frontend  
     script.
       window.API_URL = '#{apiUrl}';
       window.USER_ROLE = '#{user ? user.role : ""}';
       window.USER_ID = '#{user ? user.id : ""}';
-
+    
     //- Service Axios centralisé
     script(src=asset('js/api/axios-service.js'))
 
     //- Auth Manager uniquement si l'utilisateur est déjà connecté (pas sur la page login)
     if user
       script(src=asset('js/auth/auth-manager.js'))
-    
+        
   body
     //- Header
     include ../partials/header
@@ -85,3 +85,38 @@ html(lang='fr')
     
     //- Bloc pour les scripts additionnels
     block scripts 
+
+    //- Bouton de débogage et modal
+    if user
+      link(rel='stylesheet', href=asset('css/debug/debug.css'))
+      button#debug-button.debug-button(title="Signaler un bug") 🐛
+      #debug-modal.debug-modal
+        .debug-modal-content
+          span.debug-modal-close &times;
+          h2 Signaler un bug
+          form.debug-form
+            .form-group
+              label(for="title") Titre
+              input#title.form-control(type="text" name="title" required)
+            .form-group
+              label(for="description") Description
+              textarea#description.form-control(name="description" required)
+            .form-group
+              label(for="priority") Priorité
+              select#priority(name="priority" required)
+                option(value="basse") Basse
+                option(value="moyenne" selected) Moyenne
+                option(value="elevee") Élevée
+                option(value="critique") Critique
+            .form-group.image-upload
+              label(for="image-upload") Images
+              input#image-upload(type="file" name="images" accept="image/*" multiple)
+              .paste-zone
+                p Collez une image ici (Ctrl+V)
+              #image-preview
+
+            button.btn.btn-primary(type="submit") Envoyer
+
+      //- Scripts de débogage avec dépendances
+      script(src=asset('js/lib/axios-config.js'))
+      script(src=asset('js/debug/debug-manager.js')) 

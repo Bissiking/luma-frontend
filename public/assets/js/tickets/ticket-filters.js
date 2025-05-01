@@ -77,7 +77,7 @@ const TicketFilters = {
         
         axios.get(`${API_URL}/tickets/categories`)
             .then(response => {
-                if (response.data.success) {
+            if (response.data.success) {
                     this.populateCategorySelect(response.data.categories);
                 } else {
                     console.error('Erreur lors de la récupération des catégories:', response.data.message);
@@ -90,7 +90,7 @@ const TicketFilters = {
                     this.redirectToLogin();
                 } else {
                     this.showNotification('Erreur lors de la récupération des catégories', 'error');
-                }
+            }
             });
     },
 
@@ -103,7 +103,7 @@ const TicketFilters = {
         
         axios.get(`${API_URL}/users`)
             .then(response => {
-                if (response.data.success) {
+            if (response.data.success) {
                     this.populateCreatorSelect(response.data.users);
                 } else {
                     console.error('Erreur lors de la récupération des créateurs:', response.data.message);
@@ -116,7 +116,7 @@ const TicketFilters = {
                     this.redirectToLogin();
                 } else {
                     this.showNotification('Erreur lors de la récupération des créateurs', 'error');
-                }
+            }
             });
     },
 

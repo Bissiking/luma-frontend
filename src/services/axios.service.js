@@ -47,10 +47,11 @@ const axiosService = {
      * @param {string} options.url - URL de la requête (sans le baseURL)
      * @param {Object} options.data - Données à envoyer (pour POST, PUT)
      * @param {Object} options.req - Objet requête Express (pour accéder à la session)
+     * @param {Object} options.res - Objet réponse Express (pour envoyer les nouveaux tokens au front)
      * @returns {Promise<any>} Résultat de la requête
      */
     request: async (options) => {
-        const { method, url, data = {}, req } = options;
+        const { method, url, data = {}, req, res } = options;
         
         try {
             // Si la requête nécessite une authentification (req est fourni)
@@ -62,7 +63,23 @@ const axiosService = {
                 // Vérifier l'expiration du token
                 if (req.session.expiresAt && new Date(req.session.expiresAt) < new Date()) {
                     // Token expiré, essayer de le rafraîchir
-                    await axiosService.refreshToken(req);
+                    const newTokens = await axiosService.refreshToken(req);
+                    
+                    // Envoyer les nouveaux tokens au frontend
+                    if (res) {
+                        res.cookie('token', newTokens.token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 24 * 60 * 60 * 1000 // 24 heures
+                        });
+                        res.cookie('refreshToken', newTokens.refreshToken, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+                        });
+                    }
                 }
 
                 // Créer une instance avec le token
@@ -82,6 +99,30 @@ const axiosService = {
                 } else {
                     response = await authInstance[method](url, data, config);
                 }
+
+                // Si la réponse contient de nouveaux tokens, les mettre à jour
+                if (response.data && response.data.token) {
+                    req.session.token = response.data.token;
+                    req.session.refreshToken = response.data.refresh_token;
+                    req.session.expiresAt = response.data.expires_at;
+
+                    // Envoyer les nouveaux tokens au frontend
+                    if (res) {
+                        res.cookie('token', response.data.token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 24 * 60 * 60 * 1000 // 24 heures
+                        });
+                        res.cookie('refreshToken', response.data.refresh_token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+                        });
+                    }
+                }
+
                 return response.data;
             } else {
                 // Requête sans authentification
@@ -93,7 +134,23 @@ const axiosService = {
             if (req && error.response && error.response.status === 401) {
                 try {
                     // Tenter de rafraîchir le token
-                    await axiosService.refreshToken(req);
+                    const newTokens = await axiosService.refreshToken(req);
+                    
+                    // Envoyer les nouveaux tokens au frontend
+                    if (res) {
+                        res.cookie('token', newTokens.token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 24 * 60 * 60 * 1000 // 24 heures
+                        });
+                        res.cookie('refreshToken', newTokens.refreshToken, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
+                        });
+                    }
                     
                     // Réessayer la requête avec le nouveau token
                     const authInstance = axiosService.createAuthenticatedInstance(req.session.token);
@@ -124,7 +181,7 @@ const axiosService = {
     /**
      * Rafraîchit le token JWT
      * @param {Object} req - Objet requête Express
-     * @returns {Promise<void>}
+     * @returns {Promise<Object>} Nouveaux tokens
      */
     refreshToken: async (req) => {
         if (!req.session.refreshToken) {
@@ -147,6 +204,12 @@ const axiosService = {
             if (response.data.expires_at) {
                 req.session.expiresAt = response.data.expires_at;
             }
+
+            return {
+                token: response.data.token,
+                refreshToken: response.data.refresh_token,
+                expiresAt: response.data.expires_at
+            };
         } else {
             throw new Error('Échec du rafraîchissement du token');
         }
@@ -155,10 +218,10 @@ const axiosService = {
     /**
      * Méthodes raccourcies pour les requêtes HTTP
      */
-    get: (url, req) => axiosService.request({ method: 'get', url, req }),
-    post: (url, data, req) => axiosService.request({ method: 'post', url, data, req }),
-    put: (url, data, req) => axiosService.request({ method: 'put', url, data, req }),
-    delete: (url, req) => axiosService.request({ method: 'delete', url, req })
+    get: (url, req, res) => axiosService.request({ method: 'get', url, req, res }),
+    post: (url, data, req, res) => axiosService.request({ method: 'post', url, data, req, res }),
+    put: (url, data, req, res) => axiosService.request({ method: 'put', url, data, req, res }),
+    delete: (url, req, res) => axiosService.request({ method: 'delete', url, req, res })
 };
 
 module.exports = axiosService; 

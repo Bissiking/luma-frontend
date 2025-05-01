@@ -1,0 +1,77 @@
+extends ../layouts/main
+
+
+
+block content
+  link(rel='stylesheet', href=asset('css/debug/debug.css'))
+  style.
+    .report-row {
+      cursor: pointer;
+    }
+    .report-details {
+      display: none;
+      background: var(--bg-secondary);
+      padding: 20px;
+      border-radius: var(--rounded);
+    }
+    .report-details.show {
+      display: block;
+    }
+    .report-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .report-image {
+      max-width: 200px;
+      border-radius: var(--rounded);
+      border: 1px solid var(--border-color);
+    }
+    .status-select {
+      padding: 5px;
+      border-radius: var(--rounded);
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+  .debug-container
+    h1.mb-4 
+      i.fas.fa-bug.me-2
+      | Rapports de bug
+
+    .debug-filters.mb-4
+      select#statusFilter.form-control
+        option(value="") Tous les statuts
+        option(value="nouveau") Nouveau
+        option(value="en_cours") En cours
+        option(value="en_test") En test
+        option(value="resolu") Résolu
+        option(value="ferme") Fermé
+        option(value="rejete") Rejeté
+
+      select#priorityFilter.form-control
+        option(value="") Toutes les priorités
+        option(value="critique") Critique
+        option(value="elevee") Élevée
+        option(value="moyenne") Moyenne
+        option(value="basse") Basse
+
+    .debug-reports
+      table.table
+        thead
+          tr
+            th ID
+            th Date
+            th Titre
+            th Description
+            th Priorité
+            th Statut
+            th Images
+            th Actions
+        tbody#reportsTable
+          //- Les rapports seront injectés ici via JavaScript
+
+block append scripts
+  script(src=asset('js/admin/debug.js') defer)
+    

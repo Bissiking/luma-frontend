@@ -76,6 +76,12 @@ block content
 block scripts
   script.
     const API_URL = '#{apiUrl}'; // L'URL de l'API récupérée depuis les variables Pug
+  script.
+    // Attendre que le service soit initialisé
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.AxiosService) {
+        console.error('AxiosService n\'est pas disponible');
+      }
+    });
   script(src=asset('js/auth/auth-prompts.js'))
-  // auth-manager.js retiré pour éviter les interférences sur la page de login
   script(src=asset('js/auth/login.js'))

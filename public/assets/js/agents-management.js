@@ -5,7 +5,11 @@
 
 $(document).ready(function () {
     // Configuration
-    const api = window.api; // Utilisation de l'instance axios configurée
+    if (!window.api) {
+        console.error('L\'instance Axios n\'est pas disponible. Vérifiez que axios-config.js est chargé.');
+        return;
+    }
+    const api = window.api;
 
     // État
     let agents = [];
@@ -479,7 +483,7 @@ $(document).ready(function () {
                 <div class="agent-last-seen">
                     <div class="last-time">${lastSeen}</div>
                     <div class="agent-actions">
-                        <button class="action-btn view" title="Voir les métriques">
+                        <button class="action-btn view view-metrics" title="Voir les métriques">
                             <i class="fas fa-chart-line"></i>
                         </button>
                         <button class="action-btn edit" title="Configurer">
@@ -568,7 +572,7 @@ $(document).ready(function () {
                             <div class="last-date">${lastSeen.date}</div>
                         </div>
                         <div class="agent-actions">
-                            <button class="action-btn view" title="Voir les métriques">
+                            <button class="action-btn view view-metrics" title="Voir les métriques">
                                 <i class="fas fa-chart-line"></i>
                             </button>
                             <button class="action-btn edit" title="Configurer">
@@ -746,6 +750,7 @@ $(document).ready(function () {
         switch (status) {
             case 'online': return 'En ligne';
             case 'offline': return 'Hors ligne';
+            case 'inactive': return 'Hors ligne';
             case 'warning': return 'Avertissement';
             case 'error': return 'Erreur';
             default: return 'Inconnu';
@@ -770,6 +775,7 @@ $(document).ready(function () {
         switch (status) {
             case 'online': return 'fa-check-circle';
             case 'offline': return 'fa-times-circle';
+            case 'inactive': return 'fa-times-circle';
             case 'warning': return 'fa-exclamation-triangle';
             case 'error': return 'fa-exclamation-circle';
             default: return 'fa-question-circle';
@@ -807,4 +813,10 @@ $(document).ready(function () {
             }, wait);
         };
     }
+
+    // Popup pour afficher les métriques d'un agent
+    $(document).on('click', '.view-metrics', function() {
+        console.log("check");
+        showPopup('info', 'Une peu de patience...', 'La fonctionnalité est en cours de développement', 2000);
+    });
 }); 

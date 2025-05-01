@@ -59,6 +59,35 @@ block content
           .activity-list
             // Les activités seront chargées dynamiquement par JavaScript
 
+        //- Section de débogage de session
+        .dashboard-section
+          .section-header
+            h2
+              i.fas.fa-bug
+              |  Informations de session (Débogage)
+          .debug-info-container
+            .debug-card
+              h3 Cookies
+              pre#cookie-debug Chargement...
+            .debug-card
+              h3 localStorage
+              pre#local-storage-debug Chargement...
+            .debug-card
+              h3 sessionStorage  
+              pre#session-storage-debug Chargement...
+            .debug-card
+              h3 Session du serveur
+              pre
+                | Token: #{debug.token} 
+                br
+                | Refresh Token: #{debug.refreshToken}
+                br
+                | Expire à: #{debug.expiresAt || 'Non défini'}
+                br
+                | User ID: #{user.id}
+                br
+                | Role: #{user.role}
+
         .dashboard-section
           .section-header
             h2
@@ -75,10 +104,10 @@ block content
                 i.fas.fa-ticket-alt
               span Mes tickets
 
-            button.quick-link#create-ticket-btn
+            a.quick-link#create-ticket-btn(href='#')
               .quick-link-icon.success-gradient
-                i.fas.fa-plus-circle
-              span Nouveau ticket
+                i.fas.fa-plus
+              span Créer un ticket
 
             a.quick-link(href='/dashboard/profile')
               .quick-link-icon.info-gradient
@@ -138,5 +167,4 @@ block scripts
   script.
     const API_URL = '#{apiUrl}'; // L'URL de l'API récupérée depuis les variables Pug
   script(src="/assets/js/services/activityService.js")
-  script(src="/assets/js/tickets/tickets.js")
-  script(src="/assets/js/dashboard.js")
+  script(src="/assets/js/dashboard.js" defer)

@@ -81,13 +81,13 @@ const handleRedirection = {
  * @param {string[]} roles - Liste des rôles autorisés
  */
 const hasRole = (roles) => {
-  return (req, res, next) => {
-    if (!req.session.user || !roles.includes(req.session.user.role)) {
-      req.session.error = 'Vous n\'avez pas les droits nécessaires pour accéder à cette page.';
+    return (req, res, next) => {
+        if (!req.session.user || !roles.includes(req.session.user.role)) {
+            req.session.error = 'Vous n\'avez pas les droits nécessaires pour accéder à cette page.';
       return handleRedirection.toDashboard(req, res, 'role_denied');
-    }
-    return next();
-  };
+        }
+        return next();
+    };
 };
 
 /**
@@ -96,32 +96,32 @@ const hasRole = (roles) => {
  * @param {string} action - Action à vérifier (view, create, edit, delete)
  */
 const hasPermission = (module, action) => {
-  return (req, res, next) => {
-    if (!req.session.user) {
-      req.session.error = 'Vous devez être connecté pour accéder à cette page.';
+    return (req, res, next) => {
+        if (!req.session.user) {
+            req.session.error = 'Vous devez être connecté pour accéder à cette page.';
       return handleRedirection.toLogin(req, res);
-    }
+        }
 
-    // Les administrateurs ont tous les droits
-    if (req.session.user.role === 'admin') {
-      return next();
-    }
+        // Les administrateurs ont tous les droits
+        if (req.session.user.role === 'admin') {
+            return next();
+        }
 
-    // Vérifie les permissions du groupe de l'utilisateur
-    const userGroup = req.session.user.group;
-    if (!userGroup || !userGroup.permissions || !userGroup.permissions[module]) {
-      req.session.error = 'Vous n\'avez pas les droits nécessaires pour accéder à cette page.';
+        // Vérifie les permissions du groupe de l'utilisateur
+        const userGroup = req.session.user.group;
+        if (!userGroup || !userGroup.permissions || !userGroup.permissions[module]) {
+            req.session.error = 'Vous n\'avez pas les droits nécessaires pour accéder à cette page.';
       return handleRedirection.toDashboard(req, res, 'permission_denied');
-    }
+        }
 
-    const permission = userGroup.permissions[module];
-    if (!permission[`can${action.charAt(0).toUpperCase() + action.slice(1)}`]) {
-      req.session.error = 'Vous n\'avez pas les droits nécessaires pour effectuer cette action.';
+        const permission = userGroup.permissions[module];
+        if (!permission[`can${action.charAt(0).toUpperCase() + action.slice(1)}`]) {
+            req.session.error = 'Vous n\'avez pas les droits nécessaires pour effectuer cette action.';
       return handleRedirection.toDashboard(req, res, 'action_denied');
-    }
+        }
 
-    return next();
-  };
+        return next();
+    };
 };
 
 /**

@@ -22,4 +22,13 @@ router.use('/groups', groupsRoutes);
 // Routes de gestion des instances Nino
 router.get('/nino/instances', adminController.instances);
 
+// Page des rapports de debug
+router.get('/debug-reports', (req, res) => {
+    res.render('admin/debug-reports', {
+        title: 'Rapports de bug',
+        currentPage: 'admin-debug-reports',
+        user: req.user
+    });
+});
+
 module.exports = router; 

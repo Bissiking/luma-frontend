@@ -297,3 +297,58 @@
 .dark .quick-link:hover {
   background: var(--bg-hover);
 }
+
+/* Styles pour la section de débogage de session */
+.debug-info-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.debug-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.debug-card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.debug-card pre {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 4px;
+  overflow: auto;
+  max-height: 200px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #333;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  .debug-card {
+    background-color: #2d3748;
+  }
+  
+  .debug-card h3 {
+    color: #e2e8f0;
+    border-bottom-color: #4a5568;
+  }
+  
+  .debug-card pre {
+    background-color: #1a202c;
+    color: #e2e8f0;
+  }
+}

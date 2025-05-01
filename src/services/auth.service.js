@@ -171,9 +171,9 @@ class AuthService {
    */
   static async logout() {
     try {
-      // Supprimer le token du localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      // Supprimer le token du sessionStorage
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
       
       // Supprimer le cookie de session
       document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -191,7 +191,7 @@ class AuthService {
    * @returns {boolean}
    */
   static isAuthenticated() {
-    return !!localStorage.getItem('token');
+    return !!sessionStorage.getItem('token');
   }
 
   /**
@@ -199,7 +199,7 @@ class AuthService {
    * @returns {Object|null}
    */
   static getUser() {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   }
 
@@ -208,7 +208,7 @@ class AuthService {
    * @returns {string|null}
    */
   static getToken() {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 }
 

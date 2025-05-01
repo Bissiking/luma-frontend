@@ -27,11 +27,19 @@ const ActivityService = {
      * @param {number} offset - Décalage pour la pagination
      * @returns {Promise<Array>} - Liste des activités de l'utilisateur
      */
-    getUserActivities: async (userId, limit = 5, offset = 0) => {
+    getUserActivities: async (limit = 5, offset = 0) => {
+        console.log("check 2");
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const url = "/activities/user/"+user.id;
+
+        console.log(url);
+        console.log(user);
         try {
-            const response = await window.AxiosService.get(`/activities/user/${userId}`, {
+            console.log("check 3");
+            const response = await window.AxiosService.get(url, {
                 params: { limit, offset }
             });
+            console.log(response.data);
             return response.data.success ? response.data.activities : [];
         } catch (error) {
             console.error('Erreur lors de la récupération des activités de l\'utilisateur:', error);

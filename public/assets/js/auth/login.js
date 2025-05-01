@@ -1,3 +1,4 @@
+// Suppression de la déclaration locale de AxiosService
 const LoginManager = {
     init: function() {
         this.setupLoginForm();
@@ -5,7 +6,13 @@ const LoginManager = {
         this.captureOriginalDestination();
         
         // Ajouter l'écouteur d'événements sur le formulaire
-        document.getElementById('login-form')?.addEventListener('submit', (e) => this.handleLogin(e));
+        const form = document.getElementById('login-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Empêcher la soumission standard du formulaire
+                this.handleLogin(e);
+            });
+        }
     },
 
     setupApiUrl: function() {
@@ -64,24 +71,66 @@ const LoginManager = {
         const remember_me = document.getElementById('remember_me').checked;
         
         try {
-            const response = await axiosService.post('/auth/login', {
-                username,
-                password,
+            console.log('Envoi de la requête de connexion avec les données:', { 
+                username, 
                 remember_me,
-                source: 'LUMA'
+                source: 'LUMA' 
+            });
+
+            // Utiliser une requête AJAX directe vers le backend
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    remember_me,
+                    source: 'LUMA'
+                }),
+                credentials: 'include', // Inclure les cookies dans la requête
+                mode: 'cors' // Spécifier le mode CORS
             });
             
-            if (response.data.success) {
-                // Rediriger vers la page demandée ou le tableau de bord
-                window.location.href = response.data.redirectTo || '/dashboard';
+            console.log('Statut de la réponse:', response.status);
+            console.log('En-têtes de la réponse:', Object.fromEntries([...response.headers.entries()]));
+            
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log(data);
+
+            if (data.success) {
+                // Stocker les tokens dans le storage approprié
+                const storage = data.storage === 'localStorage' ? localStorage : sessionStorage;
+                
+                // Stocker les informations de l'utilisateur
+                storage.setItem('user', JSON.stringify(data.user));
+                storage.setItem('token', data.token);
+                storage.setItem('refresh_token', data.refresh_token);
+                storage.setItem('expires_at', data.expires_at);
+                storage.setItem('authorizations', JSON.stringify(data.authorizations));
+
+                // Afficher un message de succès
+                showPopup('success', "success",'Connexion réussie', 2000);
+
+                // Rediriger vers la page appropriée
+                setTimeout(() => {
+                    window.location.href = data.redirectTo || '/dashboard';
+                }, 2000);
             } else {
-                throw new Error(response.data.message || 'Erreur lors de la connexion');
+                // Afficher un message d'erreur
+                showPopup('error', "error", data.message || 'Erreur lors de la connexion', 3000);
+                this.showLoadingState(false);
             }
         } catch (error) {
             console.error('Erreur lors de la connexion:', error);
-            const msg = error.response?.data?.message || error.message || 'Erreur lors de la connexion';
-            showPopup('error', 'Erreur', msg, 5000);
-        } finally {
+            showPopup('error', "error", 'Erreur lors de la connexion. Veuillez réessayer.', 3000);
             this.showLoadingState(false);
         }
         return false;
@@ -89,6 +138,6 @@ const LoginManager = {
 };
 
 // Initialiser le gestionnaire de connexion
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     LoginManager.init();
 }); 

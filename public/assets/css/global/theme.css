@@ -99,6 +99,18 @@
     /* Couleurs d'icônes */
     --icon-color: var(--text-primary);
     --icon-bg: rgba(67, 97, 238, 0.1);
+
+    /* Status colors */
+    --status-new: #2196F3;
+    --status-in-progress: #FFC107;
+    --status-testing: #9C27B0;
+    --status-resolved: #4CAF50;
+    --status-closed: #607D8B;
+    --status-rejected: #F44336;
+
+    /* Table colors */
+    --table-header-bg: var(--background-color);
+    --table-hover-bg: rgba(0, 0, 0, 0.05);
 }
 
 /* THÈME SOMBRE */
